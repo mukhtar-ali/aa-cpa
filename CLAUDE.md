@@ -1,8 +1,9 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan:
-`specs/001-design-system/plan.md` (with `research.md`, `data-model.md`, `contracts/components.md`,
-`quickstart.md` in the same folder). Project principles: `.specify/memory/constitution.md`.
+shell commands, and other important information, read the current plan for your feature:
+- UI (agy): `specs/001-design-system/plan.md` (+ `research.md`, `data-model.md`, `contracts/`, `quickstart.md`)
+- Backend (Claude): `specs/002-cpa-content-backend/plan.md` (+ `research.md`, `data-model.md`, `contracts/`, `quickstart.md`)
+- Project principles: `.specify/memory/constitution.md`.
 <!-- SPECKIT END -->
 
 ## Work split
