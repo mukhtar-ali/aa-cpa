@@ -40,6 +40,18 @@ assertions) and SEO tags; Rich Results/hreflang validators (manual + scripted); 
 
 ## Project Structure
 
+### Documentation (this feature)
+
+```text
+specs/004-seo-compliance-launch/
+├── spec.md · plan.md · research.md (R1–R12, R4b) · data-model.md · quickstart.md (L1–L8) · tasks.md
+├── contracts/api-additions.md      # redirects, OG, SEO/consent settings, lead stats (extends 002)
+├── contracts/consent-and-seo.md    # consent behaviour and per-page SEO output rules
+└── checklists/requirements.md
+```
+
+### Source Code
+
 ```text
 apps/web/src/lib/seo/{page-metadata.ts (extended), json-ld/*.ts (+ tests), og.ts}
 apps/web/src/components/JsonLd.tsx
@@ -67,3 +79,12 @@ docs/{launch/runbook.md, launch/go-live-checklist.md, launch/hypercare.md, compl
 ## Quickstart
 
 See [quickstart.md](./quickstart.md) L1–L8.
+
+## Complexity Tracking
+
+| Addition | Why Needed | Simpler Alternative Rejected Because |
+| --- | --- | --- |
+| Caddy (server) | Automatic TLS + reverse proxy for 4 hostnames | nginx + certbot needs renewal jobs and more config |
+| restic (server) | Encrypted, deduplicated off-site backups with retention | Plain dump copies have no encryption or retention management |
+| k6 (dev tool) | FR-033 load test, scriptable in CI | autocannon cannot model multi-page journeys |
+| Trivy, OWASP ZAP (CI tools) | FR-031/032 vulnerability and baseline scans | `pnpm audit` alone misses OS packages and runtime issues |

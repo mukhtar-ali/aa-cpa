@@ -11,6 +11,8 @@ Conventions:
   page layer picks the locale.
 - `Href` = `string` (internal paths are already locale-prefixed by the caller, e.g. `/ar/services/audit`).
 - Optional fields render nothing when absent (spec Edge Cases).
+- Text-bearing view models accept optional `textLang?: 'ar' | 'en'`; when it differs from the page locale the component
+  renders that text with matching `lang` and `dir` (used for Arabic fallback text on English pages — 003 US1).
 
 ## Shared value types
 
@@ -116,7 +118,7 @@ figcaption, a, strong, em`. Heading `id`s feed the TOC.
 `{ icon?: IconName; title: string; body: string }`
 
 ### Testimonial
-`{ quote: string; rating?: 1 | 2 | 3 | 4 | 5; name: string; role: string; avatar?: ImageRef }`
+`{ quote: string; rating?: 1 | 2 | 3 | 4 | 5; name: string; role: string; company?: string; avatar?: ImageRef }`
 
 ### FaqItem
 `{ id: string; question: string; answer: string /* plain text or sanitized HTML */ }`

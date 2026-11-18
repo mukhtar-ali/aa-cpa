@@ -24,19 +24,19 @@
 | --- | --- |
 | GET `/api/pages/home` | `HomePageWebSchema` = `{ seo, hero, gap, clients: { rows: LogoItem[][] }, services: { …block, items: ServiceSummary[] }, reasons, credentials: { …, logos }, process, partnerQuote, news: { …, items: ArticleSummary[] }, estimator: EstimatorPublicSchema \| null, testimonial }` |
 | GET `/api/pages/about` | `AboutPageWebSchema` (incl. credentials, clients, offices, testimonial, estimator) |
-| GET `/api/pages/services` | `ServicesPageWebSchema` (incl. services list) |
+| GET `/api/pages/services` | `ServicesPageWebSchema` (incl. services list, partner quote, estimator, testimonial) |
 | GET `/api/pages/sectors` | `SectorsPageWebSchema` (incl. sectors, clients, featured sector band, case stories, estimator) |
-| GET `/api/pages/articles?category=&page=&pageSize=` | `ArticlesPageWebSchema` `{ seo, hero, featured: ArticleSummary[], categories, items: Paginated<ArticleSummary> }` |
+| GET `/api/pages/articles?category=&page=&pageSize=` | `ArticlesPageWebSchema` `{ seo, hero, featured: ArticleSummary[], categories, items: Paginated<ArticleSummary>, partnerQuote, estimator, testimonial }` |
 | GET `/api/pages/careers?department=` | `CareersPageWebSchema` (incl. departments, jobs, perks, team, hiring steps) |
 | GET `/api/pages/contact` | `ContactPageWebSchema` (incl. channels, offices, faqs scope=contact, service options) |
-| GET `/api/pages/legal/:key` (`privacy` \| `terms`) | `LegalPageWebSchema` |
+| GET `/api/pages/legal/:key` (`privacy` \| `terms` \| `accessibility`) | `LegalPageWebSchema` |
 
 ## Collections & details
 
 | Method & path | Response schema | Notes |
 | --- | --- | --- |
 | GET `/api/services` | `ServiceSummaryWeb[]` | ordered |
-| GET `/api/services/:slug` | `ServiceDetailWebSchema` | hero, statement, audience, methodology, deliverables, whyUs, faqs, sharedCtas, related sectors, seo; `{ redirectTo }` if slug moved; 404 otherwise |
+| GET `/api/services/:slug` | `ServiceDetailWebSchema` | hero, statement, audience, methodology, deliverables, whyUs, faqs, sharedCtas, related sectors, partnerQuote, estimator, testimonial, seo; `{ redirectTo }` if slug moved; 404 otherwise |
 | GET `/api/sectors` | `SectorSummaryWeb[]` | |
 | GET `/api/articles?category=&sector=&service=&page=&pageSize=&featured=` | `Paginated<ArticleSummaryWeb>` | `sector` filter powers sector "learn more" |
 | GET `/api/articles/:slug` | `ArticleDetailWebSchema` | body HTML, toc `[{id,label}]`, author, tags, related (4, same category/sector), seo |
@@ -49,14 +49,22 @@
 | --- | --- | --- |
 | GET `/api/estimator` | — | `EstimatorPublicSchema` (questions, labels, disclaimer) or 404 when not approved |
 | POST `/api/estimator/estimate` | `EstimateRequestSchema` `{ answers: Record<questionId, string \| number> }` | `EstimateResponseSchema` `{ min, max, currency: 'SAR', disclaimer, isDraft }` — throttled 30/10 min |
-| POST `/api/estimator/quote` | `QuoteRequestSchema` `{ answers, range, fullName, mobile, email, consent: true, website: '', startedAt, turnstileToken? }` | `201 { ok: true }` |
+| POST `/api/estimator/quote` | `QuoteRequestSchema` `{ answers, range, fullName, mobile, email, landingPath?, consent: true, website: '', startedAt, turnstileToken? }` | `201 { ok: true }` |
 
 ## Forms
 
 | Method & path | Body | Response |
 | --- | --- | --- |
-| POST `/api/contact` | `ContactRequestSchema` `{ fullName, company?, mobile, email, serviceId?, message, consent: true, website: '', startedAt, turnstileToken? }` | `201 { ok: true }`; 422 with field errors |
+| POST `/api/contact` | `ContactRequestSchema` `{ fullName, company?, mobile, email, serviceId?, message, landingPath?, consent: true, website: '', startedAt, turnstileToken? }` | `201 { ok: true }`; 422 with field errors |
 | POST `/api/jobs/:slug/apply` | multipart: `JobApplicationSchema` fields `{ fullName, email, mobile, linkedinUrl?, motivation?, consent, website, startedAt, turnstileToken? }` + `resume` file | `201 { ok: true }`; 409 job closed; 413/415 file errors |
+
+## Analytics ingestion (existing monitoring module)
+
+| Method & path | Body | Notes |
+| --- | --- | --- |
+| POST `/api/monitoring/events` (existing ingestion route; path per `endpoint.monitoring`) | `MonitoringEventSchema` `{ name, path, lang, props: Record<string, string \| number> }` | throttled; rejects personal-data keys (`email`, `phone`, `mobile`, `name`, `message`). Estimator completions are counted server-side only (`estimator.completed` written by `POST /api/estimator/estimate`); the web does not send `estimate_completed` here, to avoid double counting. |
+
+Estimator blocks are returned only on: home, about, services, service detail, sectors, articles (Figma Page 1).
 
 ## Preview
 

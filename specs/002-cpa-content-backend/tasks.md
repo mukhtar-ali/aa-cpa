@@ -32,7 +32,7 @@ description: "Task list for 002-cpa-content-backend (executed by agy; reviewed b
 
 **Independent Test**: quickstart B1.
 
-- [ ] T012 [US1] Copy 001 view-model fixtures (built from `specs/001-design-system/data-model.md` + Figma copy) to `packages/shared/test/fixtures/{home,services,articles,careers,contact,sectors}.ar.json`
+- [ ] T012 [US1] Author view-model fixtures (the 002 run writes them from `specs/001-design-system/data-model.md` + Figma Page 1 copy; the 001 run later verifies them against its mock content in 001 T104) at `packages/shared/test/fixtures/{home,services,articles,careers,contact,sectors}.ar.json`
 - [ ] T013 [US1] Write failing `packages/shared/test/view-model-fixtures.test.ts` parsing each fixture with its `*WebSchema`
 - [ ] T014 [P] [US1] Create `SH/validations/site.schema.ts` + `SH/models/site.model.ts`
 - [ ] T015 [P] [US1] Create `SH/validations/pages.schema.ts` + models (all page sections + web schemas, legal)
@@ -82,10 +82,13 @@ description: "Task list for 002-cpa-content-backend (executed by agy; reviewed b
 - [ ] T046 [US2] Extend `API/src/news/` (categories, authors controllers; mapper with toc + readingMinutes + isFallback; filters; related)
 - [ ] T047 [US2] Extend `API/src/careers/` jobs part (departments controller, extended mapper, open filter)
 - [ ] T048 [US2] Implement `API/src/reference/` module (offices, testimonials, client logos, credentials, FAQs)
-- [ ] T049 [US2] Implement `API/src/redirects/` (SlugRedirect write on slug change; lookup in by-slug services)
-- [ ] T050 [US2] Implement `API/src/pages/` aggregators (home, about, services, sectors, articles, careers, contact, legal) + `GET /api/site/chrome`
+- [ ] T049 [US2] Implement `API/src/redirects/` (SlugRedirect write on slug change; lookup in by-slug services; permanent = 308). 004 T016 later migrates SlugRedirect into the general `Redirect` table
+- [ ] T050 [US2] Implement `API/src/pages/` aggregators (home, about, services, sectors, articles, careers, contact, legal incl. `accessibility`) + `GET /api/site/chrome`; seed `Seo` page keys for every page (`home`, `about`, `services`, `sectors`, `articles`, `careers`, `contact`, `privacy`, `terms`, `accessibility`); estimator block included on home, about, services, service detail, sectors, articles only
 - [ ] T051 [US2] Implement `API/src/preview/` (token issue in admin, `X-Preview-Token` guard/decorator, no-store header)
 - [ ] T052 [US2] Add cache headers interceptor for public GETs and revalidation outbox enqueue on publish/update (`API/src/outbox/revalidate.ts`)
+- [ ] T051a [US2] E2E `API/test/preview.e2e-spec.ts`: token issue requires `manage_content`; valid token returns drafts with `Cache-Control: no-store`; expired/forged token → treated as anonymous; token scope enforced
+- [ ] T052a [US2] E2E `API/test/cache-revalidate.e2e-spec.ts`: public GET cache headers; publish/update/delete enqueue `revalidate` outbox rows with the correct tags; outbox sender posts to `WEB_REVALIDATE_URL` with secret
+- [ ] T048a [US2] Tests + implementation for edge cases: `updatedAt`/`updatedById` returned and shown ("updated by/at"); delete of referenced Service/Sector/Category/Department/Office → 409 with references; uploaded images > 2560 px resized and converted (sharp) — in `API/src/common/` and affected modules
 - [ ] T053 [US2] Run autocannon p95 check (quickstart B3.5); add missing indexes if needed
 
 ## Phase 7: User Story 3 — Contact requests (P1)
@@ -107,7 +110,7 @@ description: "Task list for 002-cpa-content-backend (executed by agy; reviewed b
 - [ ] T061 [P] [US4] Write specs for file validation by magic bytes (`API/src/careers/helpers/resume-validator.spec.ts`) and e2e `API/test/job-apply.e2e-spec.ts` (valid, wrong type, too big, closed job, consent)
 - [ ] T062 [US4] Implement resume validator and update `create-job-application.service.ts` (fullName, mobile, linkedinUrl, motivation, private key storage, consent, outbox emails)
 - [ ] T063 [P] [US4] Add templates `application-staff.{ar,en}.hbs`, `application-ack.{ar,en}.hbs`
-- [ ] T064 [US4] Signed resume download endpoint with audit event in `API/src/careers/careers.controller.ts`
+- [ ] T064 [US4] Signed resume download endpoint with audit event in `API/src/careers/careers.controller.ts`, with e2e `API/test/resume-download.e2e-spec.ts` (permission required, signed URL expiry 5 min, audit event written)
 
 ## Phase 9: User Story 5 — Estimator (P2)
 
@@ -123,6 +126,7 @@ description: "Task list for 002-cpa-content-backend (executed by agy; reviewed b
 **Independent Test**: quickstart B7, B8.
 
 - [ ] T069 [US6] Write e2e `API/test/admin-permissions.e2e-spec.ts` (each admin route refuses without its permission)
+- [ ] T069a [P] [US6] Write e2e `API/test/admin-leads.e2e-spec.ts`, `admin-applications.e2e-spec.ts`, `admin-privacy.e2e-spec.ts`, `admin-outbox.e2e-spec.ts` (validation errors, status transitions incl. invalid ones, assignment, notes, CSV with BOM and formula-injection escaping, export/erase results, outbox retry) — failing first
 - [ ] T070 [US6] Implement leads admin endpoints (list/filter, detail, status, assign, notes, CSV with BOM) in `API/src/leads/`
 - [ ] T071 [US6] Implement applications admin endpoints (statuses flow, notes, CSV) in `API/src/careers/`
 - [ ] T072 [US6] Implement `API/src/privacy/` export/erase endpoints + retention job (`@Cron` daily) with specs
@@ -135,6 +139,7 @@ description: "Task list for 002-cpa-content-backend (executed by agy; reviewed b
 - [ ] T079 [P] [US6] Admin features `ADM/features/leads/` (replaces contact-submissions) and applications views
 - [ ] T080 [P] [US6] Admin features `ADM/features/estimator/` (questions, factors, status draft/approved with confirmation) and `ADM/features/settings/{notifications,spam}`
 - [ ] T081 [US6] Update admin sidebar, route permissions and dashboard widgets (`ADM/features/dashboard/`, `API/src/dashboard/`)
+- [ ] T082a [US6] Component tests (Vitest + Testing Library) for each new admin feature form in `ADM/features/*/__tests__/` (schema validation messages, bilingual tabs, publish guard UI, reorder)
 - [ ] T082 [US6] Playwright admin journeys: adapt `e2e/specs/05`, `06`, `07`, `11`; add `12-admin-services-sectors.spec.ts`, `13-admin-leads-privacy.spec.ts`
 
 ## Phase 11: Polish

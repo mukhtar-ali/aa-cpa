@@ -14,7 +14,7 @@
 
 ## R2. Social images with Arabic text
 - **Decision**: Generate OG images in the API with sharp + SVG/Pango text (`apps/api/src/og/`), which shapes Arabic and
-  handles RTL correctly, at `GET /api/og?type=&slug=&lang=` (1200×630 PNG, brand template, cached on disk/S3 by content
+  handles RTL correctly, at `GET /api/og?type=&key=&lang=` (1200×630 PNG, brand template, cached on disk/S3 by content
   hash). Next `openGraph.images` points to it when no custom image is set.
 - **Rationale**: `next/og` (Satori) has incomplete Arabic shaping/bidi support; sharp/libvips with Pango renders it
   properly and already ships in the API.
@@ -27,10 +27,18 @@
   `noindex`. Admin and API Swagger send `X-Robots-Tag: noindex`.
 
 ## R4. Redirect manager
-- **Decision**: Backend: `Redirect` model (`fromPath` unique, `toPath`, `type 301|302`, `hits`, `createdById`) with admin
-  CRUD + CSV import (002 area, separate run); Web: `proxy.ts` looks up a cached redirect map (`GET /api/redirects/map`,
+- **Decision**: Backend: `Redirect` model (`fromPath` unique, `toPath`, `type permanent|temporary` served as 308|307, `hits`,
+  `createdById`) with admin CRUD + CSV import (002 area, separate run); 002 `SlugRedirect` rows are migrated into it, slug
+  changes write `Redirect` rows from then on, and `SlugRedirect` is dropped; Web: `proxy.ts` looks up a cached redirect map (`GET /api/redirects/map`,
   tag `redirects`, revalidated on change) before locale handling.
 - **Rationale**: FR-005; legacy URLs from any previous site.
+
+## R4b. Legacy site migration (client has an existing site)
+- **Decision**: Before cutover: crawl the old site (Screaming Frog or `wget --spider` script `tests/legacy/crawl.sh`),
+  merge with the old sitemap and Search Console / analytics top pages and backlinks; map each URL to a new path in
+  `docs/launch/legacy-redirects.csv` (client reviews); import via the redirect manager; Playwright check that every
+  legacy URL returns 301 → 200. Record the old site's DNS (incl. MX, SPF, DKIM, verification TXT records) so cutover
+  changes only the web records; keep a static archive of the old site for 90 days.
 
 ## R5. Consent & analytics
 - **Decision**: Own lightweight consent manager (no third-party CMP): DS components `ConsentBanner` and
@@ -49,10 +57,11 @@
   `security-headers.middleware.ts`. Report-only CSP on staging for one week first.
 
 ## R7. Infrastructure
-- **Decision**: Follow `docs/DEPLOY_VPS.md` path B (Docker + GitHub Actions) unless the client already uses Coolify
-  (path A); two environments on the same VPS class: `staging.aacpa.sa` and `aacpa.sa`, plus `admin.aacpa.sa` and
-  `api.aacpa.sa`. Reverse proxy with automatic TLS (existing compose/Caddy or Coolify Traefik). Images tagged by commit
-  SHA; rollback by tag (already documented).
+- **Decision** (confirmed 2026-11-18): `docs/DEPLOY_VPS.md` path B — Docker Compose on a VPS, deployed by GitHub
+  Actions over SSH; Caddy as reverse proxy with automatic TLS. Two environments on the same VPS class: `staging.aacpa.sa` and `aacpa.sa`, plus `admin.aacpa.sa` and
+  `api.aacpa.sa`. Images built in CI, pushed to GHCR, tagged by commit SHA; rollback by tag (already documented).
+  Staging and production run as separate Compose projects (separate VPS recommended for production isolation; same VPS
+  acceptable if the client limits cost).
 - **CDN (optional, client cost)**: Cloudflare free/pro in front of web and API (DNS proxied), caching static assets;
   disable for `/api/` writes.
 

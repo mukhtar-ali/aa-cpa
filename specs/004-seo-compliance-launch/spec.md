@@ -23,6 +23,11 @@ storage; this feature completes and verifies them for this site.
 
 - Launch locales: Arabic (default) and English.
 - Approved pages: Figma "Page 1" only.
+- Q: Analytics tool? → A: Google Analytics 4 through Google Tag Manager (existing settings), gated by the consent banner
+  with Google Consent Mode v2; Meta pixel only if the client supplies one, under the marketing category.
+- Q: Hosting and deployment? → A: VPS with Docker Compose deployed by GitHub Actions (path B in `docs/DEPLOY_VPS.md`).
+- Q: Existing website on the domain? → A: Yes. Its URLs MUST be inventoried and redirected to the new equivalents before
+  cutover; existing mail on the domain must keep working.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -69,8 +74,8 @@ honoured on every page.
 
 ### User Story 3 - The firm measures leads (Priority: P2)
 
-Firm management sees how many visitors become leads, from which pages, channels and campaigns, and which services and
-sectors attract interest.
+Firm management sees how many visitors become leads, from which pages and which services attract interest (admin
+dashboard), and from which channels and campaigns (Google Analytics, standard UTM tracking).
 
 **Independent Test**: Perform test journeys and confirm each event appears once with correct properties in the
 analytics property and in the admin dashboard.
@@ -151,7 +156,8 @@ with daily checks.
    other redirecting.
 2. **Given** email sending from the domain, **Then** SPF, DKIM and DMARC are configured and test messages land in the
    inbox (not spam) for Gmail and Outlook.
-3. **Given** the client's previous website (if any), **Then** its important URLs redirect to the new equivalents.
+3. **Given** the client's previous website, **Then** 100% of its inventoried URLs (pages with traffic or backlinks
+   at minimum) redirect permanently to the closest new equivalent, and none returns 404.
 
 ### Edge Cases
 
@@ -168,8 +174,8 @@ with daily checks.
 **SEO**
 
 - **FR-001**: Every public page MUST have localized title, description, canonical, alternate language links (`ar`, `en`,
-  `x-default` → Arabic), Open Graph and social card data, editable per page (and per item for services, sectors,
-  articles, jobs) in the admin portal with sensible automatic defaults.
+  `x-default` → Arabic), Open Graph and social card data, editable per page (and per item for services,
+  articles, jobs — sectors have no page of their own) in the admin portal with sensible automatic defaults.
 - **FR-002**: Structured data MUST be published for the organisation (accounting service with offices, licence, logo,
   socials), breadcrumbs, articles, job postings, FAQ blocks and services.
 - **FR-003**: The sitemap MUST list every published page in both languages with alternates and last-modified dates; the
@@ -177,7 +183,8 @@ with daily checks.
 - **FR-004**: Automatically generated social sharing images MUST be available for pages without a chosen image, rendering
   Arabic text correctly.
 - **FR-005**: The content team MUST be able to manage redirects (old URL → new URL, permanent/temporary) in the admin
-  portal; legacy URLs from any previous client site are imported before launch.
+  portal. The previous site's URLs MUST be crawled and collected (sitemap, analytics/Search Console top pages,
+  backlinks), mapped to new pages, imported, and verified before cutover.
 
 **Analytics & consent**
 
@@ -195,7 +202,7 @@ with daily checks.
 - **FR-021**: A record of processing (what personal data, purpose, retention, who can access) MUST be produced for the
   client.
 - **FR-022**: Accessibility conformance MUST be audited on the final content (automated + manual screen-reader pass in
-  Arabic and English) and an accessibility statement page content provided to the client.
+  Arabic and English) and the accessibility statement content entered for the `/{lang}/accessibility` page (003, legal layout).
 
 **Security & performance**
 
@@ -212,7 +219,7 @@ with daily checks.
 **Infrastructure & operations**
 
 - **FR-040**: Production and staging environments MUST exist with the same configuration, deployed from the main branch
-  through CI with health checks and one-step rollback (existing `docs/DEPLOY_VPS.md` path, Coolify or Docker + Actions).
+  through CI with health checks and one-step rollback (`docs/DEPLOY_VPS.md` path B: Docker Compose + GitHub Actions, Caddy).
 - **FR-041**: Daily database and uploaded-file backups MUST be kept off-server for at least 30 days, encrypted, and a
   restore MUST be rehearsed before launch.
 - **FR-042**: Uptime, error-rate, disk, certificate-expiry and failed-email alerts MUST notify named contacts.
@@ -252,13 +259,12 @@ with daily checks.
 ## Assumptions
 
 - Domain `aacpa.sa` is owned by the client, who grants DNS access or performs the changes with us.
-- Hosting is a VPS (per existing docs) unless the client chooses otherwise; costs (VPS, backups storage, CDN, email
-  service) are approved by the client.
-- Analytics vendor: Google Analytics 4 via the existing tag-manager settings, unless the client prefers a
-  privacy-friendly alternative; consent mode respected either way.
+- Hosting: VPS + Docker Compose + GitHub Actions (clarified); the client approves costs (VPS, backup storage, optional
+  CDN, email service).
+- Analytics: GA4 via GTM with Consent Mode v2 (clarified).
 - The client's legal advisor supplies or approves the final privacy policy and terms; we provide drafts based on the
   approved Figma copy.
-- If there is no previous website, the legacy-redirect work is skipped.
+- The previous website stays live until cutover; its hosting/mail provider details are supplied by the client.
 
 ## Dependencies & Scope
 

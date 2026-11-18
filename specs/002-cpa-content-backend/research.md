@@ -144,7 +144,7 @@ Current code makes English mandatory and the fallback (`RequiredTitleSchema` in
 ## R13. Slug changes
 
 - **Decision**: `SlugRedirect(entityType, fromSlug, toSlug)` written when a published slug changes; public
-  by-slug endpoints return `{ redirectTo }` with 301 semantics for the web to follow.
+  by-slug endpoints return `{ redirectTo }` with permanent (308) semantics for the web to follow.
 
 ## R14. Admin portal
 

@@ -35,9 +35,20 @@
 | `ImageRef` | `ImageRefSchema` `{ src, alt, width, height }` | API stores width/height on upload (sharp metadata) |
 | `SiteChrome` | `SiteChromeWebSchema` | `localeSwitch` built by web |
 
+Field renames done by the API mappers (storage name → web schema name, so web schemas match 001 exactly):
+`Office.mapUrl` → `mapHref`, `Office.mapX/mapY` → `coordinates: { x, y }`; `ClientLogo.logo` → `image`,
+`ClientLogo.url` → `href`; `Credential.logo` → `image`; `Job.experienceMin/Max` → `experience` (localized label,
+e.g. "4+ سنوات" / "4+ years"); `Testimonial.company` → `company` (added to the 001 view model as optional).
+Any text value that fell back to Arabic carries `textLang: 'ar'` on its object (see 001 data-model conventions).
+
 Rule: field names in `*WebSchema` match the design-system types exactly; anything the web must compute (hrefs,
 labels from dictionaries) is listed above. A contract test (`packages/shared/test/view-model-fixtures.test.ts`)
 parses the 001 mock fixtures with these schemas.
+
+## Later additions
+
+004 extends these contracts (redirects, SEO/OG fields, consent version, lead stats, image licence):
+`specs/004-seo-compliance-launch/contracts/api-additions.md`.
 
 ## Versioning
 

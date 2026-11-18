@@ -132,6 +132,20 @@ Legend: **S** = server-safe (no `"use client"`), **C** = client component.
 | ApplicationFormLayout | `title; eyebrow; description; children` | ice section card | S | Job `514:3194` apply form |
 | ContactFormLayout | `title; subtitle; channels: ContactChannel[]; socials; children` | — | S | Contact `524:3651` |
 
+## Added by later features (same conventions; built in those features' batches)
+
+Figma has no designs for these; they follow the 001 visual language and need client review.
+
+| Component | Props (summary) | S/C | Added by |
+| --- | --- | --- | --- |
+| SkipLink | `href ('#main'); label` | S | 003 T009 |
+| ErrorState | `code: 404 \| 500 \| 503; title; body; actions: ActionRef[]; contact?: ContactChannel[]` | S | 003 T009 |
+| EmptyState | `title; body?; action?: ActionRef; icon?` | S | 003 T009 |
+| PreviewBanner | `label; exitHref; exitLabel` (sticky top, high contrast) | S | 003 T009 |
+| FormSuccess | `title; body; action?: ActionRef` (focus target, `role="status"`) | S | 003 T009 |
+| ConsentBanner | `texts; onAcceptAll; onRejectAll; onCustomize` (non-modal, bottom) | C | 004 T020 |
+| ConsentPreferences | `texts; categories: { id; label; description; locked? }[]; value; onSave; open; onOpenChange` (Radix Dialog) | C | 004 T020 |
+
 ## Icons
 
 `Icon` (`name: IconName; size?: 16 | 20 | 24 | 48; mirror?: boolean; title?`) — decorative by default

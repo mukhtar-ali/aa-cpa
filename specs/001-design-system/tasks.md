@@ -15,7 +15,7 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - JSDoc `@figma <node-id>` on the component; story `parameters.design.url` = Figma link to that node.
 - Before implementing a Figma-derived component: load the `figma-design-to-code` skill, call `get_design_context`
   on the node (file `1jzfujyx2OJ6EKDRD2X6Xm`), map values to tokens only, then compare the story with
-  `get_screenshot` of the node.
+  `get_screenshot` of the node. Sector Redesign components (`552:4605`: card grid, tabs, detail panel) are NOT approved — never build them.
 - Stories: every variant × state, plus AR and EN (locale toolbar), long-text and missing-optional cases.
 - Logical utilities only; no hex/px literals outside `tokens/` (guard tests enforce).
 - `"use client"` only on files listed as **C** in contracts/components.md.
@@ -215,7 +215,7 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 
 **Independent Test**: quickstart V5 + V6.
 
-- [ ] T103 [P] [US5] Write Playwright spec `e2e/specs/design-system/reference-home.spec.ts`: 404 without `ENABLE_REFERENCE_PAGES`; screenshots 360/768/1024/1512 × ar/en (`toHaveScreenshot`); `@axe-core/playwright` 0 serious/critical; keyboard pass through header, service tabs, marquee pause and the full estimator flow; no horizontal overflow; add `design-system` project in `playwright.config.ts`
+- [ ] T103 [P] [US5] Write Playwright spec `e2e/specs/design-system/reference-home.spec.ts`: 404 without `ENABLE_REFERENCE_PAGES`; screenshots 320/360/768/1024/1512/1920 × ar/en (`toHaveScreenshot`); `@axe-core/playwright` 0 serious/critical; keyboard pass through header, service tabs, marquee pause and the full estimator flow; no horizontal overflow; add `design-system` project in `playwright.config.ts`
 - [ ] T104 [P] [US5] Create mock content `WEB/src/reference/home.ar.ts` (copy from Figma `411:169`) and `WEB/src/reference/home.en.ts` (provisional English) typed with `@repo/design-system/types`; delete `WEB/src/reference/.keep.ts`
 - [ ] T105 [P] [US5] Add neutral, licence-free placeholder photos sized as in Figma to `WEB/public/reference/` with `README.md` noting sources/licences (no Figma watermarked images)
 - [ ] T106 [US5] Implement `WEB/app/[lang]/reference/home/page.tsx` composing Header, HomeHero, GapSection, LogoMarquee, ServiceTabs, ReasonsSection, CredentialsGrid, ProcessSteps, PhotoQuoteBand, NewsGrid, EstimatorSection, Footer in Figma order; `notFound()` unless `process.env.ENABLE_REFERENCE_PAGES === 'true'`; `metadata.robots = { index: false, follow: false }`; excluded from `WEB/app/sitemap.ts`
@@ -297,5 +297,5 @@ After US1, after US3 (mobile nav sign-off), after US5 (parity), and final PR.
 ## Notes
 
 - `[P]` = different files, no dependency on incomplete tasks.
-- Do not edit `packages/shared`, `apps/api`, `apps/admin` (owned by Claude); request needed type changes in the PR.
+- Do not edit `packages/shared`, `apps/api`, `apps/admin` (owned by the 002 backend run); request needed type changes in the PR.
 - Commit after each task or logical group using Conventional Commits (`feat(design-system): …`, `test(design-system): …`).

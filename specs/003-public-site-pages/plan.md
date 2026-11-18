@@ -47,6 +47,17 @@ against the full stack (seeded DB), `@axe-core/playwright`, Lighthouse CI (`ligh
 
 ## Project Structure
 
+### Documentation (this feature)
+
+```text
+specs/003-public-site-pages/
+├── spec.md · plan.md · research.md (R1–R10) · data-model.md · quickstart.md (P1–P6) · tasks.md
+├── contracts/web-endpoints.md   # routes, route handlers, Server Actions, analytics events
+└── checklists/requirements.md
+```
+
+### Source Code
+
 ```text
 apps/web/
 ├── next.config.ts                 # transpile DS, serverActions.bodySizeLimit 6mb, /news → /articles redirects, images
@@ -102,3 +113,5 @@ See [quickstart.md](./quickstart.md) P1–P6.
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 | --- | --- | --- |
 | Server Actions proxying to API | No-JS forms + IP forwarding + hidden API internals | Direct browser → API calls need JS and expose CORS/CSRF surface for forms |
+| Lighthouse CI (`@lhci/cli`, dev) | Constitution VII requires ≥ 90 on every template, enforced in CI | Manual Lighthouse runs are not repeatable or gating |
+| Vitest in `apps/web` (dev) | Mappers/actions/client need fast unit tests (constitution VI); same runner as the design system | Jest would add a second test-config style |

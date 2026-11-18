@@ -23,10 +23,10 @@ Content observed on the approved pages:
 | --- | --- |
 | Home `411:169` | hero, gap statement, client logos, service highlights, reasons + stats, credentials, process steps, partner quote, latest articles, estimator, testimonial |
 | About `445:36452` | hero, statement, licence text, credentials, client logos, partner/signatory block, three commitments, offices, partner quote, estimator |
-| Services `448:41066` | hero, intro statement, five services (title, summary, image), partner quote |
-| Service details `448:41873` | per service: hero, statement, who needs it, methodology rows, what you receive, why us, CTA cards, FAQs |
-| Sectors `547:4555` | hero, statement, eight sectors (title, one-line description), client logos, featured sector band, case stories |
-| Articles `473:36031` | featured articles, category filters, paginated list |
+| Services `448:41066` | hero, intro statement, five services (title, summary, image), partner quote, estimator |
+| Service details `448:41873` | per service: hero, statement, who needs it, methodology rows, what you receive, why us, CTA cards, FAQs, partner quote, estimator |
+| Sectors `547:4555` | hero, statement, eight sectors (title, one-line description), client logos, featured sector band, case stories, estimator |
+| Articles `473:36031` | featured articles, category filters, paginated list, partner quote, estimator |
 | Article `506:2706` | category, title, author, date, reading time, cover, body, tags, related articles |
 | Careers `519:38941` | hero, perks, team section with stats and quote, photos, job list with filters, hiring steps |
 | Job details `514:3194` | job summary, responsibilities, requirements, benefits, application form, similar jobs |
@@ -60,7 +60,7 @@ reviewer** (receives leads and applications), **Administrator** (manages users a
 The UI team and the backend team use one agreed definition of every content item and form submission, so pages
 built from the design system can display API data without reshaping it ad hoc.
 
-**Why this priority**: Unblocks parallel work (UI by agy, backend by Claude) and prevents integration rework.
+**Why this priority**: Unblocks parallel work (UI and backend built by separate agy runs, reviewed by Claude) and prevents integration rework.
 
 **Independent Test**: Every view model in `specs/001-design-system/data-model.md` maps to a published contract
 or a documented mapper; contract validation tests accept the sample data used by the design system's stories.
@@ -167,7 +167,7 @@ publish → reorder → unpublish; a user without permission is refused.
 **Acceptance Scenarios**:
 
 1. **Given** an editor without permission for jobs, **When** they try to edit a job, **Then** the action is refused.
-2. **Given** a reviewer opens a contact request, **Then** they can change status (new → contacted → closed), add
+2. **Given** a reviewer opens a contact request, **Then** they can change status (new → contacted → qualified → closed, or spam), add
    internal notes, and see the consent record.
 3. **Given** a candidate's CV, **When** a reviewer downloads it, **Then** access is authenticated and logged.
 
@@ -218,9 +218,9 @@ migration drops the old tables on a copy of the current database without data lo
 - **FR-010**: Services (title, slug, summary, image, hero subtitle, statement, who-needs-it text, methodology rows,
   deliverables, why-us text, FAQs, related sectors, highlight stat, order, published).
 - **FR-011**: Sectors (title, slug, one-line description, optional featured band: title, body, image, CTA),
-  Case stories (title, sector, service, image, link to an article or external URL), Articles (existing News
-  extended with category, author, reading time, tags, related sector/service, featured flag, cover image, scheduled
-  publish), Article categories, Authors (name, role, avatar, bio).
+  Articles (existing News extended with category, author, reading time, tags, related sectors/services, featured
+  flag, cover image, scheduled publish), Article categories (one flagged "case stories" — case stories are Articles in
+  that category, per Q3), Authors (name, role, avatar, bio).
 - **FR-012**: When the requested language translation is missing, public responses MUST fall back to Arabic and flag
   the item as fallback; required fields in Arabic are mandatory to publish.
 - **FR-013**: Jobs (existing model extended with department, city/office, contract type, experience, posted and
@@ -238,8 +238,8 @@ migration drops the old tables on a copy of the current database without data lo
 
 **Public read API**
 
-- **FR-020**: Public endpoints MUST return each page's data by language with caching that keeps typical page data
-  responses under 300 ms at p95 and invalidates on publish.
+- **FR-020**: Public endpoints MUST return each page's data by language, meet SC-003, and invalidate cached pages on
+  publish.
 - **FR-021**: Lists MUST support pagination, category/department filters and featured items as in the designs.
 
 **Lead capture**
@@ -272,11 +272,12 @@ migration drops the old tables on a copy of the current database without data lo
 
 ### Key Entities
 
-Service, ServiceMethodologyStep, ServiceDeliverable, Sector, CaseStory, Article (News), ArticleCategory, Author,
-Tag, Job, JobDepartment, JobApplication, ContactRequest, ConsentRecord, Office, Testimonial, ClientLogo, Credential,
-FaqItem, Perk, HiringStep, ProcessStep, Stat, EstimatorConfig (questions, bands, rules), EstimateRequest (if
-stored), PageContent (per page blocks), SiteSettings (chrome, contact channels, socials, legal ids), LegalPage,
-NotificationRecipient (per service / per inbox). Each bilingual entity has Arabic and English text; Arabic is
+Stored as records: Service, Sector, Article (News), ArticleCategory (incl. "case stories"), Author, Job,
+JobDepartment, JobApplication, ContactRequest, ConsentRecord, Office, Testimonial, ClientLogo, Credential, FaqItem.
+Stored inside a parent record: methodology steps and deliverables (Service), tags (Article), responsibilities,
+requirements and benefits (Job). Stored as page/site content blocks: perks, hiring steps, process steps, stats,
+page texts (PageContent), site chrome and contact channels (SiteSettings), legal pages, estimator configuration
+(questions, bands, rules), notification recipients. Not stored: plain estimates (only anonymous counts). Each bilingual entity has Arabic and English text; Arabic is
 required to publish.
 
 ## Success Criteria *(mandatory)*

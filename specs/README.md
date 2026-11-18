@@ -21,6 +21,8 @@ Constitution: `.specify/memory/constitution.md` · Figma: file `1jzfujyx2OJ6EKDR
 - 001 and 002 run in parallel (separate worktrees and agy sessions).
 - 003 starts when 001 is merged and 002's contracts and public API are merged.
 - 004's non-code tracks (content entry, legal texts, DNS/email, analytics account) start now with the client.
+- 004 Batch A (staging/production infrastructure, T006–T011a) is a prerequisite for putting 003 on staging; run it
+  as soon as 002's API builds.
 
 ## Client inputs needed (owner: project manager)
 

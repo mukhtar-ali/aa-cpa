@@ -8,10 +8,12 @@ description: "Task list for 004-seo-compliance-launch (code/IaC by agy; client/P
 
 ## Phase 1: Setup & client inputs (start immediately, in parallel with 001–003)
 
-- [ ] T001 [CLIENT] Confirm domain `aacpa.sa` DNS access, hosting choice (VPS path A Coolify / B Docker+Actions), budget for backups bucket, uptime tool, optional CDN
+- [ ] T001 [CLIENT] Confirm domain `aacpa.sa` DNS access, VPS provisioning (staging + production; hosting decided: Docker + GitHub Actions), budget for backups bucket, uptime tool, optional CDN
 - [ ] T002 [CLIENT] Provide/approve analytics accounts (GA4 property, GTM container, Meta pixel if any) and Search Console access
 - [ ] T003 [CLIENT] Legal advisor drafts/approves privacy policy and terms (we supply drafts from Figma copy); confirm policy version `1.0`
-- [ ] T004 [CLIENT] Inventory of previous website URLs (if any) for redirects; transactional email provider choice and sender addresses
+- [ ] T004 [CLIENT] Give access to the existing website, its Search Console/analytics, and current DNS zone export (incl. MX/SPF/DKIM); choose transactional email provider and sender addresses
+- [ ] T004a Legacy URL inventory per research R4b: crawl script `tests/legacy/crawl.sh`, merge sources, mapping `docs/launch/legacy-redirects.csv` for client review
+- [ ] T004b Playwright `e2e/specs/seo/legacy-redirects.spec.ts` reading the CSV: every legacy URL → 308 → 200 on staging and production
 - [ ] T005 [CLIENT] Licensed photos, team portraits, client-logo permissions, credential logos; staff list with roles
 
 ## Phase 2: User Story 4 — Infrastructure (P1) (needed for staging of 003)
@@ -19,9 +21,10 @@ description: "Task list for 004-seo-compliance-launch (code/IaC by agy; client/P
 - [ ] T006 Create `deploy/vps/docker-compose.prod.yml` (web, api, admin, mysql, reverse proxy with auto TLS) for `staging` and `prod` stacks; env templates `deploy/vps/env.{staging,prod}.example`
 - [ ] T007 Extend `.github/workflows/deploy-vps.yml` with GitHub environments `staging` (auto on main) and `production` (manual approval), SHA tags, health-check gate, rollback job
 - [ ] T008 [P] Backups: `deploy/vps/backup/restic-backup.sh` (mysqldump + uploads, encrypted, off-site, retention) + systemd timer/cron + `deploy/vps/backup/restore.md`
-- [ ] T009 [P] Monitoring: configure uptime checks/alerts (documented in `docs/launch/monitoring.md`); API alert hook for failed outbox > 0 for 30 min and disk > 80 %
+- [ ] T009 [P] Monitoring: uptime checks for web, admin, API `/api/health` and web `/api/health` (documented in `docs/launch/monitoring.md`); alerts for error-rate spikes, failed outbox > 0 for 30 min, disk > 80 %, TLS certificate < 14 days
 - [ ] T010 [P] Email authentication runbook `docs/launch/email-dns.md` (SPF/DKIM/DMARC records for chosen provider) and configure staging sender
 - [ ] T011 Restore drill on a fresh VPS; record timing in `specs/004-seo-compliance-launch/reviews/restore-drill.md`
+- [ ] T011a Rollback drill on staging (deploy a deliberately broken build, roll back by SHA tag) in < 15 min; record in `reviews/rollback-drill.md`
 
 ## Phase 3: User Story 1 — SEO (P1)
 
@@ -29,7 +32,7 @@ description: "Task list for 004-seo-compliance-launch (code/IaC by agy; client/P
 - [ ] T013 [US1] Extend `buildMetadata` (OG/Twitter images, `noindex` outside production, alternates) and wire JSON-LD into all 12 pages
 - [ ] T014 [P] [US1] API OG renderer `apps/api/src/og/` (sharp + Pango SVG brand template, AR/EN, cache by hash) with tests; shared endpoint + schema in `packages/shared`
 - [ ] T015 [US1] Complete `apps/web/app/sitemap.ts` (both languages, alternates, lastModified) and `robots.ts` per env
-- [ ] T016 [P] [US1] Backend redirect manager: `Redirect` model + migration, admin CRUD + CSV import, `GET /api/redirects/map` (API/admin run) with tests
+- [ ] T016 [P] [US1] Backend redirect manager: `Redirect` model + migration (migrate 002 `SlugRedirect` rows, switch slug-change writes, drop `SlugRedirect`), admin CRUD + CSV import (loop/chain checks), `GET /api/redirects/map` (API/admin run) with unit + e2e tests
 - [ ] T017 [US1] Web redirect handling in `apps/web/proxy.ts` using cached map, with tests
 - [ ] T018 [US1] Admin SEO fields: per-page and per-item OG image + preview of search snippet (`apps/admin/src/features/settings/seo`, entity forms)
 - [ ] T019 [US1] Playwright `e2e/specs/seo/seo.spec.ts` (meta, canonical, hreflang, JSON-LD parse, robots per env); manual Rich Results validation log in `reviews/seo-validation.md`
@@ -39,12 +42,12 @@ description: "Task list for 004-seo-compliance-launch (code/IaC by agy; client/P
 - [ ] T020 [US2] DS components `ConsentBanner`, `ConsentPreferences` + `use-consent.ts` with stories/tests (001 conventions); client review
 - [ ] T021 [US2] Web integration: Consent Mode v2 defaults inline before GTM, gated loading of GTM/GA4/pixel by category, footer "cookie settings" link, consent version from `seo-global`
 - [ ] T022 [US3] `apps/web/src/lib/analytics.ts` dataLayer bridge (consent-aware) and GTM container export documented in `docs/launch/analytics.md` (events, conversions)
-- [ ] T023 [US3] Admin dashboard: leads by source/service/page and estimator completions with period filter (API + admin)
+- [ ] T023 [US3] Admin dashboard: leads by source/service/page and estimator completions with period filter (API + admin), with e2e `apps/api/test/lead-stats.e2e-spec.ts` (permission, date validation, aggregates)
 - [ ] T024 [US2] Playwright `e2e/specs/consent/consent.spec.ts` (no third-party requests before consent; category gating; withdrawal; version bump)
 
 ## Phase 5: Security & performance
 
-- [ ] T025 [P] CSP nonce + security headers in `apps/web/proxy.ts`/`next.config.ts`, report-only on staging first; tests for header presence
+- [ ] T025 [P] CSP nonce + security headers in `apps/web/proxy.ts`/`next.config.ts`, report-only on staging first; `Cache-Control: immutable` for hashed static assets and AVIF/WebP image output (FR-034); tests for header presence
 - [ ] T026 [P] CI: `pnpm audit --prod --audit-level high`, Trivy image scan, Lighthouse CI on staging, ZAP baseline workflow `.github/workflows/zap-baseline.yml`
 - [ ] T027 Manual security review checklist `docs/launch/security-review.md` (forms, uploads, auth, RBAC/IDOR, CSV injection, rate limits); fix or record client acceptance
 - [ ] T028 [P] k6 scripts `tests/load/k6-{home,service,article,contact}.js`; run on staging; record in `reviews/load-test.md`; tune caching/CDN
@@ -80,4 +83,5 @@ description: "Task list for 004-seo-compliance-launch (code/IaC by agy; client/P
 
 ## Delegation batches (agy)
 
-Batch A: T006–T011 · Batch B: T012–T019 · Batch C: T020–T028 · Batch D: T029, T032–T034, T036–T037.
+Batch A: T006–T011 · Batch B: T004a, T004b, T012–T019 · Batch C: T020–T028 · Batch D: T029, T032–T034, T036–T037.
+Backend-area tasks (run in the backend worktree): T014, T016, T018, T023 (API/admin parts), T029.

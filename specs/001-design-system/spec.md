@@ -132,7 +132,7 @@ A developer builds any of the twelve approved page templates entirely from libra
 section heading, statement text, stats, feature/pillar cards, service tabs, service cards, process steps,
 timeline stepper, methodology rows, logo marquee and credential grid, photo-quote CTA band, CTA cards, FAQ
 accordion, news cards and featured news, article body, table of contents, author card, share box, job rows and
-job summary, perk tiles, office cards, contact items, map with pins, sector cards/tabs/detail panel/index rows,
+job summary, perk tiles, office cards, contact items, map with pins, sector index rows,
 case story cards, testimonial, fee estimator, legal document layout, floating WhatsApp button.
 
 **Why this priority**: These sections make the pages; they depend on Stories 1–3.
@@ -276,8 +276,8 @@ props, variants, states, do/don't notes and AR/EN toggle.
   news block, article body typography (headings, paragraphs, lists, pull quote, figure with caption, tags),
   table of contents with active state, author card, share box with copy link, job row, job summary card
   (dark), perk tile, office card with map link, contact item (phone, email, WhatsApp, hours), static map with
-  location pins, sector card grid (with one highlighted state), sector tabs with sector detail panel, sector
-  index rows, case story card, testimonial, legal document layout (contents, summary box, numbered sections,
+  location pins, sector
+  index rows (approved Sectors `547:4555`), case story card, testimonial, legal document layout (contents, summary box, numbered sections,
   "have a question" card with document download), floating WhatsApp button. Sector components MUST cover
   the approved Sectors design `547:4555` ("Sectors · القطاعات"): sector index rows, the sector photo-quote
   band and case story cards. The "Redesign" frame `552:4605` is NOT approved; its sector card grid, sector
@@ -314,7 +314,7 @@ props, variants, states, do/don't notes and AR/EN toggle.
 - **Office**: city, address, map link, optional photo.
 - **Contact channel**: type (phone, email, WhatsApp, hours), label, value, link.
 - **Service summary**: title, short description, image, link, optional stat.
-- **Sector summary**: icon, number, title, description, tags, challenges, offerings, image, links.
+- **Sector summary**: title, one-line description, link (approved `547:4555`).
 - **Stat**: value, label, optional suffix/prefix.
 - **Article summary**: title, category, date, image, reading time, link, author.
 - **Job summary**: title, department, city, contract type, experience, posted/closing dates, link.
@@ -365,7 +365,6 @@ props, variants, states, do/don't notes and AR/EN toggle.
 
 - **In scope**: tokens, primitives, forms, layout/chrome, content sections, workbench documentation, tests,
   reference homepage with mock content.
-- **Out of scope** (later features): removing the real-estate domain and the new CPA data model and API (002),
-  building and routing the twelve real pages with live CMS data, SEO and analytics (003), admin CMS screens
-  (004).
+- **Out of scope** (later features): removing the real-estate domain, the new CPA data model, API and admin CMS
+  screens (002); building and routing the twelve real pages with live CMS data (003); SEO, analytics and launch (004).
 - **Depends on**: approved Figma "Page 1"; client review of the team-designed mobile navigation (FR-031).

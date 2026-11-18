@@ -33,8 +33,19 @@ real website a visitor uses. Approved designs: Figma file `1jzfujyx2OJ6EKDRD2X6X
 | Contact | `524:3651` | `/{lang}/contact` (`?service=`) | `/api/pages/contact` |
 | Privacy policy | `525:3854` | `/{lang}/privacy` | `/api/pages/legal/privacy` |
 | Terms & conditions | `525:4136` | `/{lang}/terms` | `/api/pages/legal/terms` |
+| Accessibility statement | no frame — reuses the legal layout `525:3854` (design decision, client review) | `/{lang}/accessibility` | `/api/pages/legal/accessibility` |
 
 Site chrome on every page comes from `/api/site/chrome`.
+
+## Clarifications
+
+### Session 2026-11-18
+
+- Q: Keep the starter's GSAP preloader and page-transition animation (not in Figma)? → A: Remove them. Only light,
+  reduced-motion-aware entrance effects from the design system remain.
+- Q: Locales? → A: Arabic default + English at launch (constitution III).
+- Q: Sector and case-story destinations? → A: Case stories are articles in a "case stories" category; sector links go
+  to articles filtered by sector (002 Q3).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -114,7 +125,8 @@ A candidate filters jobs by department, opens a job, reads the summary, and appl
 
 1. **Given** a job page, **When** the candidate clicks "Apply now", **Then** the page scrolls to the application form and
    focuses its first field.
-2. **Given** an upload in progress, **Then** progress is visible and the submit button is disabled until it ends.
+2. **Given** an upload in progress with JavaScript available, **Then** progress is visible and the submit button is
+   disabled until it ends (without JavaScript the form still submits normally, without a progress bar).
 3. **Given** a closed job, **Then** the form is replaced by a closed notice and links to other open jobs.
 
 ---
@@ -186,8 +198,8 @@ that might have been shared return proper not-found pages.
 - **FR-005**: Forms (contact, job application, estimator quote) MUST validate on the client with the shared rules, show
   server errors per field, work without JavaScript, protect against double submission, and include the anti-spam fields
   required by 002.
-- **FR-006**: The estimator section MUST appear only when the estimator is approved; otherwise a contact call to action
-  takes its place.
+- **FR-006**: The estimator section appears on Home, About, Services, Service details, Sectors and Articles (as in
+  Figma) and only when the estimator is approved; otherwise a contact call to action takes its place.
 - **FR-007**: Pages MUST show updates within 60 s of publishing (on-demand revalidation from 002) and serve cached
   pages when the API is slow or down.
 - **FR-008**: Draft preview MUST be supported via time-limited links, with a visible preview banner, no indexing and no
@@ -195,8 +207,7 @@ that might have been shared return proper not-found pages.
 - **FR-009**: Designed states MUST exist for 404, 500/maintenance, empty lists, form success, closed job, and estimator
   unavailable; Figma does not include them, so they follow the 001 visual language and are reviewed by the client.
 - **FR-010**: The starter's real-estate pages, components, hero slider, and any unused starter visuals MUST be removed;
-  the starter preloader and page-transition animations MUST be removed unless the client approves them (they are not in
-  Figma).
+  the starter preloader and page-transition animations (GSAP) MUST be removed (decided 2026-11-18).
 - **FR-011**: Each page MUST expose the data needed by feature 004 (titles, descriptions, images, breadcrumbs, dates)
   through a single page-metadata function so SEO can be completed without page rewrites.
 - **FR-012**: Tracking (page views, form submissions, estimator completion, outbound phone/WhatsApp/email clicks) MUST be

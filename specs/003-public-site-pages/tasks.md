@@ -17,17 +17,17 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 
 - [ ] T001 Create worktree branch `003-public-site-pages` from `main`; `pnpm install`; confirm 001 and 002 contracts present
 - [ ] T002 Add Vitest to `WEB` (`WEB/vitest.config.ts`, `"test"` script) and Playwright project `web` in `playwright.config.ts`
-- [ ] T003 [P] Add Lighthouse CI config `lighthouserc.json` (templates: home, service, article, careers, contact; budgets from SC-002) and CI step in `.github/workflows/ci.yml` (shared-file commit)
+- [ ] T003 [P] Add Lighthouse CI config `lighthouserc.json` (every template: home, about, services, service detail, sectors, articles, article, careers, job, contact, privacy/terms/accessibility, 404 — both languages for home; budgets from SC-002) and CI step in `.github/workflows/ci.yml` (shared-file commit)
 - [ ] T004 [P] Update `WEB/next.config.ts`: `serverActions.bodySizeLimit: '6mb'`, `/:lang/news/:path*` → `/:lang/articles/:path*` permanent, image remote patterns from env
 
 ## Phase 2: Foundational
 
 - [ ] T005 Write tests then implement `WEB/src/lib/api/client.ts` (`apiGet`/`apiPost`, timeout, tags, preview header, schema parse, typed errors) and `endpoints.ts`
-- [ ] T006 [P] Write tests then implement `WEB/src/mappers/image.ts` (`ImageField` → `ImageRef`) and `WEB/src/mappers/chrome.ts` (`SiteChromeWeb` → header/footer props incl. locale switch)
+- [ ] T006 [P] Write tests then implement `WEB/src/mappers/image.ts` (`ImageField` → `ImageRef`; development-build console warning for non-decorative images missing alt text — FR-014) and `WEB/src/mappers/chrome.ts` (`SiteChromeWeb` → header/footer props incl. locale switch)
 - [ ] T007 [P] Implement chrome-label dictionaries `WEB/dictionaries/{ar,en}.json` + typed loader `WEB/src/lib/i18n/dictionaries.ts` (labels only: menu, close, read more, form labels/errors fallback, empty states)
 - [ ] T008 Update `WEB/proxy.ts` per research R5 (cookie → Accept-Language → `ar`; maintenance mode) with unit tests
 - [ ] T009 [P] Add DS sections `ErrorState`, `EmptyState`, `PreviewBanner`, `FormSuccess`, `SkipLink` in `DS/src/sections/` with stories + tests (001 conventions)
-- [ ] T010 Rewrite `WEB/app/[lang]/layout.tsx`: html lang/dir, fonts, skip link, Header/Footer/MobileNav/WhatsAppFloat from `/api/site/chrome`, PreviewBanner when draft mode, focus reset on navigation
+- [ ] T010 Rewrite `WEB/app/[lang]/layout.tsx`: html lang/dir, fonts, skip link, Header/Footer/MobileNav/WhatsAppFloat from `/api/site/chrome` (WhatsApp button hidden below md while a form field has focus — FR-004), PreviewBanner when draft mode, focus reset on navigation
 - [ ] T011 [P] Implement `WEB/src/lib/seo/page-metadata.ts` (`buildMetadata`) with tests (canonical, alternates ar/en/x-default=ar, OG basics)
 - [ ] T012 [P] Implement `WEB/src/lib/analytics.ts` typed `track()` forwarding to the monitoring endpoint, with tests
 - [ ] T013 Implement `WEB/app/[lang]/not-found.tsx`, `error.tsx`, `WEB/app/global-error.tsx` using DS `ErrorState`
@@ -44,16 +44,16 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 - [ ] T018 [P] [US1] Mapper + tests `about.ts`; page `WEB/app/[lang]/about/page.tsx` (Figma `445:36452`)
 - [ ] T019 [P] [US1] Mapper + tests `services.ts`; pages `services/page.tsx` (`448:41066`) and `services/[slug]/page.tsx` (`448:41873`) with `generateStaticParams`, redirect on moved slug, contact CTA with `?service=`
 - [ ] T020 [P] [US1] Mapper + tests `sectors.ts`; page `sectors/page.tsx` (`547:4555`), sector links → `/articles?sector=`
-- [ ] T021 [P] [US1] Mapper + tests `legal.ts`; pages `privacy/page.tsx` (`525:3854`), `terms/page.tsx` (`525:4136`)
+- [ ] T021 [P] [US1] Mapper + tests `legal.ts`; pages `privacy/page.tsx` (`525:3854`), `terms/page.tsx` (`525:4136`), `accessibility/page.tsx` (legal layout, content from 004)
 - [ ] T022 [US1] Mapper + tests `contact.ts`; page `contact/page.tsx` (`524:3651`) content parts (channels, offices map, FAQ) — form wired in US2
 - [ ] T023 [US1] Playwright `e2e/specs/web/navigation.spec.ts`: all pages × 2 langs render, nav/footer links resolve, language switch keeps page, fallback Arabic block has `dir="rtl"`
 - [ ] T024 [US1] Parity review per page at 1512/360/768/1024; record in `specs/003-public-site-pages/reviews/parity.md`
 
 ## Phase 5: User Story 2 — Contact (P1)
 
-- [ ] T025 [US2] Write tests then implement Server Action `WEB/src/actions/contact.ts` (FormData → `ContactRequestSchema`, forward IP, map field errors, track `lead_submitted`)
+- [ ] T025 [US2] Write tests then implement Server Action `WEB/src/actions/contact.ts` (FormData → `ContactRequestSchema` incl. `landingPath`, forward IP and `Accept-Language`, map 422/429 errors, track `lead_submitted`) per `contracts/web-endpoints.md`
 - [ ] T026 [US2] Wire `ContactFormLayout` + DS form fields on `contact/page.tsx` with `useActionState`, error summary focus, `FormSuccess`, honeypot/startedAt, Turnstile when enabled, `?service=` preselect
-- [ ] T027 [US2] Playwright `e2e/specs/web/contact.spec.ts` (valid, invalid, no-JS via `javaScriptEnabled: false`, double submit, keyboard only, axe)
+- [ ] T027 [US2] Playwright `e2e/specs/web/contact.spec.ts` (valid, invalid, no-JS via `javaScriptEnabled: false`, double submit, keyboard only, axe, consent checkbox links to `/{lang}/privacy`, WhatsApp float hidden while typing on mobile)
 
 ## Phase 6: User Story 5 — Articles & case stories (P2)
 
@@ -71,21 +71,25 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 ## Phase 8: User Story 3 — Estimator & quote (P2)
 
 - [ ] T035 [US3] Tests then `WEB/src/mappers/estimator.ts` and Server Actions `WEB/src/actions/estimator.ts` (`estimate`, `requestQuote`)
-- [ ] T036 [US3] Client glue `WEB/src/components/EstimatorClient.tsx` binding DS `Estimator` to the actions; `EstimatorSection` on home/about/services/sectors/articles; fallback CTA when estimator not approved
+- [ ] T036 [US3] Client glue `WEB/src/components/EstimatorClient.tsx` binding DS `Estimator` to the actions; `EstimatorSection` on home, about, services, service detail, sectors, articles (Figma Page 1); fallback CTA when estimator not approved
 - [ ] T037 [US3] Playwright `e2e/specs/web/estimator.spec.ts` (approved flow + quote lead; not-approved fallback)
 
 ## Phase 9: User Story 6 — Freshness & preview (P2)
 
 - [ ] T038 [US6] Tests then `WEB/app/api/revalidate/route.ts` (secret, tags validation)
 - [ ] T039 [US6] `WEB/app/api/preview/route.ts` and `exit/route.ts` (draft mode, token verify, safe redirect path), `noindex` in draft mode
+- [ ] T039a [US6] `WEB/app/api/health/route.ts` (`{ status, version }` from build SHA) with test — used by 004 uptime checks
+- [ ] T040a [US6] Resilience test `e2e/specs/web/api-down.spec.ts`: warm the cache, stop the API, cached pages still render; an uncached page shows the branded error with contact details
 - [ ] T040 [US6] Playwright `e2e/specs/web/freshness-preview.spec.ts` (publish → visible < 60 s; preview draft; expired token)
 
 ## Phase 10: Polish
 
 - [ ] T041 Lighthouse CI passing budgets on all templates; fix regressions; record in `reviews/performance.md`
 - [ ] T042 [P] Grep guard test `WEB/src/__guards__/no-hardcoded-copy.test.ts` (no Arabic/Latin sentence literals in `app/**` JSX outside dictionaries)
+- [ ] T042a [P] Guard tests `WEB/src/__guards__/no-raw-values.test.ts` and `no-physical-direction.test.ts` over `WEB/app/**` and `WEB/src/**` (same rules as 001 T017/T018 — constitution II/III)
+- [ ] T042b [P] Measure styles written outside the library (001 SC-007): count non-layout utility classes in `WEB/app/**`; target < 5%; record in `reviews/style-audit.md`
 - [ ] T043 [P] Full axe sweep `e2e/specs/web/a11y.spec.ts` on all pages × 2 langs
-- [ ] T044 Update `docs/STATUS.md` web section; batch report `specs/003-public-site-pages/reviews/final-report.md`; run quickstart P1–P6; open PR
+- [ ] T044 Collect client sign-off on designed states (404, 500/maintenance, empty, form success, closed job, preview banner, accessibility page) in `reviews/designed-states.md`; update `docs/STATUS.md` web section; batch report `specs/003-public-site-pages/reviews/final-report.md`; run quickstart P1–P6; open PR
 
 ## Dependencies
 

@@ -119,9 +119,9 @@ returns `width`/`height` from sharp metadata so admin forms fill them automatica
 | `service-shared` | `ServiceSharedSectionSchema` | CTA cards (expert, faq) texts/actions, "not sure" title, FAQ title |
 | `page-sectors` | `SectorsPageSectionSchema` | hero, statement, index title + description, case stories eyebrow/title/action |
 | `page-articles` | `ArticlesPageSectionSchema` | hero, featured title, list eyebrow/title |
-| `page-careers` | `CareersPageSectionSchema` | hero, perks (eyebrow, title, items[4] `{icon,title,body}`), team (eyebrow, title, accent, body, image, quote `{text,name,role,avatar}`, stats[3], photos[4]), jobs eyebrow/title, hiring steps (eyebrow, title, steps[4]), application (eyebrow, title, description), job sidebar question card |
-| `page-contact` | `ContactPageSectionSchema` | hero, intro (eyebrow, title, body), form (title, subtitle), offices (eyebrow, title, map image), FAQ (eyebrow, title) |
-| `legal-privacy`, `legal-terms` | `LegalPageSectionSchema` | `version`, `updatedAt`, hero, summary `ML[]`, sections `[{ id; title: ML; body: ML(html) }]`, pdfUrl `ML?`, question card |
+| `page-careers` | `CareersPageSectionSchema` | hero, perks (eyebrow, title, items[4] `{icon,title,body}`), team (eyebrow, title, accent, body, image, quote `{text,name,role,avatar}`, stats[3], photos[4]), jobs eyebrow/title, hiring steps (eyebrow, title, steps[4]), application (eyebrow, title, description, successTitle, successBody, closedTitle, closedBody), job sidebar question card |
+| `page-contact` | `ContactPageSectionSchema` | hero, intro (eyebrow, title, body), form (title, subtitle, successTitle, successBody — e.g. reply within one working day), offices (eyebrow, title, map image), FAQ (eyebrow, title) |
+| `legal-privacy`, `legal-terms`, `legal-accessibility` | `LegalPageSectionSchema` | `version`, `updatedAt`, hero, summary `ML[]`, sections `[{ id; title: ML; body: ML(html) }]`, pdfUrl `ML?`, question card |
 | `estimator-config` | `EstimatorConfigSchema` | `status`, questions, pricing (bases, factors), rounding, spread, disclaimer, labels |
 | `notification-settings` | `NotificationSettingsSchema` | `defaultInbox`, per-service recipients `{ serviceId: string[] }`, careers inbox, `retentionMonths` |
 | `spam-settings` | `SpamSettingsSchema` | `turnstileEnabled`, `turnstileSiteKey`, `minFillSeconds` |
@@ -144,6 +144,7 @@ Every page section also has its per-page SEO in the existing `Seo` table (page k
 | estimatorAnswers | JSON? | |
 | estimatedRange | JSON? | `{ min, max, currency }` |
 | language | Language | submission language (reply language) |
+| landingPath | String(500)? | page the form was submitted from (sent by the 003 Server Action; used by 004 dashboard) |
 | status | enum(new, contacted, qualified, closed, spam) | replaces free string |
 | assignedToId | String? FK → User | |
 | notes | JSON | `[{ authorId, body, at }]` |
@@ -174,6 +175,7 @@ Added: `services.{view,create,update,delete}`, `sectors.{view,create,update,dele
 `site_content.{view,update}` (sections, offices, testimonials, logos, credentials, FAQs),
 `leads.{view,update,export,erase}` (contact requests + quotes), `applications.{view,update,export,erase}`,
 `estimator.update`, `settings.notifications`. Removed: projects.*, media.*, group_locations.
+Added later by 004: `seo.{view,update}` (redirect manager, SEO fields) — see `specs/004-seo-compliance-launch/contracts/api-additions.md`.
 
 ## Validation rules (shared schemas)
 
