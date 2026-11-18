@@ -1,5 +1,5 @@
 ---
-description: "Task list for 002-cpa-content-backend (executed by Claude)"
+description: "Task list for 002-cpa-content-backend (executed by agy; reviewed by Claude)"
 ---
 
 # Tasks: CPA Content & Lead Backend

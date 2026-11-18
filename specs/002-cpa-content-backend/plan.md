@@ -4,7 +4,9 @@
 
 **Input**: Feature specification from `specs/002-cpa-content-backend/spec.md`
 
-**Implementer**: Claude (owner of `packages/shared`, `apps/api`, `apps/admin`). UI consumers are built by agy (001, 003).
+**Implementer**: agy, in its own worktree on branch `002-cpa-content-backend`, separate from the 001 run. It edits
+`packages/shared`, `apps/api` and `apps/admin` only. **Planner/reviewer**: Claude (does not write code). The UI runs
+(001, 003) never edit these areas.
 
 ## Summary
 
@@ -138,7 +140,8 @@ listed above. No changes to `apps/web` or `packages/design-system` (agy) in this
 ## Coordination with agy
 
 - Contracts (US1) merge to `main` early as their own PR so agy's 001 types can align before 001 ends.
-- 001 fixtures are copied into `packages/shared/test/fixtures/` by Claude; agy notifies on fixture shape changes.
+- 001 fixtures are copied into `packages/shared/test/fixtures/` by the 002 run; the 001 run notes fixture shape changes
+  in its batch reports; Claude reconciles both during review.
 - 003 (pages wired to API) starts after US2 is merged.
 
 ## Complexity Tracking

@@ -67,7 +67,7 @@ Post-design re-check (after Phase 1): PASS — no new violations introduced by d
 | `packages/design-system/**` | agy | created by this feature |
 | `apps/web/**` | agy | only the changes listed under "apps/web changes" in this feature |
 | `e2e/specs/design-system/**`, `e2e/visual/**` | agy | |
-| `packages/shared/**`, `apps/api/**`, `apps/admin/**` | Claude | agy MUST NOT edit; request changes via the PR description |
+| `packages/shared/**`, `apps/api/**`, `apps/admin/**` | 002 run (separate agy session/worktree) | the 001 run MUST NOT edit; request changes via the PR description |
 | root `package.json`, `turbo.json`, `pnpm-lock.yaml`, `.github/workflows/**` | shared | changes in their own commit, called out in the PR |
 
 Branch: agy works on `001-design-system` (created) and opens a PR to `main`. Review gates: quickstart V1–V7.
