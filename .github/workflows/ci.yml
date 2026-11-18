@@ -1,0 +1,216 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      run_e2e:
+        description: Also run the Playwright e2e suite (needs MySQL; best-effort)
+        type: boolean
+        default: false
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Dummy values so builds that read public env vars don't fail.
+  NEXT_PUBLIC_API_URL: http://localhost:3001
+  NEXT_PUBLIC_SITE_URL: http://localhost:3000
+  VITE_API_URL: http://localhost:3001
+  DATABASE_URL: mysql://root:password@localhost:3306/nest_next_starter
+
+jobs:
+  verify:
+    name: Install, build, types, lint, unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      # pnpm version comes from "packageManager" in package.json.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build (shared, ui, api, admin, web)
+        run: pnpm build
+
+      - name: Type-check
+        run: pnpm check-types
+
+      # The api "lint" script uses --fix, which would silently rewrite files in CI,
+      # so lint it explicitly without --fix. Everything else uses its own script.
+      - name: Lint (packages and apps except api)
+        run: pnpm --filter "!@repo/api" --filter "!nest-next-starter" lint
+
+      - name: Lint (api, no --fix)
+        run: pnpm --filter @repo/api exec eslint "{src,apps,libs,test}/**/*.ts"
+
+      - name: API unit tests
+        run: pnpm --filter @repo/api test -- --passWithNoTests
+
+  # Applies scripts/strip-domain (the generic "core starter" preset, MUK-474) to a fresh checkout and
+  # proves the result still installs, builds, type-checks and passes the API tests.
+  starter-core:
+    name: Core starter preset (strip-domain)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Apply the preset
+        run: node scripts/strip-domain/strip-domain.mjs --apply
+      - run: pnpm --filter @repo/api db:generate
+      - run: pnpm build
+      - run: pnpm check-types
+      - run: pnpm --filter @repo/api test -- --passWithNoTests
+
+  # Builds the three production images through docker-compose and smoke-tests the
+  # stack. GitHub runners ship with Docker, so this verifies the Dockerfiles without
+  # needing Docker on a developer machine.
+  docker:
+    name: Docker images and compose smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      # Throwaway values for this run only; nothing here is a real secret.
+      SUPER_ADMIN_PASSWORD: Ci-${{ github.run_id }}-Aa1!x
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare .env from the deploy template
+        # Production mode refuses placeholder secrets, so generate random ones for this run.
+        run: |
+          cp docs/deploy/env.example .env
+          sed -i "s|^JWT_SECRET=.*|JWT_SECRET=$(openssl rand -hex 32)|; s|^CSRF_SECRET=.*|CSRF_SECRET=$(openssl rand -hex 32)|" .env
+
+      - name: Validate compose file
+        run: docker compose config --quiet
+
+      - name: Build images (api, admin, web)
+        run: docker compose build
+
+      - name: Start the stack and wait for health
+        run: docker compose up -d --wait --wait-timeout 300
+
+      - name: Smoke test endpoints
+        run: |
+          curl -fsS -o /dev/null -w "api health: %{http_code}\n" http://localhost:3001/api/health
+          curl -fsS -o /dev/null -w "admin: %{http_code}\n" http://localhost:3002/
+          curl -fsSL -o /dev/null -w "web: %{http_code}\n" http://localhost:3000/
+
+      - name: Security regression checks
+        run: |
+          # Swagger must be off in production unless SWAGGER_ENABLED=true.
+          code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3001/api/swagger)
+          test "$code" = "404" || { echo "Swagger reachable in production (HTTP $code)"; exit 1; }
+          # Admin nginx must send the security headers.
+          headers=$(curl -sI http://localhost:3002/)
+          for h in "x-content-type-options: nosniff" "x-frame-options: DENY" "referrer-policy:"; do
+            echo "$headers" | grep -qi "$h" || { echo "Missing header: $h"; exit 1; }
+          done
+          # The public web container must not receive the API's secrets.
+          if docker compose exec -T web printenv JWT_SECRET >/dev/null 2>&1; then
+            echo "JWT_SECRET leaked into the web container"; exit 1
+          fi
+
+      - name: Seed the super admin (throwaway password)
+        run: |
+          docker compose run --rm \
+            -e SUPER_ADMIN_EMAIL=admin@example.com \
+            -e SUPER_ADMIN_USERNAME=super_admin \
+            -e SUPER_ADMIN_FULL_NAME="Super Admin" \
+            -e SUPER_ADMIN_PASSWORD="$SUPER_ADMIN_PASSWORD" \
+            api pnpm seed
+
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs --no-color --tail=200
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
+
+  e2e:
+    name: Playwright e2e (manual)
+    if: github.event_name == 'workflow_dispatch' && inputs.run_e2e
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: nest_next_starter
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -ppassword"
+          --health-interval=10s --health-timeout=5s --health-retries=10
+    env:
+      APP_PORT: 3001
+      # e2e logs in many times; the API defaults to 10 auth attempts per 15 min.
+      AUTH_THROTTLE_LIMIT: 500
+      JWT_SECRET: ci-only-not-a-secret-${{ github.run_id }}
+      ADMIN_PORTAL_URL: http://localhost:3002
+      FRONTEND_URL: http://localhost:3000
+      SUPER_ADMIN_EMAIL: admin@example.com
+      SUPER_ADMIN_USERNAME: super_admin
+      SUPER_ADMIN_FULL_NAME: Super Admin
+      # Throwaway CI password generated per run; never reused anywhere else.
+      SUPER_ADMIN_PASSWORD: Ci-${{ github.run_id }}-Aa1!x
+      E2E_ADMIN_EMAIL: admin@example.com
+      E2E_ADMIN_PASSWORD: Ci-${{ github.run_id }}-Aa1!x
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Migrate and seed
+        run: |
+          pnpm --filter @repo/api db:deploy
+          pnpm --filter @repo/api seed
+      - name: Start apps
+        run: |
+          pnpm --filter @repo/api start:prod > api.log 2>&1 &
+          pnpm --filter @repo/admin preview --port 3002 --host > admin.log 2>&1 &
+          pnpm --filter @repo/web start > web.log 2>&1 &
+          npx --yes wait-on http://localhost:3001/api/health http://localhost:3002 http://localhost:3000 --timeout 120000
+      - name: Install Chrome for Playwright
+        run: npx playwright install --with-deps chrome
+      - name: Run e2e
+        run: pnpm test:e2e
+      - name: Upload reports and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-artifacts
+          path: |
+            playwright-report
+            e2e/test-results
+            api.log
+            admin.log
+            web.log
+          if-no-files-found: ignore

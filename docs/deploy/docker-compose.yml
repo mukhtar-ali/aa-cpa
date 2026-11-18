@@ -1,0 +1,104 @@
+# Copy this file to the repository root as `docker-compose.yml`:
+#   cp docs/deploy/docker-compose.yml docker-compose.yml
+#   cp docs/deploy/env.example .env
+
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-CHANGE_ME_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-nest_next_starter}
+      MYSQL_USER: ${MYSQL_USER:-app_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-CHANGE_ME_DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "--password=$${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      APP_PORT: 3001
+      # Least privilege: the app uses the MYSQL_USER account (full rights on MYSQL_DATABASE only,
+      # enough for `prisma migrate deploy`), not root. MYSQL_USER/MYSQL_PASSWORD must be URL-safe
+      # (letters, digits, - _ . ~) or percent-encoded, because they are embedded in this URL.
+      # Required in production: the API refuses to start without them. Listed here (not only in .env) so that
+      # Coolify shows them in the Environment Variables tab as required fields, and `docker compose` stops with
+      # a clear message instead of the container crashing at boot.
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET to at least 32 random characters (openssl rand -hex 32)}
+      ADMIN_PORTAL_URL: ${ADMIN_PORTAL_URL:?Set ADMIN_PORTAL_URL to the admin site origin, e.g. https://admin.example.com}
+      FRONTEND_URL: ${FRONTEND_URL:?Set FRONTEND_URL to the public site origin, e.g. https://www.example.com}
+      # Number of reverse-proxy hops (1 behind Coolify/Traefik). Empty = not behind a proxy.
+      TRUST_PROXY: ${TRUST_PROXY:-}
+      # The Swagger UI (/api/swagger) is OFF in production. Set to true to turn it on (it lists every endpoint to the public).
+      SWAGGER_ENABLED: ${SWAGGER_ENABLED:-}
+      # Public URL of this API. File links stored when uploads go to local disk (no S3 settings) are built from it,
+      # so with local storage the API refuses to start in production until it is set.
+      API_PUBLIC_URL: ${API_PUBLIC_URL:-}
+      DATABASE_URL: mysql://${MYSQL_USER:-app_user}:${MYSQL_PASSWORD:-CHANGE_ME_DB_PASSWORD}@mysql:3306/${MYSQL_DATABASE:-nest_next_starter}
+    expose:
+      - "3001"
+    volumes:
+      # Uploaded files when STORAGE_DRIVER=local (the default without S3). Back this volume up.
+      - api_uploads:/app/apps/api/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:3001/api/health >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3001}
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    expose:
+      - "80"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+        NEXT_PUBLIC_FB_PIXEL_ID: ${NEXT_PUBLIC_FB_PIXEL_ID:-}
+        BASE_URL: ${BASE_URL:-http://localhost:3001}
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    # No env_file here on purpose: the public web container must not receive the API's
+    # secrets (JWT_SECRET, database and S3 credentials). It only needs these public values.
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      BASE_URL: ${BASE_URL:-http://localhost:3001}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+      NEXT_PUBLIC_FB_PIXEL_ID: ${NEXT_PUBLIC_FB_PIXEL_ID:-}
+    expose:
+      - "3000"
+
+volumes:
+  mysql_data:
+  api_uploads:

@@ -1,0 +1,484 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// Enums
+// ============================================================
+
+enum Language {
+  en
+  ar
+}
+
+enum OtpType {
+  forget_password
+}
+
+enum SectionType {
+  website_info    @map("website-info")
+  home_hero       @map("home-hero")
+  home_about      @map("home-about")
+  fonts
+  home_why        @map("home-why")
+}
+
+// ============================================================
+// User & Auth
+// ============================================================
+
+model User {
+  id                  String    @id @default(uuid())
+  fullName            String    @db.VarChar(100)
+  email               String    @unique @db.VarChar(100)
+  username            String    @unique @db.VarChar(100)
+  password            String    @db.VarChar(255)
+  isActive            Boolean   @default(true)
+  permissions         Json      @default("[]")
+  failedLoginAttempts Int       @default(0)
+  lockedUntil         DateTime?
+  lastLoginAt         DateTime?
+  isDeleted           Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
+
+  otps          UserOtp[]
+  loginAttempts LoginAttempt[]
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+}
+
+model UserOtp {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  otp       String   @db.VarChar(6)
+  expiresAt DateTime
+  isUsed    Boolean  @default(false)
+  type      OtpType
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user_otps")
+}
+
+// Audit trail of every login attempt (success and failure), keyed by user when the
+// email matched a real account. Backs both account lockout and a future admin
+// "login history" view.
+model LoginAttempt {
+  id            String   @id @default(uuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  email         String   @db.VarChar(100)
+  success       Boolean
+  ipAddress     String   @db.VarChar(45)
+  userAgent     String?  @db.VarChar(500)
+  failureReason String?  @db.VarChar(255)
+  createdAt     DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([email, createdAt])
+  @@map("login_attempts")
+}
+
+// Long-lived refresh tokens, issued as an httpOnly cookie and stored here hashed
+// (never in plaintext) so they can be individually or entirely revoked — powers
+// logout, "log out all devices" (password change/reset), and session auditing.
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String    @unique @db.VarChar(64)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+  rotatedAt DateTime?
+
+  @@index([token])
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+// ============================================================
+// Projects & Units
+// ============================================================
+
+model Project {
+  id          String    @id @default(uuid())
+  slug        String?   @unique @db.VarChar(255)
+  heroMedia   Json?
+  thumbnail   String?   @db.VarChar(500)
+  isPublished Boolean   @default(false)
+  isFeatured  Boolean   @default(false)
+  rank        Int       @default(0)
+  location    String?   @db.VarChar(255)
+  isDeleted   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  translations ProjectTranslation[]
+  units        Unit[]
+
+  @@index([isPublished, isDeleted])
+  @@index([rank])
+  @@map("projects")
+}
+
+model ProjectTranslation {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  language    Language
+  title       String   @db.VarChar(255)
+  subtitle    String   @db.VarChar(500)
+  location    String   @db.VarChar(255)
+  description String   @db.Text
+  amenities   Json?
+  tags        Json?
+
+  @@unique([projectId, language])
+  @@map("project_translations")
+}
+
+model Unit {
+  id                  String    @id @default(uuid())
+  projectId           String
+  project             Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  slug                String?   @unique @db.VarChar(255)
+  thumbnail           String?   @db.VarChar(500)
+  overViewImage       String?   @db.VarChar(500)
+  price               String?   @db.VarChar(100)
+  pricePerMeter       String?   @db.VarChar(100)
+  gallery             Json?
+  isPublished         Boolean   @default(false)
+  bedrooms            Int       @default(0)
+  bathrooms           Int       @default(0)
+  isDeleted           Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
+
+  translations UnitTranslation[]
+
+  @@index([projectId, isPublished])
+  @@map("units")
+}
+
+model UnitTranslation {
+  id                  String   @id @default(uuid())
+  unitId              String
+  unit                Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  language            Language
+  title               String   @db.VarChar(255)
+  type                String   @db.VarChar(100)
+  area                String   @db.VarChar(100)
+  view                String   @db.VarChar(100)
+  delivery            String   @db.VarChar(100)
+  status              String   @db.VarChar(100)
+  floor               String   @db.VarChar(100)
+  building            String   @db.VarChar(100)
+  overViewTitle       String   @db.VarChar(255)
+  overViewDescription String   @db.Text
+  overViewFeatures    Json?
+
+  @@unique([unitId, language])
+  @@map("unit_translations")
+}
+
+// ============================================================
+// Inquiries
+// ============================================================
+
+model Inquiry {
+  id            String    @id @default(uuid())
+  phone         String    @db.VarChar(50)
+  fullName      String    @db.VarChar(100)
+  email         String    @db.VarChar(100)
+  projectId     String?
+  unitId        String?
+  message       String?   @db.Text
+  preferredDate String?   @db.VarChar(50)
+  projectName   String?   @db.VarChar(255)
+  unitName      String?   @db.VarChar(255)
+  isDeleted     Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  @@index([isDeleted])
+  @@map("inquiries")
+}
+
+// ============================================================
+// Contact
+// ============================================================
+
+model Contact {
+  id         String    @id @default(uuid())
+  fullName   String    @db.VarChar(100)
+  subject    String    @db.VarChar(255)
+  email      String    @db.VarChar(100)
+  department String    @db.VarChar(100)
+  message    String    @db.Text
+  status     String    @default("new") @db.VarChar(20) // new, contacted, closed
+  isDeleted  Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([status, isDeleted])
+  @@map("contacts")
+}
+
+// ============================================================
+// Sections (JSON key-value store for CMS content)
+// ============================================================
+
+model Section {
+  id        String      @id @default(uuid())
+  type      String      @unique @db.VarChar(100)
+  data      Json
+  isDeleted Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@map("sections")
+}
+
+// ============================================================
+// SEO
+// ============================================================
+
+model Seo {
+  id        String   @id @default(uuid())
+  pageKey   String   @unique @db.VarChar(255)
+  content   Json
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("seo")
+}
+
+// ============================================================
+// Monitoring
+// ============================================================
+
+model MonitoringMetric {
+  id        String   @id @default(uuid())
+  sessionId String   @db.VarChar(36)
+  type      String   @db.VarChar(20)
+  name      String   @db.VarChar(100)
+  value     Float
+  rating    String?  @db.VarChar(30)
+  page      String   @db.VarChar(500)
+  timestamp DateTime
+  createdAt DateTime @default(now())
+
+  @@index([type, timestamp])
+  @@index([sessionId])
+  @@index([createdAt])
+  @@map("monitoring_metrics")
+}
+
+model MonitoringError {
+  id        String   @id @default(uuid())
+  sessionId String   @db.VarChar(36)
+  type      String   @db.VarChar(30)
+  message   String   @db.VarChar(1000)
+  stack     String?  @db.Text
+  context   String   @db.Text
+  page      String   @db.VarChar(500)
+  timestamp DateTime
+  createdAt DateTime @default(now())
+
+  @@index([type, timestamp])
+  @@index([sessionId])
+  @@index([createdAt])
+  @@map("monitoring_errors")
+}
+
+model MonitoringEvent {
+  id         String   @id @default(uuid())
+  sessionId  String   @db.VarChar(36)
+  type       String   @db.VarChar(20)
+  name       String   @db.VarChar(100)
+  properties String?  @db.Text
+  page       String   @db.VarChar(500)
+  timestamp  DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([name, timestamp])
+  @@index([sessionId])
+  @@index([createdAt])
+  @@map("monitoring_events")
+}
+
+model MonitoringMetricRollup {
+  id        String   @id @default(uuid())
+  period    String   @db.VarChar(10)
+  periodKey String   @db.VarChar(30)
+  type      String   @db.VarChar(20)
+  count     Int
+  p50       Float
+  p75       Float
+  p90       Float
+  min       Float
+  max       Float
+  createdAt DateTime @default(now())
+
+  @@unique([period, periodKey, type])
+  @@index([period, type])
+  @@map("monitoring_metric_rollups")
+}
+
+model MonitoringEventRollup {
+  id        String   @id @default(uuid())
+  period    String   @db.VarChar(10)
+  periodKey String   @db.VarChar(30)
+  name      String   @db.VarChar(100)
+  count     Int
+  createdAt DateTime @default(now())
+
+  @@unique([period, periodKey, name])
+  @@index([period, name])
+  @@map("monitoring_event_rollups")
+}
+
+model MonitoringErrorRollup {
+  id        String   @id @default(uuid())
+  period    String   @db.VarChar(10)
+  periodKey String   @db.VarChar(30)
+  type      String   @db.VarChar(30)
+  count     Int
+  createdAt DateTime @default(now())
+
+  @@unique([period, periodKey, type])
+  @@index([period, type])
+  @@map("monitoring_error_rollups")
+}
+
+// ============================================================
+// News / Blog
+// ============================================================
+
+enum NewsTag {
+  news
+  event
+}
+
+model News {
+  id          String    @id @default(uuid())
+  slug        String?   @unique @db.VarChar(300)
+  thumbnail   String?   @db.VarChar(500)
+  tag         NewsTag   @default(news)
+  isPublished Boolean   @default(false)
+  isFeatured  Boolean   @default(false)
+  publishedAt DateTime?
+  isDeleted   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  translations NewsTranslation[]
+
+  @@index([isPublished, isDeleted])
+  @@index([tag, isPublished])
+  @@map("news")
+}
+
+model NewsTranslation {
+  id                String   @id @default(uuid())
+  newsId            String
+  news              News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  language          Language
+  title             String   @db.VarChar(255)
+  excerpt           String?  @db.Text
+  body              String?  @db.LongText
+  metaTitle         String?  @db.VarChar(255)
+  metaDescription   String?  @db.Text
+  keywords          String?  @db.Text
+
+  @@unique([newsId, language])
+  @@map("news_translations")
+}
+
+// ============================================================
+// Careers / Jobs
+// ============================================================
+
+enum EmploymentType {
+  full_time
+  part_time
+  contract
+  internship
+}
+
+enum JobApplicationStatus {
+  pending
+  reviewed
+  rejected
+  hired
+}
+
+model Job {
+  id             String         @id @default(uuid())
+  slug           String?        @unique @db.VarChar(300)
+  employmentType EmploymentType @default(full_time)
+  isPublished    Boolean        @default(false)
+  publishedAt    DateTime?
+  isDeleted      Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  deletedAt      DateTime?
+
+  translations JobTranslation[]
+  applications JobApplication[]
+
+  @@index([isPublished, isDeleted])
+  @@map("jobs")
+}
+
+model JobTranslation {
+  id          String   @id @default(uuid())
+  jobId       String
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  language    Language
+  title       String   @db.VarChar(255)
+  description String?  @db.Text
+  body        String?  @db.LongText
+  location    String?  @db.VarChar(255)
+
+  @@unique([jobId, language])
+  @@map("job_translations")
+}
+
+model JobApplication {
+  id          String                @id @default(uuid())
+  jobId       String
+  job         Job                   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  firstName   String                @db.VarChar(100)
+  lastName    String                @db.VarChar(100)
+  email       String                @db.VarChar(255)
+  phone       String?               @db.VarChar(50)
+  coverLetter String?               @db.Text
+  resumeUrl   String?               @db.VarChar(500)
+  status      JobApplicationStatus  @default(pending)
+  notes       String?               @db.Text
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+
+  @@index([jobId, status])
+  @@index([email])
+  @@map("job_applications")
+}

@@ -1,0 +1,8 @@
+{
+    "common": {
+        "not_found": "المورد غير موجود",
+        "unauthorized": "غير مصرح به",
+        "forbidden": "ممنوع",
+        "validation_failed": "فشل التحقق من الصحة"
+    }
+}

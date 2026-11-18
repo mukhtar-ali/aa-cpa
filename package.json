@@ -1,0 +1,36 @@
+{
+    "name": "nest-next-starter",
+    "private": true,
+    "scripts": {
+        "build": "turbo run build",
+        "dev": "turbo run dev --concurrency=25",
+        "start": "turbo run start --concurrency=25",
+        "lint": "turbo run lint",
+        "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+        "check-types": "turbo run check-types",
+        "test:e2e": "playwright test"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.63.0",
+        "prettier": "^3.7.4",
+        "turbo": "^2.8.3",
+        "typescript": "^5"
+    },
+    "packageManager": "pnpm@9.0.0",
+    "engines": {
+        "node": ">=22"
+    },
+    "optionalDependencies": {
+        "@rollup/rollup-linux-x64-gnu": "^4.61.1"
+    },
+    "pnpm": {
+        "supportedArchitectures": {
+            "os": ["current", "linux"],
+            "cpu": ["current"],
+            "libc": ["glibc"]
+        },
+        "overrides": {
+            "@swc/helpers": "^0.5.17"
+        }
+    }
+}

@@ -1,0 +1,137 @@
+name: Deploy to VPS
+
+# Self-hosted deployment: build the three images, push them to GHCR, then SSH to the server and restart the stack.
+# It is OFF until the repository variable VPS_DEPLOY_ENABLED is "true", so pushes that are deployed by Coolify
+# (which builds from the root docker-compose.yml on its own) are not affected. Setup: docs/DEPLOY_VPS.md.
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  images:
+    name: Build and push ${{ matrix.service }}
+    if: vars.VPS_DEPLOY_ENABLED == 'true' && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: true
+      matrix:
+        service: [api, admin, web]
+    outputs:
+      prefix: ${{ steps.meta.outputs.prefix }}
+      tag: ${{ steps.meta.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Image name and tag
+        id: meta
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          repo="${GITHUB_REPOSITORY#*/}"
+          echo "prefix=ghcr.io/${owner}/${repo,,}" >> "$GITHUB_OUTPUT"
+          echo "tag=$(git rev-parse --short=12 HEAD)" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # The browser-facing URLs are baked into the web/admin bundles, so they come from repository variables.
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/${{ matrix.service }}/Dockerfile
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.prefix }}/${{ matrix.service }}:${{ steps.meta.outputs.tag }}
+            ${{ steps.meta.outputs.prefix }}/${{ matrix.service }}:latest
+          build-args: |
+            VITE_API_URL=https://${{ vars.VPS_API_DOMAIN }}
+            NEXT_PUBLIC_API_URL=https://${{ vars.VPS_API_DOMAIN }}
+            NEXT_PUBLIC_SITE_URL=https://${{ vars.VPS_WEB_DOMAIN }}
+            BASE_URL=https://${{ vars.VPS_API_DOMAIN }}
+            NEXT_PUBLIC_FB_PIXEL_ID=${{ vars.VPS_FB_PIXEL_ID }}
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+
+  deploy:
+    name: Deploy to the server
+    needs: images
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Prepare SSH
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          # Pinned host key (ssh-keyscan on your own machine) instead of trusting whatever answers on first connect.
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Copy the compose files
+        env:
+          TARGET: ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+          APP_DIR: ${{ vars.VPS_APP_DIR || 'app' }}
+        run: |
+          ssh -i ~/.ssh/deploy_key "$TARGET" "mkdir -p '$APP_DIR'"
+          scp -i ~/.ssh/deploy_key deploy/vps/docker-compose.yml deploy/vps/Caddyfile "$TARGET:$APP_DIR/"
+
+      - name: Pull the images and restart
+        env:
+          TARGET: ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+          APP_DIR: ${{ vars.VPS_APP_DIR || 'app' }}
+          TAG: ${{ needs.images.outputs.tag }}
+          PREFIX: ${{ needs.images.outputs.prefix }}
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # The registry token is sent over stdin (never on a command line) and is only valid for this run.
+          printf '%s' "$GHCR_TOKEN" | ssh -i ~/.ssh/deploy_key "$TARGET" \
+            "docker login ghcr.io -u '$GHCR_USER' --password-stdin"
+          ssh -i ~/.ssh/deploy_key "$TARGET" bash -s -- "$APP_DIR" "$TAG" "$PREFIX" <<'REMOTE'
+          set -euo pipefail
+          cd "$1"
+          test -f .env || { echo "Missing $1/.env on the server (see docs/DEPLOY_VPS.md)"; exit 1; }
+          grep -v -E '^(IMAGE_TAG|IMAGE_PREFIX)=' .env > .env.tmp || true
+          { cat .env.tmp; echo "IMAGE_PREFIX=$3"; echo "IMAGE_TAG=$2"; } > .env && rm .env.tmp
+          docker compose pull
+          docker compose up -d --remove-orphans
+          docker image prune -f >/dev/null
+          docker compose ps
+          REMOTE
+
+      - name: Wait for the API to be healthy
+        env:
+          API_DOMAIN: ${{ vars.VPS_API_DOMAIN }}
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS "https://${API_DOMAIN}/api/health" >/dev/null; then echo "API is healthy"; exit 0; fi
+            sleep 10
+          done
+          echo "API did not become healthy in time" >&2
+          exit 1

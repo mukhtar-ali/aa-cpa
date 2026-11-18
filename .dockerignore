@@ -1,0 +1,66 @@
+# Copy this file to the repository root as `.dockerignore`:
+#   cp docs/deploy/dockerignore .dockerignore
+
+# Dependencies (reinstalled inside container)
+node_modules
+**/node_modules
+.pnp
+.pnp.js
+package-lock.json
+E:\.pnpm-store*
+
+# Git & editor metadata
+.git
+.gitignore
+.github
+.claude
+.idea
+.vscode
+
+# Build & cache outputs
+.turbo
+**/.turbo
+dist
+**/dist
+.next
+**/.next
+.tanstack
+**/.tanstack
+out
+build
+coverage
+**/coverage
+*.tsbuildinfo
+**/*.tsbuildinfo
+
+# Local environment files (never bake secrets into image layers)
+.env
+.env.*
+**/.env
+**/.env.*
+
+# E2E tests, reports & documentation
+e2e
+playwright.config.ts
+playwright-report
+docs
+README.md
+*.md
+
+# Logs & misc OS artifacts
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+*.pem
+
+# Explicitly preserve required workspace & config files
+!.npmrc
+!.nvmrc
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!turbo.json
+!apps/*/package.json
+!packages/*/package.json
+!packages/typescript-config/*.json

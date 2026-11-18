@@ -1,0 +1,17 @@
+# Automatic HTTPS (Let's Encrypt) for the three public hostnames. DNS A records for all three must point at
+# this server before the first start, otherwise certificate issuance fails.
+
+{$WEB_DOMAIN} {
+	encode gzip zstd
+	reverse_proxy web:3000
+}
+
+{$ADMIN_DOMAIN} {
+	encode gzip zstd
+	reverse_proxy admin:80
+}
+
+{$API_DOMAIN} {
+	encode gzip zstd
+	reverse_proxy api:3001
+}

@@ -1,0 +1,18 @@
+# Local use only: publishes the services on this machine's ports so you can open them in a browser.
+# `docker compose up` merges this file automatically. Coolify (and any `docker compose -f docker-compose.yml ...`
+# deployment) ignores it on purpose: behind a reverse proxy the services must NOT claim host ports, and a port that is
+# already taken on the server (for example 3000) would make the whole deploy fail with "port is already allocated".
+services:
+  mysql:
+    ports:
+      # Bound to localhost only: the default root password is a placeholder.
+      - "127.0.0.1:${MYSQL_PORT:-3306}:3306"
+  api:
+    ports:
+      - "${API_PORT:-3001}:3001"
+  admin:
+    ports:
+      - "${ADMIN_PORT:-3002}:80"
+  web:
+    ports:
+      - "${WEB_PORT:-3000}:3000"

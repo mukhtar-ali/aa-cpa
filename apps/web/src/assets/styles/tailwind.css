@@ -1,0 +1,335 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------------------------------------
+   Design tokens. Neutral surfaces + one accent (the admin's orange hue, darkened for text/button contrast:
+   white on --brand is 5.2:1 in light mode). Dark mode follows the OS setting, as the `dark:` variant does.
+   Swap --brand* here when the real brand colours arrive; nothing else needs to change.
+   --------------------------------------------------------------------------------------------------------- */
+:root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --fg: #18181b;
+    --muted: #52525b;
+    --line: #e4e4e7;
+    --card: #ffffff;
+    --soft: #f4f4f5;
+    --brand: #c2410c;
+    --brand-hover: #9a3412;
+    --brand-fg: #ffffff;
+    --ring: #ea580c;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0a0a0b;
+        --fg: #f4f4f5;
+        --muted: #a1a1aa;
+        --line: #27272a;
+        --card: #111113;
+        --soft: #18181b;
+        --brand: #fb923c;
+        --brand-hover: #fdba74;
+        --brand-fg: #1c0a02;
+        --ring: #fb923c;
+    }
+}
+
+@theme inline {
+    --color-bg: var(--bg);
+    --color-fg: var(--fg);
+    --color-muted: var(--muted);
+    --color-line: var(--line);
+    --color-card: var(--card);
+    --color-soft: var(--soft);
+    --color-brand: var(--brand);
+    --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+    body {
+        background-color: var(--bg);
+        color: var(--fg);
+        font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+    ::selection {
+        background: color-mix(in srgb, var(--brand) 25%, transparent);
+    }
+    :focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+    }
+}
+
+/* Shared building blocks, so pages stop repeating long utility strings. */
+@layer components {
+    .page-title {
+        font-size: 2rem;
+        line-height: 1.15;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+    @media (min-width: 640px) {
+        .page-title {
+            font-size: 2.5rem;
+        }
+    }
+    .lead {
+        margin-top: 0.75rem;
+        max-width: 42rem;
+        font-size: 1.125rem;
+        line-height: 1.6;
+        color: var(--muted);
+    }
+    .section-title {
+        font-size: 1.5rem;
+        line-height: 1.25;
+        font-weight: 650;
+        letter-spacing: -0.01em;
+    }
+    .card {
+        border: 1px solid var(--line);
+        border-radius: 0.75rem;
+        background: var(--card);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+    }
+    .card-link {
+        display: block;
+        transition:
+            border-color 150ms,
+            box-shadow 150ms,
+            transform 150ms;
+    }
+    .card-link:hover {
+        border-color: color-mix(in srgb, var(--brand) 45%, var(--line));
+        box-shadow: 0 6px 20px rgb(0 0 0 / 0.07);
+        transform: translateY(-1px);
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .card-link:hover {
+            transform: none;
+        }
+    }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border-radius: 0.5rem;
+        border: 1px solid transparent;
+        padding: 0.6rem 1.1rem;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+            background-color 150ms,
+            border-color 150ms,
+            color 150ms;
+    }
+    .btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.55;
+    }
+    .btn-primary {
+        background: var(--brand);
+        color: var(--brand-fg);
+    }
+    .btn-primary:hover:not(:disabled) {
+        background: var(--brand-hover);
+    }
+    .btn-outline {
+        border-color: var(--line);
+        background: var(--card);
+        color: var(--fg);
+    }
+    .btn-outline:hover:not(:disabled) {
+        border-color: color-mix(in srgb, var(--brand) 50%, var(--line));
+        color: var(--brand);
+    }
+    .field {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 0.5rem;
+        background: var(--card);
+        padding: 0.55rem 0.75rem;
+        font-size: 0.9375rem;
+        line-height: 1.4;
+        transition:
+            border-color 150ms,
+            box-shadow 150ms;
+    }
+    .field::placeholder {
+        color: color-mix(in srgb, var(--muted) 70%, transparent);
+    }
+    .field:focus {
+        outline: none;
+        border-color: var(--brand);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 20%, transparent);
+    }
+    .label {
+        display: block;
+        margin-bottom: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    .empty {
+        border: 1px dashed var(--line);
+        border-radius: 0.75rem;
+        padding: 2.5rem 1rem;
+        text-align: center;
+        color: var(--muted);
+    }
+}
+
+/* Preloader / page-transition panels — used by src/animations/{Preloader,PageTransition}.tsx.
+   No background image (public/ has no assets yet); solid color instead of ramy's bg-white.jpg. */
+.preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.preloader__panel {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    z-index: 1;
+    background-color: var(--soft);
+}
+
+.preloader__panel--left {
+    left: 0;
+}
+
+.preloader__panel--right {
+    right: 0;
+}
+
+.preloader__inner {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--fg);
+}
+
+/* Header "scrolled" state — toggled by src/animations/pages/headerAnimation.ts */
+.header-active.bg-main-blur {
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+}
+
+/* Arabic pages: Inter has no Arabic glyphs, so use Cairo (self-hosted in app/[lang]/layout.tsx). */
+html[lang='ar'] body {
+    font-family: var(--font-cairo-latin), var(--font-cairo-arabic), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Rich text from the CMS editor (news articles, job descriptions). Replaces the `prose` classes, which need
+   the @tailwindcss/typography plugin that is not installed (Tailwind's reset otherwise flattens headings,
+   lists and links). Colours follow the surrounding text so light and dark mode both work. */
+.rich-text {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+}
+.rich-text > * + * {
+    margin-top: 1.1em;
+}
+.rich-text h1,
+.rich-text h2,
+.rich-text h3,
+.rich-text h4,
+.rich-text h5,
+.rich-text h6 {
+    font-weight: 700;
+    line-height: 1.3;
+    margin-top: 1.8em;
+}
+.rich-text h1 {
+    font-size: 2rem;
+}
+.rich-text h2 {
+    font-size: 1.5rem;
+}
+.rich-text h3 {
+    font-size: 1.25rem;
+}
+.rich-text h4,
+.rich-text h5,
+.rich-text h6 {
+    font-size: 1.0625rem;
+}
+.rich-text ul {
+    list-style: disc;
+    padding-inline-start: 1.5em;
+}
+.rich-text ol {
+    list-style: decimal;
+    padding-inline-start: 1.5em;
+}
+.rich-text li + li {
+    margin-top: 0.35em;
+}
+.rich-text a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.rich-text blockquote {
+    border-inline-start: 4px solid color-mix(in srgb, currentColor 25%, transparent);
+    padding-inline-start: 1em;
+    font-style: italic;
+    opacity: 0.9;
+}
+.rich-text img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+.rich-text hr {
+    border: 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+    margin: 2em 0;
+}
+.rich-text table {
+    width: 100%;
+    border-collapse: collapse;
+    display: block;
+    overflow-x: auto;
+}
+.rich-text th,
+.rich-text td {
+    border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+    padding: 0.5em 0.75em;
+    text-align: start;
+}
+.rich-text pre {
+    overflow-x: auto;
+    padding: 1em;
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, currentColor 8%, transparent);
+}
+.rich-text code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+}
+
+/* Arabic letters have long descenders: a tight line box (and the animated line mask, overflow: clip) would cut them off.
+   Deliberately outside @layer: Tailwind's text-5xl utility sets line-height: 1 and would win inside the components layer. */
+html[lang='ar'] .page-title {
+    line-height: 1.5;
+}

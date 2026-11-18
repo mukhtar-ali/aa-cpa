@@ -1,0 +1,39 @@
+{
+    "name": "@repo/shared",
+    "version": "1.0.0",
+    "private": true,
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "files": ["dist"],
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js"
+        }
+    },
+    "scripts": {
+        "dev": "tsup --watch",
+        "build": "tsup",
+        "lint": "eslint ."
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/js-cookie": "^3.0.6",
+        "@types/node": "^22.10.7",
+        "dayjs": "^1.11.19",
+        "js-cookie": "^3.0.0",
+        "tsup": "^8.0.0",
+        "typescript": "^5",
+        "lodash": "^4.17.23"
+    },
+    "peerDependencies": {
+        "dayjs": "^1.11.19",
+        "js-cookie": "^3.0.0",
+        "uuid": "^13.0.0",
+        "zod": "^4.0.0",
+        "lodash": "^4.17.23"
+    }
+}

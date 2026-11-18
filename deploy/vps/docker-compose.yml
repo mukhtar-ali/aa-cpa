@@ -1,0 +1,121 @@
+# Self-hosted deployment (plain Docker on a VPS, HTTPS by Caddy). NOT used by Coolify: Coolify keeps
+# using the repository root docker-compose.yml, which builds the images itself.
+#
+# This file only PULLS prebuilt images (built and pushed to GHCR by .github/workflows/deploy-vps.yml), so the
+# server never compiles anything. Copy this file, Caddyfile and .env to the server (see docs/DEPLOY_VPS.md).
+#
+# Keep the service definitions in step with the root docker-compose.yml (env vars, healthchecks, volumes).
+
+# Container logs rotate (5 files of 10 MB per container) so they cannot fill the VPS disk.
+# `docker compose logs` and Hostinger's Docker Manager read these same logs.
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-nest_next_starter}
+      MYSQL_USER: ${MYSQL_USER:-app_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "--password=$${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  api:
+    image: ${IMAGE_PREFIX:?Set IMAGE_PREFIX, e.g. ghcr.io/your-user/your-repo}/api:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      mysql:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      APP_PORT: 3001
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET to at least 32 random characters (openssl rand -hex 32)}
+      ADMIN_PORTAL_URL: https://${ADMIN_DOMAIN:?Set ADMIN_DOMAIN}
+      FRONTEND_URL: https://${WEB_DOMAIN:?Set WEB_DOMAIN}
+      API_PUBLIC_URL: https://${API_DOMAIN:?Set API_DOMAIN}
+      # One hop: Caddy. Without it every visitor shares the proxy's IP for the per-IP auth rate limit.
+      TRUST_PROXY: "1"
+      SWAGGER_ENABLED: ${SWAGGER_ENABLED:-}
+      DATABASE_URL: mysql://${MYSQL_USER:-app_user}:${MYSQL_PASSWORD}@mysql:3306/${MYSQL_DATABASE:-nest_next_starter}
+    expose:
+      - "3001"
+    volumes:
+      # Uploads when S3 is not configured. Back this volume up.
+      - api_uploads:/app/apps/api/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:3001/api/health >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  admin:
+    image: ${IMAGE_PREFIX}/admin:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      api:
+        condition: service_healthy
+    expose:
+      - "80"
+
+  web:
+    image: ${IMAGE_PREFIX}/web:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      api:
+        condition: service_healthy
+    # No env_file on purpose: the public web container must not receive the API's secrets.
+    # NEXT_PUBLIC_* and BASE_URL are baked into the image at build time (see the workflow's build args); the same
+    # public URLs are repeated here so the runtime matches what was built.
+    environment:
+      NODE_ENV: production
+      BASE_URL: https://${API_DOMAIN}
+      NEXT_PUBLIC_API_URL: https://${API_DOMAIN}
+      NEXT_PUBLIC_SITE_URL: https://${WEB_DOMAIN}
+    expose:
+      - "3000"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      - web
+      - admin
+      - api
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      WEB_DOMAIN: ${WEB_DOMAIN}
+      ADMIN_DOMAIN: ${ADMIN_DOMAIN}
+      API_DOMAIN: ${API_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  mysql_data:
+  api_uploads:
+  caddy_data:
+  caddy_config:
