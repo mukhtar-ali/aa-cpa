@@ -7,9 +7,19 @@ import {
 import { csvList, PaginationParamsSchema } from './pagination.schema';
 import { emailValidation } from './base.schema';
 
-export const LeadStatusSchema = z.enum(['new', 'contacted', 'qualified', 'closed', 'spam']);
+export const LeadStatusSchema = z.enum([
+    'new',
+    'contacted',
+    'qualified',
+    'closed',
+    'spam',
+]);
 
-export const LeadSourceSchema = z.enum(['contact', 'estimator', 'service_page']);
+export const LeadSourceSchema = z.enum([
+    'contact',
+    'estimator',
+    'service_page',
+]);
 
 export const ContactRequestSchema = PublicFormGuardSchema.extend({
     fullName: z.string().min(1, 'Full name is required').max(100),
@@ -83,13 +93,27 @@ export const LeadAdminSchema = z.object({
     updatedAt: z.union([z.string(), z.date()]),
 });
 
+const dateQueryParam = z.preprocess(
+    (val) => (val === '' ? undefined : val),
+    z
+        .string()
+        .refine((val) => !isNaN(Date.parse(val)), {
+            message: 'Invalid date format',
+        })
+        .optional(),
+);
+
+const toLower = (val: unknown) => (typeof val === 'string' ? val.toLowerCase() : val);
+const queryLeadStatusSchema = z.preprocess(toLower, LeadStatusSchema);
+const queryLeadSourceSchema = z.preprocess(toLower, LeadSourceSchema);
+
 export const LeadQuerySchema = PaginationParamsSchema.extend({
-    status: csvList(LeadStatusSchema),
-    source: csvList(LeadSourceSchema),
+    status: csvList(queryLeadStatusSchema),
+    source: csvList(queryLeadSourceSchema),
     serviceId: z.string().optional(),
     assignedToId: z.string().optional(),
-    from: z.string().optional(),
-    to: z.string().optional(),
+    from: dateQueryParam,
+    to: dateQueryParam,
     q: z.string().optional(),
 });
 

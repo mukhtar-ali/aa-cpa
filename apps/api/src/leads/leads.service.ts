@@ -30,8 +30,8 @@ export function normalizeSaudiMobile(mobile: string): string {
 export function escapeCsvCell(value: unknown): string {
     if (value === null || value === undefined) return '';
     let str = typeof value === 'object' ? JSON.stringify(value) : String(value);
-    // Prevent CSV formula injection in Excel
-    if (/^[=+\-@\t\r]/.test(str)) {
+    // Prevent CSV formula injection in Excel, allowing valid international phone numbers
+    if (/^[=+\-@\t\r]/.test(str) && !/^\+\d{6,15}$/.test(str)) {
         str = `'${str}`;
     }
     if (/[",\n\r]/.test(str)) {
@@ -265,20 +265,22 @@ export class LeadsService {
 
     private buildAdminWhere(rawQuery: Record<string, any> = {}) {
         const parsed = LeadQuerySchema.safeParse(rawQuery);
-        const query = parsed.success ? parsed.data : (rawQuery as any);
+        if (!parsed.success) {
+            throw new BadRequestException({
+                message: 'Invalid query parameters',
+                errors: parsed.error.issues,
+            });
+        }
+        const query = parsed.data;
 
         const where: any = { isDeleted: false };
 
         if (Array.isArray(query.status) && query.status.length > 0) {
             where.status = { in: query.status };
-        } else if (typeof rawQuery.status === 'string' && rawQuery.status.trim()) {
-            where.status = { in: rawQuery.status.split(',').map((s: string) => s.trim()) };
         }
 
         if (Array.isArray(query.source) && query.source.length > 0) {
             where.source = { in: query.source };
-        } else if (typeof rawQuery.source === 'string' && rawQuery.source.trim()) {
-            where.source = { in: rawQuery.source.split(',').map((s: string) => s.trim()) };
         }
 
         if (query.serviceId) {
@@ -318,7 +320,7 @@ export class LeadsService {
                 take: pageSize,
                 include: {
                     service: { include: { translations: true } },
-                    assignedTo: { select: { id: true, name: true, email: true } },
+                    assignedTo: { select: { id: true, username: true, email: true } },
                 },
             }),
             this.prisma.contact.count({ where }),
@@ -338,7 +340,7 @@ export class LeadsService {
             where: { id },
             include: {
                 service: { include: { translations: true } },
-                assignedTo: { select: { id: true, name: true, email: true } },
+                assignedTo: { select: { id: true, username: true, email: true } },
             },
         });
 
@@ -398,24 +400,28 @@ export class LeadsService {
             throw new BadRequestException('Note body cannot be empty');
         }
 
-        const existing = await this.prisma.contact.findUnique({ where: { id } });
-        if (!existing || existing.isDeleted) {
-            throw new NotFoundException(`Lead not found: ${id}`);
-        }
+        return this.prisma.$transaction(async (tx: any) => {
+            await tx.$queryRaw`SELECT id FROM contacts WHERE id = ${id} FOR UPDATE`;
 
-        const currentNotes = Array.isArray(existing.notes) ? [...(existing.notes as any[])] : [];
-        const newNote = {
-            authorId,
-            body: body.trim(),
-            at: new Date().toISOString(),
-        };
-        currentNotes.push(newNote);
+            const existing = await tx.contact.findUnique({ where: { id } });
+            if (!existing || existing.isDeleted) {
+                throw new NotFoundException(`Lead not found: ${id}`);
+            }
 
-        return this.prisma.contact.update({
-            where: { id },
-            data: {
-                notes: currentNotes as any,
-            },
+            const currentNotes = Array.isArray(existing.notes) ? [...(existing.notes as any[])] : [];
+            const newNote = {
+                authorId,
+                body: body.trim(),
+                at: new Date().toISOString(),
+            };
+            currentNotes.push(newNote);
+
+            return tx.contact.update({
+                where: { id },
+                data: {
+                    notes: currentNotes as any,
+                },
+            });
         });
     }
 
@@ -426,7 +432,7 @@ export class LeadsService {
             orderBy: { createdAt: 'desc' },
             include: {
                 service: { include: { translations: true } },
-                assignedTo: { select: { id: true, name: true } },
+                assignedTo: { select: { id: true, username: true } },
             },
         });
 
