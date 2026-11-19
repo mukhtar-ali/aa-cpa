@@ -5,6 +5,6 @@
     "jsx": "react-jsx",
     "rootDir": "."
   },
-  "include": ["src", ".storybook", "scripts"],
+  "include": ["src", ".storybook", "scripts", "vitest.setup.ts"],
   "exclude": ["node_modules", "dist", "storybook-static"]
 }

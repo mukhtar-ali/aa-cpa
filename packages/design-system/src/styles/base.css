@@ -1,0 +1,38 @@
+/**
+ * Base styles for AA-CPA Design System
+ * Sets body typography, default color, focus-visible outlines,
+ * prefers-reduced-motion resets, and article prose placeholder.
+ */
+
+:root {
+  --container-max-width: 1140px;
+  --container-wide-max-width: 1320px;
+  --radius-32: 32px;
+}
+
+body {
+  font-family: var(--font-family-base, var(--font-almarai, 'Almarai', system-ui, sans-serif));
+  color: var(--color-text-body, var(--color-text-heading, currentColor));
+  background-color: var(--color-bg-page, #ffffff);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-action-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* .ds-prose placeholder for article styles (expanded in T093) */
+.ds-prose {
+  color: var(--color-text-body, inherit);
+}

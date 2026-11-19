@@ -10,6 +10,8 @@ export default defineConfig({
     setupFiles: [path.resolve(import.meta.dirname, './vitest.setup.ts')],
     css: true,
     pool: 'threads',
+    fileParallelism: false,
+    isolate: false,
     coverage: {
       provider: 'v8',
       include: ['src/**'],
