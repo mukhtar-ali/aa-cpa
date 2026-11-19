@@ -26,17 +26,17 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 
 **Purpose**: package scaffold, toolchain, wiring into the web app
 
-- [ ] T001 Create `DS/package.json` (`@repo/design-system`, private, `type: module`, `sideEffects: ["**/*.css"]`, exports map for `./styles.css`, `./primitives`, `./forms`, `./layout`, `./sections`, `./icons`, `./lib`, `./types` per contracts "Import paths"; scripts `lint`, `check-types`, `test`, `test:watch`, `tokens`, `storybook`, `build-storybook`)
-- [ ] T002 Add exact-pinned dependencies to `DS/package.json` per research R14 (runtime: cva, clsx, tailwind-merge, Radix dialog/accordion/tabs/direction; dev: storybook + react-vite + addon-a11y + addon-docs, vitest, @vitest/coverage-v8, jsdom, Testing Library react/user-event/jest-dom, vitest-axe, vite, @vitejs/plugin-react, @tailwindcss/vite, tailwindcss, svgo, typescript, eslint); peer deps `react`, `react-dom` ^19; run `pnpm install` and commit lockfile in its own commit
-- [ ] T003 [P] Create `DS/tsconfig.json` extending `@repo/typescript-config/react-library.json` (strict, `jsx: react-jsx`, include `src`, `.storybook`, `scripts`)
-- [ ] T004 [P] Create `DS/eslint.config.js` extending `@repo/eslint-config` React config + `eslint-plugin-jsx-a11y` recommended
-- [ ] T005 [P] Create `DS/vitest.config.ts` (jsdom, `setupFiles: ['./vitest.setup.ts']`, css: true, coverage v8 over `src/**`, exclude stories) and `DS/vitest.setup.ts` (jest-dom matchers, `vitest-axe` `toHaveNoViolations`, `matchMedia` and `IntersectionObserver` mocks)
-- [ ] T006 [P] Create `DS/.storybook/main.ts` (framework `@storybook/react-vite`, stories `../src/**/*.stories.tsx`, addons docs + a11y, `viteFinal` adds `@tailwindcss/vite`)
-- [ ] T007 Create `DS/.storybook/preview.tsx`: import `../src/styles/index.css` and `../assets/fonts/almarai.css`; global toolbar `locale` (`ar` default | `en`) setting `lang`/`dir` on the story root and wrapping in `DesignSystemProvider`; toolbar `tone` (page, ice, surface, inverse, hero) setting background; a11y addon `test: 'error'`
-- [ ] T008 Add root `test` task to `turbo.json` (`dependsOn: ["^build"]`, outputs `coverage/**`) and root script `"test": "turbo run test"` in `package.json` (shared-file commit)
-- [ ] T009 Add CI job steps in `.github/workflows/ci.yml` verify job: `pnpm --filter @repo/design-system test` and `build-storybook` with the static build uploaded as an artifact (shared-file commit)
-- [ ] T010 Add `"@repo/design-system": "workspace:*"` to `WEB/package.json` and `transpilePackages: ['@repo/design-system']` in `WEB/next.config.ts`
-- [ ] T011 Change `defaultLocale` from `'en'` to `'ar'` in `WEB/proxy.ts`; ensure `WEB/app/[lang]/layout.tsx` sets `<html lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'}>`
+- [x] T001 Create `DS/package.json` (`@repo/design-system`, private, `type: module`, `sideEffects: ["**/*.css"]`, exports map for `./styles.css`, `./primitives`, `./forms`, `./layout`, `./sections`, `./icons`, `./lib`, `./types` per contracts "Import paths"; scripts `lint`, `check-types`, `test`, `test:watch`, `tokens`, `storybook`, `build-storybook`)
+- [x] T002 Add exact-pinned dependencies to `DS/package.json` per research R14 (runtime: cva, clsx, tailwind-merge, Radix dialog/accordion/tabs/direction; dev: storybook + react-vite + addon-a11y + addon-docs, vitest, @vitest/coverage-v8, jsdom, Testing Library react/user-event/jest-dom, vitest-axe, vite, @vitejs/plugin-react, @tailwindcss/vite, tailwindcss, svgo, typescript, eslint); peer deps `react`, `react-dom` ^19; run `pnpm install` and commit lockfile in its own commit
+- [x] T003 [P] Create `DS/tsconfig.json` extending `@repo/typescript-config/react-library.json` (strict, `jsx: react-jsx`, include `src`, `.storybook`, `scripts`)
+- [x] T004 [P] Create `DS/eslint.config.js` extending `@repo/eslint-config` React config + `eslint-plugin-jsx-a11y` recommended
+- [x] T005 [P] Create `DS/vitest.config.ts` (jsdom, `setupFiles: ['./vitest.setup.ts']`, css: true, coverage v8 over `src/**`, exclude stories) and `DS/vitest.setup.ts` (jest-dom matchers, `vitest-axe` `toHaveNoViolations`, `matchMedia` and `IntersectionObserver` mocks)
+- [x] T006 [P] Create `DS/.storybook/main.ts` (framework `@storybook/react-vite`, stories `../src/**/*.stories.tsx`, addons docs + a11y, `viteFinal` adds `@tailwindcss/vite`)
+- [x] T007 Create `DS/.storybook/preview.tsx`: import `../src/styles/index.css` and `../assets/fonts/almarai.css`; global toolbar `locale` (`ar` default | `en`) setting `lang`/`dir` on the story root and wrapping in `DesignSystemProvider`; toolbar `tone` (page, ice, surface, inverse, hero) setting background; a11y addon `test: 'error'`
+- [x] T008 Add root `test` task to `turbo.json` (`dependsOn: ["^build"]`, outputs `coverage/**`) and root script `"test": "turbo run test"` in `package.json` (shared-file commit)
+- [x] T009 Add CI job steps in `.github/workflows/ci.yml` verify job: `pnpm --filter @repo/design-system test` and `build-storybook` with the static build uploaded as an artifact (shared-file commit)
+- [x] T010 Add `"@repo/design-system": "workspace:*"` to `WEB/package.json` and `transpilePackages: ['@repo/design-system']` in `WEB/next.config.ts`
+- [x] T011 Change `defaultLocale` from `'en'` to `'ar'` in `WEB/proxy.ts`; ensure `WEB/app/[lang]/layout.tsx` sets `<html lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'}>`
 
 **Checkpoint**: `pnpm install`, `pnpm check-types`, `pnpm --filter @repo/design-system storybook` start cleanly.
 
@@ -46,14 +46,14 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 
 **Purpose**: utilities, provider, types and guard tests every story depends on
 
-- [ ] T012 [P] Implement `cn()` in `DS/src/lib/cn.ts` (clsx + tailwind-merge configured with the custom token class groups) with test `DS/src/lib/cn.test.ts`
-- [ ] T013 [P] Implement `formatNumber`, `formatCurrency` (SAR), `formatDate` in `DS/src/lib/format.ts` using `Intl` with `ar-SA-u-nu-latn` / `en-SA` (Western digits) with test `DS/src/lib/format.test.ts` (e.g. `12000000` → `12,000,000` in both locales)
-- [ ] T014 [P] Implement `useReducedMotion` hook in `DS/src/lib/use-reduced-motion.ts` (client) with test
-- [ ] T015 [P] Create view-model types from data-model.md in `DS/src/types/index.ts` (ImageRef, LinkRef, ActionRef, NavItem, SiteChrome, ContactChannel, Office, Stat, ServiceSummary, Pillar, ProcessStep, MethodologyRow, SectorSummary, CaseStory, ArticleSummary, Author, TocItem, JobSummary, Perk, Testimonial, FaqItem, LogoItem, LegalSection/LegalDocument, EstimatorConfig/EstimatorQuestion, field models)
-- [ ] T016 Implement `DesignSystemProvider` in `DS/src/layout/DesignSystemProvider/DesignSystemProvider.tsx` (client; props `locale`, `dir`; wraps Radix `DirectionProvider`; exposes `useDesignSystem()` context) with test
-- [ ] T017 [P] Write guard test `DS/src/__guards__/no-physical-direction.test.ts` that scans `src/**/*.tsx` (excluding stories) and fails on `\b(ml|mr|pl|pr|left|right|rounded-[lr]|border-[lr]|scroll-m[lr]|scroll-p[lr])-` and `text-(left|right)`; allow-list via `// ds-allow-physical: <reason>`
-- [ ] T018 [P] Write guard test `DS/src/__guards__/no-raw-values.test.ts` failing on hex colours, `rgb(`, and arbitrary px values (`-\[\d+px\]`) in `src/**/*.tsx` outside `src/styles`
-- [ ] T019 Create barrel files `DS/src/{primitives,forms,layout,sections,icons,lib,types}/index.ts` and verify the exports map resolves from `WEB` with a type-only import in `WEB/src/reference/.keep.ts` (delete after T104)
+- [x] T012 [P] Implement `cn()` in `DS/src/lib/cn.ts` (clsx + tailwind-merge configured with the custom token class groups) with test `DS/src/lib/cn.test.ts`
+- [x] T013 [P] Implement `formatNumber`, `formatCurrency` (SAR), `formatDate` in `DS/src/lib/format.ts` using `Intl` with `ar-SA-u-nu-latn` / `en-SA` (Western digits) with test `DS/src/lib/format.test.ts` (e.g. `12000000` → `12,000,000` in both locales)
+- [x] T014 [P] Implement `useReducedMotion` hook in `DS/src/lib/use-reduced-motion.ts` (client) with test
+- [x] T015 [P] Create view-model types from data-model.md in `DS/src/types/index.ts` (ImageRef, LinkRef, ActionRef, NavItem, SiteChrome, ContactChannel, Office, Stat, ServiceSummary, Pillar, ProcessStep, MethodologyRow, SectorSummary, CaseStory, ArticleSummary, Author, TocItem, JobSummary, Perk, Testimonial, FaqItem, LogoItem, LegalSection/LegalDocument, EstimatorConfig/EstimatorQuestion, field models)
+- [x] T016 Implement `DesignSystemProvider` in `DS/src/layout/DesignSystemProvider/DesignSystemProvider.tsx` (client; props `locale`, `dir`; wraps Radix `DirectionProvider`; exposes `useDesignSystem()` context) with test
+- [x] T017 [P] Write guard test `DS/src/__guards__/no-physical-direction.test.ts` that scans `src/**/*.tsx` (excluding stories) and fails on `\b(ml|mr|pl|pr|left|right|rounded-[lr]|border-[lr]|scroll-m[lr]|scroll-p[lr])-` and `text-(left|right)`; allow-list via `// ds-allow-physical: <reason>`
+- [x] T018 [P] Write guard test `DS/src/__guards__/no-raw-values.test.ts` failing on hex colours, `rgb(`, and arbitrary px values (`-\[\d+px\]`) in `src/**/*.tsx` outside `src/styles`
+- [x] T019 Create barrel files `DS/src/{primitives,forms,layout,sections,icons,lib,types}/index.ts` and verify the exports map resolves from `WEB` with a type-only import in `WEB/src/reference/.keep.ts` (delete after T104)
 
 **Checkpoint**: `pnpm --filter @repo/design-system test` runs (guards green on empty sources).
 
