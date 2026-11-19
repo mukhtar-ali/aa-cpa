@@ -83,7 +83,7 @@ export const LeadAdminSchema = z.object({
     assignedTo: z
         .object({
             id: z.string(),
-            name: z.string(),
+            username: z.string(),
         })
         .optional()
         .nullable(),
