@@ -21,6 +21,14 @@ import {
     FileText,
     Phone,
     Home as HomeIcon,
+    ShieldCheck,
+    Building2,
+    Calculator,
+    FolderTree,
+    UserCheck,
+    Layers,
+    Bell,
+    Shield,
 } from 'lucide-react'
 import { PermissionEnum } from '@repo/shared'
 import { type SidebarData } from '../types'
@@ -33,7 +41,7 @@ export const sidebarData: SidebarData = {
     },
     teams: [
         {
-            name: 'Admin Panel',
+            name: 'CPA Admin Portal',
             logo: Command,
             plan: 'NestJS + ShadcnUI',
         },
@@ -70,11 +78,11 @@ export const sidebarData: SidebarData = {
                     ],
                 },
                 {
-                    id: 'inquiries',
-                    title: 'Inquiries',
-                    url: '/inquiries',
+                    id: 'leads',
+                    title: 'Leads & PDPL',
+                    url: '/leads',
                     icon: Mail,
-                    permission: PermissionEnum.AdminPortalManageContent,
+                    permission: PermissionEnum.AdminPortalLeadsView,
                 },
                 {
                     id: 'contact-submissions',
@@ -92,31 +100,67 @@ export const sidebarData: SidebarData = {
             ],
         },
         {
-            title: 'Content',
+            title: 'CPA Content',
             items: [
                 {
-                    title: 'Home',
-                    url: '/home',
-                    icon: HomeIcon,
-                    permission: PermissionEnum.AdminPortalManageContent,
+                    title: 'Services',
+                    url: '/services',
+                    icon: ShieldCheck,
+                    permission: PermissionEnum.AdminPortalServicesView,
                 },
                 {
-                    title: 'Projects',
-                    url: '/projects',
-                    icon: Landmark,
-                    permission: PermissionEnum.AdminPortalProjectsView,
+                    title: 'Sectors',
+                    url: '/sectors',
+                    icon: Building2,
+                    permission: PermissionEnum.AdminPortalSectorsView,
                 },
                 {
-                    title: 'News & Events',
+                    title: 'Articles & Insights',
                     url: '/news',
                     icon: Newspaper,
                     permission: PermissionEnum.AdminPortalNewsView,
                 },
                 {
-                    title: 'Careers',
+                    title: 'Article Categories',
+                    url: '/article-categories',
+                    icon: FolderTree,
+                    permission: PermissionEnum.AdminPortalNewsView,
+                },
+                {
+                    title: 'Authors',
+                    url: '/authors',
+                    icon: UserCheck,
+                    permission: PermissionEnum.AdminPortalNewsView,
+                },
+                {
+                    title: 'Careers & Jobs',
                     url: '/careers',
                     icon: Briefcase,
                     permission: PermissionEnum.AdminPortalCareersView,
+                },
+                {
+                    title: 'Job Departments',
+                    url: '/job-departments',
+                    icon: Landmark,
+                    permission: PermissionEnum.AdminPortalCareersView,
+                },
+                {
+                    title: 'Site Content & References',
+                    url: '/site-content',
+                    icon: Layers,
+                    permission: PermissionEnum.AdminPortalSiteContentView,
+                },
+                {
+                    title: 'Fee Estimator',
+                    url: '/estimator',
+                    icon: Calculator,
+                    permission: PermissionEnum.AdminPortalEstimatorUpdate,
+                },
+                {
+                    title: 'Home',
+                    url: '/home',
+                    icon: HomeIcon,
+                    permission: PermissionEnum.AdminPortalManageContent,
                 },
                 {
                     title: 'About Page',
@@ -185,6 +229,16 @@ export const sidebarData: SidebarData = {
                             title: 'Email Settings',
                             url: '/settings/email',
                             icon: Send,
+                        },
+                        {
+                            title: 'Notifications & Retention',
+                            url: '/settings/notifications',
+                            icon: Bell,
+                        },
+                        {
+                            title: 'Spam & Bot Protection',
+                            url: '/settings/spam',
+                            icon: Shield,
                         },
                     ],
                 },

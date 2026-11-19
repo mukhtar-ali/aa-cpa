@@ -41,19 +41,11 @@ export function QuickActionCards({ stats, isLoading }: QuickActionCardsProps) {
     },
     {
       title: 'Content to Publish',
-      count: (stats?.news.draft ?? 0) + (stats?.jobs.draft ?? 0) + (stats?.projects.draft ?? 0),
+      count: (stats?.news.draft ?? 0) + (stats?.jobs.draft ?? 0),
       icon: FileText,
       iconClass: 'text-muted-foreground',
       chipClass: 'bg-muted',
-      href: '/projects',
-    },
-    {
-      title: 'Open Inquiries',
-      count: stats?.inquiries.open ?? 0,
-      icon: Phone,
-      iconClass: 'text-muted-foreground',
-      chipClass: 'bg-muted',
-      href: '/inquiries',
+      href: '/news',
     },
   ]
 

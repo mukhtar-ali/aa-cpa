@@ -35,4 +35,11 @@ export const customEnv = {
     SUPPORT_EMAIL: process.env.SUPPORT_EMAIL || '',
     ADMIN_PORTAL_URL: process.env.ADMIN_PORTAL_URL || 'http://localhost:3002',
     FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:3000',
+    WEB_REVALIDATE_URL: process.env.WEB_REVALIDATE_URL || '',
+    WEB_REVALIDATE_SECRET: process.env.WEB_REVALIDATE_SECRET || '',
+    PREVIEW_SECRET: process.env.PREVIEW_SECRET || '',
+    TURNSTILE_SECRET: process.env.TURNSTILE_SECRET || '',
+    ESTIMATOR_ALLOW_DRAFT: process.env.ESTIMATOR_ALLOW_DRAFT === 'true',
+    IP_HASH_PEPPER: process.env.IP_HASH_PEPPER || '',
+    WEB_URL: process.env.WEB_URL || process.env.FRONTEND_URL || 'http://localhost:3000',
 };

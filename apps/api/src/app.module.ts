@@ -1,5 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import { LoggerModule } from 'nestjs-pino';
@@ -12,18 +13,25 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
 import { UsersModule } from './users/users.module';
-import { ProjectModule } from './project/project.module';
-import { UnitesModule } from './unites/unites.module';
 import { ResourceModule } from './resource/resource.module';
 import { SectionModule } from './section/section.module';
 import { SeoModule } from './seo/seo.module';
-import { InquiryModule } from './inquiry/inquiry.module';
 import { MonitoringModule } from './monitoring/monitoring.module';
-import { ContactModule } from './contact/contact.module';
 import { NewsModule } from './news/news.module';
 import { CareersModule } from './careers/careers.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { HealthModule } from './health/health.module';
+import { ServiceModule } from './service/service.module';
+import { SectorModule } from './sector/sector.module';
+import { ReferenceModule } from './reference/reference.module';
+import { RedirectsModule } from './redirects/redirects.module';
+import { PagesModule } from './pages/pages.module';
+import { PreviewModule } from './preview/preview.module';
+import { PublicCacheInterceptor } from './preview/public-cache.interceptor';
+import { OutboxModule } from './outbox/outbox.module';
+import { PrivacyModule } from './privacy/privacy.module';
+import { LeadsModule } from './leads/leads.module';
+import { EstimatorModule } from './estimator/estimator.module';
 
 @Module({
     imports: [
@@ -36,7 +44,7 @@ import { HealthModule } from './health/health.module';
             },
         }),
         I18nModule.forRoot({
-            fallbackLanguage: 'en',
+            fallbackLanguage: 'ar',
             loaderOptions: {
                 path: path.join(__dirname, '/i18n/'),
                 watch: true,
@@ -47,22 +55,29 @@ import { HealthModule } from './health/health.module';
         // @Throttle({ default: { limit, ttl } }) for tighter limits — see auth.controller.ts
         // and resource.controller.ts.
         ThrottlerModule.forRoot([{ name: 'default', ttl: 60000, limit: 60 }]),
+        ScheduleModule.forRoot(),
         PrismaModule,
         AuthModule,
         EmailModule,
         UsersModule,
-        ProjectModule,
-        UnitesModule,
         ResourceModule,
         SectionModule,
         SeoModule,
-        InquiryModule,
         MonitoringModule,
-        ContactModule,
         NewsModule,
         CareersModule,
         DashboardModule,
         HealthModule,
+        ServiceModule,
+        SectorModule,
+        ReferenceModule,
+        RedirectsModule,
+        PagesModule,
+        PreviewModule,
+        OutboxModule,
+        PrivacyModule,
+        LeadsModule,
+        EstimatorModule,
     ],
     controllers: [],
     providers: [
@@ -70,6 +85,10 @@ import { HealthModule } from './health/health.module';
         {
             provide: APP_FILTER,
             useClass: HttpExceptionFilter,
+        },
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: PublicCacheInterceptor,
         },
         // ThrottlerModule.forRoot() only registers the config — without this guard,
         // nothing was ever actually being throttled (including the pre-existing

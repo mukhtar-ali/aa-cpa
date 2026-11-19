@@ -1,10 +1,6 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan for your feature:
-- 001 UI design system: `specs/001-design-system/plan.md` (+ `research.md`, `data-model.md`, `contracts/`, `quickstart.md`)
-- 002 Backend: `specs/002-cpa-content-backend/plan.md` (+ `research.md`, `data-model.md`, `contracts/`, `quickstart.md`)
-- 003 Public pages: `specs/003-public-site-pages/` · 004 SEO, compliance & launch: `specs/004-seo-compliance-launch/`
-- Roadmap: `specs/README.md` · Project principles: `.specify/memory/constitution.md`
+shell commands, and other important information, read the current plan
 <!-- SPECKIT END -->
 
 ## Roles

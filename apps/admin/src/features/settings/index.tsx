@@ -1,5 +1,5 @@
 import { Outlet } from '@tanstack/react-router'
-import { Info, Share2, Search as SearchIcon, Radar, Send } from 'lucide-react'
+import { Bell, Info, Share2, Search as SearchIcon, Radar, Send, Shield } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
@@ -38,6 +38,16 @@ const sidebarNavGroups = [
         title: 'Email Settings',
         href: '/settings/email',
         icon: <Send size={18} />,
+      },
+      {
+        title: 'Notifications & Retention',
+        href: '/settings/notifications',
+        icon: <Bell size={18} />,
+      },
+      {
+        title: 'Spam & Bot Protection',
+        href: '/settings/spam',
+        icon: <Shield size={18} />,
       },
     ],
     icon: <SearchIcon size={18} />,

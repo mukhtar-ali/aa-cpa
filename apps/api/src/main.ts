@@ -77,9 +77,18 @@ async function bootstrap() {
     const swaggerEnabled = isSwaggerEnabled();
     if (swaggerEnabled) {
         const config = new DocumentBuilder()
-            .setTitle('Nest Next Starter API')
-            .setDescription('API documentation for nest-next-starter')
+            .setTitle('Ahmad Abdullah CPA API')
+            .setDescription('Bilingual (AR/EN) Content, Fee Estimator & Lead Management API for Ahmad Abdullah CPA')
             .setVersion('1.0')
+            .addTag('site', 'Public site chrome & global SEO')
+            .addTag('pages', 'Public bilingual page aggregators')
+            .addTag('services', 'CPA professional services')
+            .addTag('sectors', 'Economic sectors served')
+            .addTag('articles', 'Articles, insights & case stories')
+            .addTag('careers', 'Job postings & candidate applications')
+            .addTag('estimator', 'Server-side fee estimator & quote requests')
+            .addTag('leads', 'Contact requests & lead pipeline')
+            .addTag('privacy', 'PDPL consent, export & erasure')
             .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'bearer')
             .build();
 

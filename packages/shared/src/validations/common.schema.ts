@@ -8,12 +8,63 @@ export const MultiLanguageFieldSchema = z.object({
 });
 
 /**
- * A multi-language field whose English text is mandatory (English is the fallback language), e.g. the title of a
- * news article, project, job or unit. Without it the admin could save a record with no title at all, which then
- * shows up blank in every list and on the public site. Arabic stays optional.
+ * A multi-language field whose Arabic text is mandatory (Arabic is the primary language), e.g. the title of a
+ * service, sector, article, job or section. English is optional and defaults to empty string.
  */
 export const RequiredTitleSchema = MultiLanguageFieldSchema.extend({
-    en: z.string().trim().min(1, 'English title is required'),
+    ar: z.string().trim().min(1, 'Arabic title is required'),
+    en: z.string().default(''),
+});
+
+export const SlugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+export const SlugSchema = z
+    .string()
+    .trim()
+    .min(1, 'Slug is required')
+    .regex(SlugRegex, 'Slug must be lowercase alphanumeric with single hyphens');
+
+export const SaudiMobileRegex = /^(?:(?:\+966|00966|0)?5\d{8}|\+[1-9]\d{6,14})$/;
+export const SaudiMobileSchema = z
+    .string()
+    .trim()
+    .regex(SaudiMobileRegex, 'Invalid mobile number (must be Saudi 05XXXXXXXX or E.164)');
+
+export const ImageFieldSchema = z.object({
+    url: z.string().trim().min(1, 'Image URL is required'),
+    width: z.number().int().positive('Image width must be positive'),
+    height: z.number().int().positive('Image height must be positive'),
+    alt: MultiLanguageFieldSchema,
+});
+
+export const ImageRefSchema = z.object({
+    src: z.string().trim().min(1, 'Image source is required'),
+    alt: z.string().default(''),
+    width: z.number().int().positive().optional(),
+    height: z.number().int().positive().optional(),
+});
+
+export const LinkRefSchema = z.object({
+    label: z.string(),
+    href: z.string(),
+    external: z.boolean().optional(),
+});
+
+export const ActionRefSchema = LinkRefSchema.extend({
+    variant: z.enum(['primary', 'secondary', 'outline-light', 'link']).optional(),
+});
+
+export const PublicFormGuardSchema = z.object({
+    consent: z.literal(true, {
+        message: 'Consent is required',
+    }),
+    website: z
+        .string()
+        .max(0, 'Spam detected')
+        .optional()
+        .or(z.literal(''))
+        .default(''),
+    startedAt: z.number().int(),
+    turnstileToken: z.string().optional(),
 });
 
 export const getDefaultMultiLanguageField = () =>

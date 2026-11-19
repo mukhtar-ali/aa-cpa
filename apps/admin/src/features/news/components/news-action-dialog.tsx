@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useQuery } from '@tanstack/react-query'
 import { formResolver } from '@/lib/form-resolver'
 import { Loader2 } from 'lucide-react'
 import { getDefaultNewsForm, NewsFormSchema, type NewsFormModel, type NewsModel } from '@repo/shared'
@@ -27,6 +28,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ImageUploadField } from '@/components/upload/image-upload-field'
 import { RichTextEditor } from '@/components/rich-text/rich-text-editor'
 import { LANGUAGES, LanguageTabs } from '@/components/language-tabs'
+import { getAdminArticleCategories, getAdminAuthors } from '@/lib/reference-api'
 import { useCreateNews, useUpdateNews } from '../hooks/use-news'
 
 type NewsActionDialogProps = {
@@ -37,6 +39,7 @@ type NewsActionDialogProps = {
 
 function toFormValues(news?: NewsModel | null): NewsFormModel {
   if (!news) return getDefaultNewsForm()
+  const anyNews = news as any
   return {
     title: news.title,
     excerpt: news.excerpt,
@@ -44,8 +47,16 @@ function toFormValues(news?: NewsModel | null): NewsFormModel {
     metaTitle: news.metaTitle,
     metaDescription: news.metaDescription,
     keywords: news.keywords,
-    thumbnail: news.thumbnail ?? '',
-    tag: news.tag,
+    thumbnail: typeof news.thumbnail === 'string' ? news.thumbnail : (anyNews.thumbnail?.url ?? ''),
+    categoryId: anyNews.categoryId ?? undefined,
+    authorId: anyNews.authorId ?? undefined,
+    readingMinutes: anyNews.readingMinutes ?? undefined,
+    tocEnabled: anyNews.tocEnabled ?? true,
+    publishedAt: anyNews.publishedAt ?? undefined,
+    tags: anyNews.tags ?? [],
+    sectorIds: anyNews.sectorIds ?? [],
+    serviceIds: anyNews.serviceIds ?? [],
+    tag: news.tag ?? 'news',
     isPublished: news.isPublished,
     isFeatured: news.isFeatured,
     slug: news.slug,
@@ -56,7 +67,19 @@ export function NewsActionDialog({ open, onOpenChange, currentRow }: NewsActionD
   const isEdit = !!currentRow
   const createNews = useCreateNews()
   const updateNews = useUpdateNews()
-  const [lang, setLang] = useState<'en' | 'ar'>('en')
+  const [lang, setLang] = useState<'en' | 'ar'>('ar')
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ['admin-article-categories'],
+    queryFn: getAdminArticleCategories,
+    enabled: open,
+  })
+
+  const { data: authors = [] } = useQuery({
+    queryKey: ['admin-authors'],
+    queryFn: getAdminAuthors,
+    enabled: open,
+  })
 
   const form = useForm<NewsFormModel>({
     resolver: formResolver(NewsFormSchema),
@@ -64,7 +87,10 @@ export function NewsActionDialog({ open, onOpenChange, currentRow }: NewsActionD
   })
 
   useEffect(() => {
-    if (open) form.reset(toFormValues(currentRow))
+    if (open) {
+      form.reset(toFormValues(currentRow))
+      setLang('ar')
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, currentRow])
 
@@ -92,11 +118,9 @@ export function NewsActionDialog({ open, onOpenChange, currentRow }: NewsActionD
     >
       <DialogContent className='sm:max-w-3xl'>
         <DialogHeader className='text-start'>
-          <DialogTitle>{isEdit ? 'Edit Article' : 'Add News Article'}</DialogTitle>
+          <DialogTitle>{isEdit ? 'Edit Article' : 'Add Article'}</DialogTitle>
           <DialogDescription>
-            {isEdit
-              ? 'Update the article below. Content fields support English and Arabic.'
-              : 'Create a new news/event article. Content fields support English and Arabic.'}
+            Manage bilingual CPA articles, categories, authors, and SEO metadata.
           </DialogDescription>
         </DialogHeader>
         <div className='max-h-[70vh] overflow-y-auto px-0.5 py-1'>
@@ -111,7 +135,9 @@ export function NewsActionDialog({ open, onOpenChange, currentRow }: NewsActionD
                     name={`title.${l.code}`}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Title ({l.label})</FormLabel>
+                        <FormLabel>
+                          Title ({l.label}) {l.code === 'ar' && <span className='text-destructive'>*</span>}
+                        </FormLabel>
                         <FormControl>
                           <Input dir={l.code === 'ar' ? 'rtl' : 'ltr'} placeholder='Article title' {...field} />
                         </FormControl>
@@ -210,29 +236,80 @@ export function NewsActionDialog({ open, onOpenChange, currentRow }: NewsActionD
                     <FormItem>
                       <FormLabel>Slug</FormLabel>
                       <FormControl>
-                        <Input placeholder='auto-generated from EN title' {...field} value={field.value ?? ''} />
+                        <Input placeholder='auto-generated from title' {...field} value={field.value ?? ''} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
-                  name='tag'
+                  name='categoryId'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tag</FormLabel>
-                      <Select value={field.value} onValueChange={field.onChange}>
+                      <FormLabel>Category</FormLabel>
+                      <Select value={field.value ?? ''} onValueChange={field.onChange}>
                         <FormControl>
                           <SelectTrigger className='w-full'>
-                            <SelectValue />
+                            <SelectValue placeholder='Select category' />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value='news'>News</SelectItem>
-                          <SelectItem value='event'>Event</SelectItem>
+                          {categories.map((cat) => (
+                            <SelectItem key={cat.id} value={cat.id}>
+                              {cat.name?.ar || cat.name?.en || cat.slug}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='authorId'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Author</FormLabel>
+                      <Select value={field.value ?? ''} onValueChange={(v) => field.onChange(v || null)}>
+                        <FormControl>
+                          <SelectTrigger className='w-full'>
+                            <SelectValue placeholder='Select author' />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {authors.map((auth) => (
+                            <SelectItem key={auth.id} value={auth.id}>
+                              {auth.name?.ar || auth.name?.en}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='readingMinutes'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Reading Minutes (optional)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type='number'
+                          min={1}
+                          placeholder='Auto-calculated if empty'
+                          value={field.value ?? ''}
+                          onChange={(e) =>
+                            field.onChange(e.target.value ? Number(e.target.value) : null)
+                          }
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -242,22 +319,25 @@ export function NewsActionDialog({ open, onOpenChange, currentRow }: NewsActionD
               <FormField
                 control={form.control}
                 name='thumbnail'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Thumbnail</FormLabel>
-                    <FormControl>
-                      <ImageUploadField
-                        value={field.value ?? undefined}
-                        onChange={field.onChange}
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const thumbUrl = typeof field.value === 'string' ? field.value : (field.value?.url ?? '')
+                  return (
+                    <FormItem>
+                      <FormLabel>Cover Image</FormLabel>
+                      <FormControl>
+                        <ImageUploadField
+                          value={thumbUrl || undefined}
+                          onChange={field.onChange}
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )
+                }}
               />
 
-              <div className='flex items-center gap-8'>
+              <div className='flex flex-wrap items-center gap-8'>
                 <FormField
                   control={form.control}
                   name='isPublished'
@@ -278,6 +358,18 @@ export function NewsActionDialog({ open, onOpenChange, currentRow }: NewsActionD
                       <FormLabel className='mb-0'>Featured</FormLabel>
                       <FormControl>
                         <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='tocEnabled'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-row items-center gap-2'>
+                      <FormLabel className='mb-0'>Table of Contents</FormLabel>
+                      <FormControl>
+                        <Switch checked={field.value ?? true} onCheckedChange={field.onChange} />
                       </FormControl>
                     </FormItem>
                   )}

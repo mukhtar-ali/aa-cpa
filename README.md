@@ -91,6 +91,7 @@ _nest_next_starter/
 | `pnpm --filter @repo/api db:push` | Push Prisma schema state directly to the database |
 | `pnpm --filter @repo/api db:studio` | Open Prisma Studio |
 | `pnpm --filter @repo/api seed` | Seed the initial super-admin user and default CMS sections |
+| `pnpm --filter @repo/api seed -- --content` | Seed super-admin, default sections, and full CPA content (services, sectors, articles, jobs, reference, pages, estimator) |
 | `pnpm --filter @repo/api test` | Run API unit tests with Jest |
 | `pnpm --filter @repo/api test:e2e` | Run API e2e tests with Jest |
 

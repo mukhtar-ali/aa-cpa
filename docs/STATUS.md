@@ -1,10 +1,10 @@
-# Project Status (`_nest_next_starter`)
+# Project Status (`aa-cpa` — Ahmad Abdullah CPA)
 
-> Consolidated from `IMPLEMENTATION_PLAN.md`, `IMPLEMENTATION_GAPS.md`, `REMAINING_ISSUES.md`, `WUJUD_PARITY_PLAN.md`, and `COMPREHENSIVE_QA_TEST_REPORT.md` (archived in [`docs/archive/`](./archive/)). All items below were verified directly against the current codebase.
+> Consolidated status reflecting the completion of feature `002-cpa-content-backend` (CPA Content & Lead Backend). The legacy real-estate domain (`projects`, `units`, `inquiries`) has been removed and replaced by the CPA firm domain (`services`, `sectors`, `articles`, `careers`, `estimator`, `leads`, `privacy`, `outbox`, `pages`, `preview`).
 
 ## Summary
 
-`_nest_next_starter` is a pnpm + Turborepo monorepo combining a **NestJS 11 + Prisma (MySQL)** backend (`apps/api`), a **Vite + React 19 + shadcn/ui + TanStack Router/Query** admin portal (`apps/admin`), a **Next.js 16 App Router** bilingual (`en`/`ar`) public storefront (`apps/web`), and shared Zod schemas/models/endpoints (`packages/shared`, `packages/ui`).
+`aa-cpa` is a pnpm + Turborepo monorepo combining a **NestJS 11 + Prisma (MySQL)** backend (`apps/api`), a **Vite + React 19 + shadcn/ui + TanStack Router/Query** admin portal (`apps/admin`), a **Next.js 16 App Router** Arabic-first bilingual (`ar`/`en`) public website (`apps/web`), and shared Zod schemas/models/endpoints (`packages/shared`, `packages/ui`).
 
 Core implementation, the 14 initial audit gaps, all 17 Wujud parity features, and the 42-test Playwright E2E suite are implemented and typecheck cleanly (`pnpm check-types` passes with zero errors).
 

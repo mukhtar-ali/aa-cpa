@@ -39,8 +39,12 @@ test.describe('Module 11: Role & Permission Gating (Sidebar & Route Guards)', ()
 
   test('TC-PERM-02: Limited-permission user is redirected to /403 when opening forbidden routes directly', async ({ page }) => {
     const forbiddenRoutes = [
-      '/inquiries',
       '/users',
+      '/leads',
+      '/services',
+      '/sectors',
+      '/site-content',
+      '/estimator',
       '/contact-submissions',
       '/settings',
       '/home',

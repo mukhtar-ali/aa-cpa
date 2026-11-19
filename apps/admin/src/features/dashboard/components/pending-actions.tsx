@@ -42,13 +42,6 @@ export function PendingActions({ stats, isLoading }: PendingActionsProps) {
       icon: Briefcase,
       href: '/careers',
     },
-    {
-      key: 'projects-draft',
-      label: 'Draft projects to publish',
-      count: stats?.projects.draft ?? 0,
-      icon: FileText,
-      href: '/projects',
-    },
   ]
 
   return (

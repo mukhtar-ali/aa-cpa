@@ -56,7 +56,7 @@ test.describe('Module 1: Authentication & Access Control', () => {
     // Should be redirected to sign-in
     await expect(page).toHaveURL(/\/sign-in/, { timeout: 8000 });
 
-    await page.goto('http://localhost:3002/projects');
+    await page.goto('http://localhost:3002/settings');
     await expect(page).toHaveURL(/\/sign-in/, { timeout: 8000 });
   });
 

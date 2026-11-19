@@ -61,27 +61,6 @@ jobs:
       - name: API unit tests
         run: pnpm --filter @repo/api test -- --passWithNoTests
 
-  # Applies scripts/strip-domain (the generic "core starter" preset, MUK-474) to a fresh checkout and
-  # proves the result still installs, builds, type-checks and passes the API tests.
-  starter-core:
-    name: Core starter preset (strip-domain)
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - name: Apply the preset
-        run: node scripts/strip-domain/strip-domain.mjs --apply
-      - run: pnpm --filter @repo/api db:generate
-      - run: pnpm build
-      - run: pnpm check-types
-      - run: pnpm --filter @repo/api test -- --passWithNoTests
-
   # Builds the three production images through docker-compose and smoke-tests the
   # stack. GitHub runners ship with Docker, so this verifies the Dockerfiles without
   # needing Docker on a developer machine.

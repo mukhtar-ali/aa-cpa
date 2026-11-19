@@ -16,14 +16,14 @@ export interface DashboardContentItem {
   updatedAt: string
 }
 
-export type DashboardContentType = 'projects' | 'news' | 'jobs'
+export type DashboardContentType = 'news' | 'jobs'
 
 export interface DashboardStats {
   users: { total: number }
-  projects: { total: number; published: number; draft: number }
+  projects?: { total: number; published: number; draft: number }
   news: { total: number; published: number; draft: number }
   jobs: { total: number; published: number; draft: number; pendingApplications: number }
-  inquiries: { open: number }
+  inquiries?: { open: number }
   contact: { new: number }
   activity: { pageviewsToday: number; errorsToday: number }
   pageviewsTrend: { date: string; count: number }[]

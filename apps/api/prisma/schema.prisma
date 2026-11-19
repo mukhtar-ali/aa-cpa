@@ -21,11 +21,89 @@ enum OtpType {
 }
 
 enum SectionType {
-  website_info    @map("website-info")
-  home_hero       @map("home-hero")
-  home_about      @map("home-about")
+  website_info          @map("website-info")
+  home_hero             @map("home-hero")
+  home_about            @map("home-about")
   fonts
-  home_why        @map("home-why")
+  home_why              @map("home-why")
+  site_chrome           @map("site-chrome")
+  page_home             @map("page-home")
+  page_about            @map("page-about")
+  page_services         @map("page-services")
+  service_shared        @map("service-shared")
+  page_sectors          @map("page-sectors")
+  page_articles         @map("page-articles")
+  page_careers          @map("page-careers")
+  page_contact          @map("page-contact")
+  legal_privacy         @map("legal-privacy")
+  legal_terms           @map("legal-terms")
+  legal_accessibility   @map("legal-accessibility")
+  estimator_config      @map("estimator-config")
+  notification_settings @map("notification-settings")
+  spam_settings         @map("spam-settings")
+}
+
+enum EmploymentType {
+  full_time
+  part_time
+  contract
+  internship
+  cooperative_training
+}
+
+enum JobApplicationStatus {
+  pending
+  reviewed
+  shortlisted
+  interview
+  offer
+  hired
+  rejected
+}
+
+enum FaqScope {
+  global
+  contact
+  service
+}
+
+enum SlugRedirectEntityType {
+  service
+  sector
+  article
+  job
+}
+
+enum ContactSource {
+  contact
+  estimator
+  service_page
+}
+
+enum ContactStatus {
+  new
+  contacted
+  qualified
+  closed
+  spam
+}
+
+enum ConsentSubjectType {
+  contact
+  application
+  quote
+}
+
+enum OutboxKind {
+  email
+  revalidate
+}
+
+enum OutboxStatus {
+  pending
+  sending
+  sent
+  failed
 }
 
 // ============================================================
@@ -48,9 +126,11 @@ model User {
   updatedAt           DateTime  @updatedAt
   deletedAt           DateTime?
 
-  otps          UserOtp[]
-  loginAttempts LoginAttempt[]
-  refreshTokens RefreshToken[]
+  otps                 UserOtp[]
+  loginAttempts        LoginAttempt[]
+  refreshTokens        RefreshToken[]
+  assignedContacts     Contact[]        @relation("AssignedContacts")
+  assignedApplications JobApplication[] @relation("AssignedApplications")
 
   @@map("users")
 }
@@ -70,9 +150,6 @@ model UserOtp {
   @@map("user_otps")
 }
 
-// Audit trail of every login attempt (success and failure), keyed by user when the
-// email matched a real account. Backs both account lockout and a future admin
-// "login history" view.
 model LoginAttempt {
   id            String   @id @default(uuid())
   userId        String?
@@ -89,9 +166,6 @@ model LoginAttempt {
   @@map("login_attempts")
 }
 
-// Long-lived refresh tokens, issued as an httpOnly cookie and stored here hashed
-// (never in plaintext) so they can be individually or entirely revoked — powers
-// logout, "log out all devices" (password change/reset), and session auditing.
 model RefreshToken {
   id        String    @id @default(uuid())
   userId    String
@@ -109,155 +183,512 @@ model RefreshToken {
 }
 
 // ============================================================
-// Projects & Units
+// Services & Sectors
 // ============================================================
 
-model Project {
+model Service {
+  id           String    @id @default(uuid())
+  slug         String    @unique @db.VarChar(120)
+  image        Json?
+  heroImage    Json?
+  icon         String?   @db.VarChar(100)
+  highlight    Json?
+  methodology  Json      @default("[]")
+  deliverables Json      @default("[]")
+  order        Int       @default(0)
+  isPublished  Boolean   @default(false)
+  publishedAt  DateTime?
+  isDeleted    Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  translations ServiceTranslation[]
+  sectors      ServiceSector[]
+  articles     ArticleService[]
+  faqs         FaqItem[]
+  contacts     Contact[]
+
+  @@index([isPublished, isDeleted])
+  @@index([order])
+  @@map("services")
+}
+
+model ServiceTranslation {
+  id              String   @id @default(uuid())
+  serviceId       String
+  service         Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  language        Language
+  title           String   @db.VarChar(255)
+  summary         String   @db.Text
+  heroSubtitle    String?  @db.VarChar(500)
+  statement       String?  @db.Text
+  audience        String?  @db.Text
+  whyUs           String?  @db.Text
+  metaTitle       String?  @db.VarChar(255)
+  metaDescription String?  @db.Text
+  keywords        String?  @db.Text
+
+  @@unique([serviceId, language])
+  @@map("service_translations")
+}
+
+model Sector {
   id          String    @id @default(uuid())
-  slug        String?   @unique @db.VarChar(255)
-  heroMedia   Json?
-  thumbnail   String?   @db.VarChar(500)
+  slug        String    @unique @db.VarChar(120)
+  icon        String?   @db.VarChar(100)
+  featured    Boolean   @default(false)
+  bandImage   Json?
+  order       Int       @default(0)
   isPublished Boolean   @default(false)
-  isFeatured  Boolean   @default(false)
-  rank        Int       @default(0)
-  location    String?   @db.VarChar(255)
+  publishedAt DateTime?
   isDeleted   Boolean   @default(false)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
 
-  translations ProjectTranslation[]
-  units        Unit[]
+  translations SectorTranslation[]
+  services     ServiceSector[]
+  articles     ArticleSector[]
 
   @@index([isPublished, isDeleted])
-  @@index([rank])
-  @@map("projects")
+  @@index([order])
+  @@map("sectors")
 }
 
-model ProjectTranslation {
+model SectorTranslation {
+  id              String   @id @default(uuid())
+  sectorId        String
+  sector          Sector   @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+  language        Language
+  title           String   @db.VarChar(255)
+  summary         String   @db.Text
+  bandTitle       String?  @db.VarChar(255)
+  bandBody        String?  @db.Text
+  bandCtaLabel    String?  @db.VarChar(100)
+  metaTitle       String?  @db.VarChar(255)
+  metaDescription String?  @db.Text
+  keywords        String?  @db.Text
+
+  @@unique([sectorId, language])
+  @@map("sector_translations")
+}
+
+model ServiceSector {
+  serviceId String
+  sectorId  String
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  sector    Sector  @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+
+  @@id([serviceId, sectorId])
+  @@map("service_sectors")
+}
+
+// ============================================================
+// Articles (News), Categories & Authors
+// ============================================================
+
+model ArticleCategory {
   id          String   @id @default(uuid())
-  projectId   String
-  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  language    Language
-  title       String   @db.VarChar(255)
-  subtitle    String   @db.VarChar(500)
-  location    String   @db.VarChar(255)
-  description String   @db.Text
-  amenities   Json?
-  tags        Json?
+  slug        String   @unique @db.VarChar(120)
+  name        Json
+  order       Int      @default(0)
+  isCaseStory Boolean  @default(false)
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  @@unique([projectId, language])
-  @@map("project_translations")
+  articles News[]
+
+  @@index([order])
+  @@map("article_categories")
 }
 
-model Unit {
-  id                  String    @id @default(uuid())
-  projectId           String
-  project             Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  slug                String?   @unique @db.VarChar(255)
-  thumbnail           String?   @db.VarChar(500)
-  overViewImage       String?   @db.VarChar(500)
-  price               String?   @db.VarChar(100)
-  pricePerMeter       String?   @db.VarChar(100)
-  gallery             Json?
-  isPublished         Boolean   @default(false)
-  bedrooms            Int       @default(0)
-  bathrooms           Int       @default(0)
-  isDeleted           Boolean   @default(false)
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-  deletedAt           DateTime?
+model Author {
+  id        String   @id @default(uuid())
+  name      Json
+  role      Json
+  bio       Json
+  avatar    Json?
+  order     Int      @default(0)
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  translations UnitTranslation[]
+  articles News[]
 
-  @@index([projectId, isPublished])
-  @@map("units")
+  @@index([order])
+  @@map("authors")
 }
 
-model UnitTranslation {
-  id                  String   @id @default(uuid())
-  unitId              String
-  unit                Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  language            Language
-  title               String   @db.VarChar(255)
-  type                String   @db.VarChar(100)
-  area                String   @db.VarChar(100)
-  view                String   @db.VarChar(100)
-  delivery            String   @db.VarChar(100)
-  status              String   @db.VarChar(100)
-  floor               String   @db.VarChar(100)
-  building            String   @db.VarChar(100)
-  overViewTitle       String   @db.VarChar(255)
-  overViewDescription String   @db.Text
-  overViewFeatures    Json?
+model News {
+  id             String           @id @default(uuid())
+  slug           String?          @unique @db.VarChar(300)
+  coverImage     Json?            @map("thumbnail")
+  categoryId     String
+  category       ArticleCategory  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  authorId       String?
+  author         Author?          @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  readingMinutes Int?
+  tags           Json             @default("[]")
+  isPublished    Boolean          @default(false)
+  isFeatured     Boolean          @default(false)
+  publishedAt    DateTime?
+  isDeleted      Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deletedAt      DateTime?
 
-  @@unique([unitId, language])
-  @@map("unit_translations")
+  translations NewsTranslation[]
+  sectors      ArticleSector[]
+  services     ArticleService[]
+
+  @@index([isPublished, isDeleted])
+  @@index([categoryId, isPublished])
+  @@index([isFeatured, isPublished])
+  @@index([publishedAt])
+  @@map("news")
+}
+
+model NewsTranslation {
+  id              String   @id @default(uuid())
+  newsId          String
+  news            News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  language        Language
+  title           String   @db.VarChar(255)
+  excerpt         String?  @db.Text
+  body            String?  @db.LongText
+  tocEnabled      Boolean  @default(true)
+  metaTitle       String?  @db.VarChar(255)
+  metaDescription String?  @db.Text
+  keywords        String?  @db.Text
+
+  @@unique([newsId, language])
+  @@map("news_translations")
+}
+
+model ArticleSector {
+  articleId String
+  sectorId  String
+  article   News   @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  sector    Sector @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, sectorId])
+  @@map("article_sectors")
+}
+
+model ArticleService {
+  articleId String
+  serviceId String
+  article   News    @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, serviceId])
+  @@map("article_services")
 }
 
 // ============================================================
-// Inquiries
+// Careers & Jobs
 // ============================================================
 
-model Inquiry {
-  id            String    @id @default(uuid())
-  phone         String    @db.VarChar(50)
-  fullName      String    @db.VarChar(100)
-  email         String    @db.VarChar(100)
-  projectId     String?
-  unitId        String?
-  message       String?   @db.Text
-  preferredDate String?   @db.VarChar(50)
-  projectName   String?   @db.VarChar(255)
-  unitName      String?   @db.VarChar(255)
-  isDeleted     Boolean   @default(false)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  deletedAt     DateTime?
+model JobDepartment {
+  id        String   @id @default(uuid())
+  slug      String   @unique @db.VarChar(120)
+  name      Json
+  order     Int      @default(0)
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@index([isDeleted])
-  @@map("inquiries")
+  jobs Job[]
+
+  @@index([order])
+  @@map("job_departments")
+}
+
+model Office {
+  id             String    @id @default(uuid())
+  city           Json
+  address        Json
+  mapUrl         String?   @db.VarChar(500)
+  mapX           Int?
+  mapY           Int?
+  image          Json?
+  isHeadquarters Boolean   @default(false)
+  order          Int       @default(0)
+  isPublished    Boolean   @default(true)
+  isDeleted      Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  jobs Job[]
+
+  @@index([order])
+  @@map("offices")
+}
+
+model Job {
+  id               String         @id @default(uuid())
+  slug             String?        @unique @db.VarChar(300)
+  departmentId     String
+  department       JobDepartment  @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  officeId         String?
+  office           Office?        @relation(fields: [officeId], references: [id], onDelete: SetNull)
+  employmentType   EmploymentType @default(full_time)
+  experienceMin    Int?
+  experienceMax    Int?
+  closesAt         DateTime?
+  responsibilities Json           @default("[]")
+  requirements     Json           @default("[]")
+  benefits         Json           @default("[]")
+  order            Int            @default(0)
+  isPublished      Boolean        @default(false)
+  publishedAt      DateTime?
+  isDeleted        Boolean        @default(false)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  deletedAt        DateTime?
+
+  translations JobTranslation[]
+  applications JobApplication[]
+
+  @@index([isPublished, isDeleted])
+  @@index([departmentId, isPublished])
+  @@index([closesAt])
+  @@index([order])
+  @@map("jobs")
+}
+
+model JobTranslation {
+  id              String   @id @default(uuid())
+  jobId           String
+  job             Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  language        Language
+  title           String   @db.VarChar(255)
+  summary         String?  @map("description") @db.Text
+  body            String?  @db.LongText
+  location        String?  @db.VarChar(255)
+  metaTitle       String?  @db.VarChar(255)
+  metaDescription String?  @db.Text
+  keywords        String?  @db.Text
+
+  @@unique([jobId, language])
+  @@map("job_translations")
+}
+
+model JobApplication {
+  id           String               @id @default(uuid())
+  jobId        String
+  job          Job                  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  fullName     String               @db.VarChar(100)
+  email        String               @db.VarChar(255)
+  mobile       String               @db.VarChar(50)
+  linkedinUrl  String?              @db.VarChar(500)
+  motivation   String?              @db.Text
+  resumeKey    String               @db.VarChar(255)
+  resumeName   String               @db.VarChar(255)
+  resumeSize   Int
+  language     Language             @default(ar)
+  status       JobApplicationStatus @default(pending)
+  assignedToId String?
+  assignedTo   User?                @relation("AssignedApplications", fields: [assignedToId], references: [id], onDelete: SetNull)
+  notes        Json                 @default("[]")
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  @@index([jobId, status])
+  @@index([status, createdAt])
+  @@index([email])
+  @@index([assignedToId])
+  @@map("job_applications")
 }
 
 // ============================================================
-// Contact
+// Reference Entities (Testimonials, Logos, Credentials, FAQs, Redirects)
+// ============================================================
+
+model Testimonial {
+  id          String    @id @default(uuid())
+  quote       Json
+  rating      Int?
+  name        Json
+  role        Json
+  company     Json?
+  avatar      Json?
+  order       Int       @default(0)
+  isPublished Boolean   @default(true)
+  placement   Json      @default("[\"home\"]")
+  isDeleted   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([order])
+  @@map("testimonials")
+}
+
+model ClientLogo {
+  id          String    @id @default(uuid())
+  name        String    @db.VarChar(255)
+  logo        Json
+  url         String?   @db.VarChar(500)
+  row         Int       @default(1)
+  order       Int       @default(0)
+  isPublished Boolean   @default(true)
+  isDeleted   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([row, order])
+  @@map("client_logos")
+}
+
+model Credential {
+  id          String    @id @default(uuid())
+  name        Json
+  logo        Json
+  url         String?   @db.VarChar(500)
+  order       Int       @default(0)
+  isPublished Boolean   @default(true)
+  isDeleted   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([order])
+  @@map("credentials")
+}
+
+model FaqItem {
+  id          String    @id @default(uuid())
+  question    Json
+  answer      Json
+  scope       FaqScope  @default(global)
+  serviceId   String?
+  service     Service?  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  order       Int       @default(0)
+  isPublished Boolean   @default(true)
+  isDeleted   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([scope, order])
+  @@index([serviceId])
+  @@map("faq_items")
+}
+
+model SlugRedirect {
+  id         String                 @id @default(uuid())
+  entityType SlugRedirectEntityType
+  fromSlug   String                 @db.VarChar(120)
+  toSlug     String                 @db.VarChar(120)
+  createdAt  DateTime               @default(now())
+
+  @@unique([entityType, fromSlug])
+  @@map("slug_redirects")
+}
+
+// ============================================================
+// Leads (Contacts & Quotes)
 // ============================================================
 
 model Contact {
-  id         String    @id @default(uuid())
-  fullName   String    @db.VarChar(100)
-  subject    String    @db.VarChar(255)
-  email      String    @db.VarChar(100)
-  department String    @db.VarChar(100)
-  message    String    @db.Text
-  status     String    @default("new") @db.VarChar(20) // new, contacted, closed
-  isDeleted  Boolean   @default(false)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  deletedAt  DateTime?
+  id               String        @id @default(uuid())
+  fullName         String        @db.VarChar(100)
+  company          String?       @db.VarChar(150)
+  mobile           String        @db.VarChar(20)
+  email            String        @db.VarChar(100)
+  serviceId        String?
+  service          Service?      @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  message          String?       @db.Text
+  source           ContactSource @default(contact)
+  estimatorAnswers Json?
+  estimatedRange   Json?
+  language         Language      @default(ar)
+  landingPath      String?       @db.VarChar(500)
+  status           ContactStatus @default(new)
+  assignedToId     String?
+  assignedTo       User?         @relation("AssignedContacts", fields: [assignedToId], references: [id], onDelete: SetNull)
+  notes            Json          @default("[]")
+  isDeleted        Boolean       @default(false)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  deletedAt        DateTime?
 
   @@index([status, isDeleted])
+  @@index([createdAt])
+  @@index([assignedToId])
   @@map("contacts")
 }
 
 // ============================================================
-// Sections (JSON key-value store for CMS content)
+// Privacy & Compliance (Consent Records, Outbox, Erasure Logs)
 // ============================================================
 
-model Section {
-  id        String      @id @default(uuid())
-  type      String      @unique @db.VarChar(100)
-  data      Json
-  isDeleted Boolean     @default(false)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+model ConsentRecord {
+  id            String             @id @default(uuid())
+  subjectType   ConsentSubjectType
+  subjectId     String             @db.VarChar(36)
+  email         String             @db.VarChar(255)
+  purpose       String             @db.VarChar(100)
+  policyVersion String             @db.VarChar(50)
+  language      Language           @default(ar)
+  ipHash        String             @db.VarChar(64)
+  userAgent     String             @db.VarChar(255)
+  consentedAt   DateTime           @default(now())
 
-  @@map("sections")
+  @@index([email])
+  @@index([subjectType, subjectId])
+  @@map("consent_records")
+}
+
+model EmailOutbox {
+  id            String       @id @default(uuid())
+  kind          OutboxKind   @default(email)
+  template      String?      @db.VarChar(100)
+  to            String?      @db.VarChar(255)
+  language      Language     @default(ar)
+  payload       Json
+  status        OutboxStatus @default(pending)
+  attempts      Int          @default(0)
+  nextAttemptAt DateTime     @default(now())
+  lastError     String?      @db.Text
+  sentAt        DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([status, nextAttemptAt])
+  @@map("email_outbox")
+}
+
+model ErasureLog {
+  id            String   @id @default(uuid())
+  emailHash     String   @db.VarChar(64)
+  requestedById String   @db.VarChar(36)
+  itemsErased   Json
+  at            DateTime @default(now())
+
+  @@index([emailHash])
+  @@map("erasure_logs")
 }
 
 // ============================================================
-// SEO
+// Sections (CMS singletons) & SEO
 // ============================================================
+
+model Section {
+  id        String   @id @default(uuid())
+  type      String   @unique @db.VarChar(100)
+  data      Json
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sections")
+}
 
 model Seo {
   id        String   @id @default(uuid())
@@ -366,119 +797,4 @@ model MonitoringErrorRollup {
   @@unique([period, periodKey, type])
   @@index([period, type])
   @@map("monitoring_error_rollups")
-}
-
-// ============================================================
-// News / Blog
-// ============================================================
-
-enum NewsTag {
-  news
-  event
-}
-
-model News {
-  id          String    @id @default(uuid())
-  slug        String?   @unique @db.VarChar(300)
-  thumbnail   String?   @db.VarChar(500)
-  tag         NewsTag   @default(news)
-  isPublished Boolean   @default(false)
-  isFeatured  Boolean   @default(false)
-  publishedAt DateTime?
-  isDeleted   Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
-
-  translations NewsTranslation[]
-
-  @@index([isPublished, isDeleted])
-  @@index([tag, isPublished])
-  @@map("news")
-}
-
-model NewsTranslation {
-  id                String   @id @default(uuid())
-  newsId            String
-  news              News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
-  language          Language
-  title             String   @db.VarChar(255)
-  excerpt           String?  @db.Text
-  body              String?  @db.LongText
-  metaTitle         String?  @db.VarChar(255)
-  metaDescription   String?  @db.Text
-  keywords          String?  @db.Text
-
-  @@unique([newsId, language])
-  @@map("news_translations")
-}
-
-// ============================================================
-// Careers / Jobs
-// ============================================================
-
-enum EmploymentType {
-  full_time
-  part_time
-  contract
-  internship
-}
-
-enum JobApplicationStatus {
-  pending
-  reviewed
-  rejected
-  hired
-}
-
-model Job {
-  id             String         @id @default(uuid())
-  slug           String?        @unique @db.VarChar(300)
-  employmentType EmploymentType @default(full_time)
-  isPublished    Boolean        @default(false)
-  publishedAt    DateTime?
-  isDeleted      Boolean        @default(false)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  deletedAt      DateTime?
-
-  translations JobTranslation[]
-  applications JobApplication[]
-
-  @@index([isPublished, isDeleted])
-  @@map("jobs")
-}
-
-model JobTranslation {
-  id          String   @id @default(uuid())
-  jobId       String
-  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  language    Language
-  title       String   @db.VarChar(255)
-  description String?  @db.Text
-  body        String?  @db.LongText
-  location    String?  @db.VarChar(255)
-
-  @@unique([jobId, language])
-  @@map("job_translations")
-}
-
-model JobApplication {
-  id          String                @id @default(uuid())
-  jobId       String
-  job         Job                   @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  firstName   String                @db.VarChar(100)
-  lastName    String                @db.VarChar(100)
-  email       String                @db.VarChar(255)
-  phone       String?               @db.VarChar(50)
-  coverLetter String?               @db.Text
-  resumeUrl   String?               @db.VarChar(500)
-  status      JobApplicationStatus  @default(pending)
-  notes       String?               @db.Text
-  createdAt   DateTime              @default(now())
-  updatedAt   DateTime              @updatedAt
-
-  @@index([jobId, status])
-  @@index([email])
-  @@map("job_applications")
 }

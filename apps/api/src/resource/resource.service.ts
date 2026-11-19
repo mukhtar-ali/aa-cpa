@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common
 import { createUniqueFilename } from '@repo/shared';
 import sharp from 'sharp';
 import { customEnv } from '@/config/custom-env';
+import { getImageDimensions, processUploadedImage } from '@/common/image-field.util';
 import type { S3AclSetting } from './s3-acl';
 import { LocalStorage } from './storage/local.storage';
 import { S3Storage } from './storage/s3.storage';
@@ -10,6 +11,12 @@ import type { StorageDriver } from './storage/storage-driver';
 import { PRIVATE_KEY_PREFIX, UPLOAD_KEY_PREFIX } from './storage/storage-keys';
 
 export { PRIVATE_KEY_PREFIX, UPLOAD_KEY_PREFIX };
+
+export interface ImageUploadResult {
+    url: string;
+    width?: number;
+    height?: number;
+}
 
 /** Longest file-name part of a key once percent-encoded (keeps the whole stored URL well under 500 characters). */
 export const MAX_ENCODED_FILENAME_LENGTH = 120;
@@ -79,6 +86,36 @@ export class ResourceService {
         return url;
     }
 
+    /**
+     * Uploads an image, compressing and resizing it (max 2560px), and returns the URL with width/height.
+     */
+    async uploadImage(file: Express.Multer.File, options: { acl?: S3AclSetting; visibility?: 'public' | 'private' } = {}): Promise<ImageUploadResult> {
+        let width: number | undefined;
+        let height: number | undefined;
+        try {
+            if (file.mimetype.startsWith('image/') && !file.mimetype.includes('svg')) {
+                const processed = await processUploadedImage(file.buffer);
+                file = {
+                    ...file,
+                    buffer: processed.buffer,
+                    mimetype: processed.mimetype,
+                    originalname: file.originalname.replace(/\.[^/.]+$/, '.webp'),
+                };
+                width = processed.width;
+                height = processed.height;
+            } else if (file.mimetype.includes('svg')) {
+                const dims = await getImageDimensions(file.buffer);
+                width = dims.width;
+                height = dims.height;
+            }
+        } catch {
+            throw new InternalServerErrorException('Failed to process image');
+        }
+
+        const url = await this.uploadFile(file, options);
+        return { url, width, height };
+    }
+
     /** See StorageDriver.urlForKey. */
     urlForKey(key: string): string {
         return this.driver.urlForKey(key);
@@ -117,15 +154,13 @@ export class ResourceService {
     }
 
     private async compressImage(file: Express.Multer.File): Promise<Express.Multer.File> {
-        const compressedBuffer = await sharp(file.buffer)
-            .resize({ width: 1920, withoutEnlargement: true })
-            .webp({ quality: 80 })
-            .toBuffer();
+        if (file.mimetype.includes('svg')) return file;
+        const processed = await processUploadedImage(file.buffer);
 
         return {
             ...file,
-            buffer: compressedBuffer,
-            mimetype: 'image/webp',
+            buffer: processed.buffer,
+            mimetype: processed.mimetype,
             originalname: file.originalname.replace(/\.[^/.]+$/, '.webp'),
         };
     }

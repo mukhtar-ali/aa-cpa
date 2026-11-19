@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head><meta charset="utf-8"><title>طلب توظيف جديد</title></head>
+<body style="font-family: Tahoma, Arial, sans-serif; direction: rtl; text-align: right; color: #1a202c;">
+  <h2>طلب توظيف جديد — {{jobTitle}}</h2>
+  <p><strong>الاسم:</strong> {{fullName}}</p>
+  <p><strong>الجوال:</strong> {{mobile}}</p>
+  <p><strong>البريد الإلكتروني:</strong> {{email}}</p>
+  {{#if linkedinUrl}}<p><strong>لينكدإن:</strong> {{linkedinUrl}}</p>{{/if}}
+  {{#if motivation}}<p><strong>نبذة / الدافع:</strong> {{motivation}}</p>{{/if}}
+</body>
+</html>

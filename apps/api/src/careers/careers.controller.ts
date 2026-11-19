@@ -3,13 +3,16 @@ import {
     Body,
     Controller,
     Delete,
-    FileTypeValidator,
     Get,
+    HttpCode,
+    HttpStatus,
     Param,
-    ParseFilePipe,
+    Patch,
     Post,
     Put,
     Query,
+    Req,
+    Res,
     UploadedFile,
     UseInterceptors,
 } from '@nestjs/common';
@@ -35,6 +38,7 @@ import { ProtectedWithPermissions } from '@/auth/decorators/auth.decorator';
 import { Public } from '@/auth/decorators/public.decorator';
 import { CustomZodValidationPipe } from '@/common/pipes/zod-validation.pipe';
 import { LocaleInterceptor } from '@/common/locale.interceptor';
+import { langStorage } from '@/common/i18n.helper';
 import { SizeValidator } from '@/resource/size.validator';
 import { PageContentService } from '@/section/page-content.service';
 import { SectionService } from '@/section/section.service';
@@ -44,6 +48,7 @@ import { GetAllJobsService } from './services/get-all-jobs.service';
 import { GetJobByIdService } from './services/get-job-by-id.service';
 import { GetJobBySlugService } from './services/get-job-by-slug.service';
 import { DeleteJobService } from './services/delete-job.service';
+import { PublishJobService } from './services/publish-job.service';
 import { CreateJobApplicationService } from './services/create-job-application.service';
 import { GetAllJobApplicationsService } from './services/get-all-job-applications.service';
 import { GetJobApplicationByIdService } from './services/get-job-application-by-id.service';
@@ -63,6 +68,7 @@ export class CareersController {
         private readonly getJobByIdAction: GetJobByIdService,
         private readonly getJobBySlugAction: GetJobBySlugService,
         private readonly deleteJobAction: DeleteJobService,
+        private readonly publishJobAction: PublishJobService,
         private readonly createApplicationAction: CreateJobApplicationService,
         private readonly getAllApplicationsAction: GetAllJobApplicationsService,
         private readonly getApplicationByIdAction: GetJobApplicationByIdService,
@@ -84,10 +90,11 @@ export class CareersController {
     @UseInterceptors(LocaleInterceptor)
     @Get(endpoint.careersPage.pageWeb)
     async getCareersPageFullWeb(@Query(new CustomZodValidationPipe(JobQuerySchema)) query: JobQueryModel) {
+        const lang = langStorage.getStore() === 'en' ? 'en' : 'ar';
         const [seo, hero, items] = await Promise.all([
             this.pageContent.getSeo(SeoPage.Careers),
             this.pageContent.getSection('careers-page'),
-            this.getAllJobsAction.execute({ ...query, pageSize: this.pageContent.clampPageSize(query.pageSize) }, true),
+            this.getAllJobsAction.execute({ ...query, pageSize: this.pageContent.clampPageSize(query.pageSize) }, true, lang),
         ]);
         return { seo, hero, items };
     }
@@ -106,20 +113,52 @@ export class CareersController {
         return this.sectionService.updateSection('careers-page', body);
     }
 
-    // ---- Jobs ----
+    // ---- Jobs (Public) ----
 
+    @Public()
+    @Get('/api/jobs')
+    async getPublicJobs(
+        @Query(new CustomZodValidationPipe(JobQuerySchema)) query: JobQueryModel,
+        @Query('lang') queryLang?: string,
+    ) {
+        const lang = queryLang === 'en' || langStorage.getStore() === 'en' ? 'en' : 'ar';
+        return this.getAllJobsAction.execute(query, true, lang);
+    }
+
+    @Public()
+    @Get('/api/jobs/:slug')
+    async getPublicJobBySlug(
+        @Param('slug') slug: string,
+        @Query('lang') queryLang?: string,
+        @Query('preview') previewToken?: string,
+    ) {
+        const lang = queryLang === 'en' || langStorage.getStore() === 'en' ? 'en' : 'ar';
+        return this.getJobBySlugAction.execute(slug, true, lang, previewToken);
+    }
+
+    // Legacy web endpoints
     @Public()
     @UseInterceptors(LocaleInterceptor)
     @Get(endpoint.job.listWeb)
     async getWebJobs(@Query(new CustomZodValidationPipe(JobQuerySchema)) query: JobQueryModel) {
-        return this.getAllJobsAction.execute(query, true);
+        const lang = langStorage.getStore() === 'en' ? 'en' : 'ar';
+        return this.getAllJobsAction.execute(query, true, lang);
     }
 
     @Public()
     @UseInterceptors(LocaleInterceptor)
     @Get(endpoint.job.getBySlugWeb + '/:slug')
     async getJobBySlug(@Param('slug') slug: string) {
-        return this.getJobBySlugAction.execute(slug, true);
+        const lang = langStorage.getStore() === 'en' ? 'en' : 'ar';
+        return this.getJobBySlugAction.execute(slug, true, lang);
+    }
+
+    // ---- Jobs (Admin) ----
+
+    @ProtectedWithPermissions(PermissionEnum.AdminPortalCareersView)
+    @Get('/api/admin/jobs')
+    async getAdminJobs(@Query(new CustomZodValidationPipe(JobQuerySchema)) query: JobQueryModel) {
+        return this.getAllJobsAction.execute(query, false);
     }
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalCareersView)
@@ -129,15 +168,48 @@ export class CareersController {
     }
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalCareersView)
+    @Get('/api/admin/jobs/:jobId')
+    async getAdminJobById(@Param('jobId') jobId: string) {
+        return this.getJobByIdAction.execute(jobId);
+    }
+
+    @ProtectedWithPermissions(PermissionEnum.AdminPortalCareersView)
     @Get(endpoint.job.getById + '/:jobId')
     async getJobById(@Param('jobId') jobId: string) {
         return this.getJobByIdAction.execute(jobId);
     }
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalCareersCreate)
+    @Post('/api/admin/jobs')
+    async createAdminJob(@Body(new CustomZodValidationPipe(JobFormSchema)) data: JobFormModel) {
+        const job = await this.createJobAction.execute(data);
+        return { job };
+    }
+
+    @ProtectedWithPermissions(PermissionEnum.AdminPortalCareersCreate)
     @Post(endpoint.job.create)
     async createJob(@Body(new CustomZodValidationPipe(JobFormSchema)) data: JobFormModel) {
         const job = await this.createJobAction.execute(data);
+        return { job };
+    }
+
+    @ProtectedWithPermissions(PermissionEnum.AdminPortalCareersUpdate)
+    @Put('/api/admin/jobs/:jobId/publish')
+    async publishJob(
+        @Param('jobId') jobId: string,
+        @Body() body: { isPublished: boolean },
+    ) {
+        const job = await this.publishJobAction.publish(jobId, body?.isPublished ?? false);
+        return { job };
+    }
+
+    @ProtectedWithPermissions(PermissionEnum.AdminPortalCareersUpdate)
+    @Put('/api/admin/jobs/:jobId')
+    async updateAdminJob(
+        @Param('jobId') jobId: string,
+        @Body(new CustomZodValidationPipe(JobFormSchema)) data: JobFormModel,
+    ) {
+        const job = await this.updateJobAction.execute(jobId, data);
         return { job };
     }
 
@@ -152,6 +224,13 @@ export class CareersController {
     }
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalCareersDelete)
+    @Delete('/api/admin/jobs/:jobId')
+    async deleteAdminJob(@Param('jobId') jobId: string) {
+        await this.deleteJobAction.execute(jobId);
+        return { message: 'Job posting deleted successfully' };
+    }
+
+    @ProtectedWithPermissions(PermissionEnum.AdminPortalCareersDelete)
     @Delete(endpoint.job.delete + '/:jobId')
     async deleteJob(@Param('jobId') jobId: string) {
         await this.deleteJobAction.execute(jobId);
@@ -160,37 +239,111 @@ export class CareersController {
 
     // ---- Applications (public submit; admin manage) ----
 
-    // Public, unauthenticated candidates apply here with a resume file — throttled like
-    // the general upload endpoints since it also processes/stores a file.
+    @Public()
+    @Throttle({ default: { limit: 5, ttl: 15 * 60 * 1000 } })
+    @Post('/api/jobs/:slug/apply')
+    @HttpCode(HttpStatus.CREATED)
+    @UseInterceptors(FileInterceptor('resume'))
+    async applyToJobBySlug(
+        @Param('slug') slug: string,
+        @Body() body: Record<string, any>,
+        @UploadedFile() resume: Express.Multer.File,
+        @Req() req: any,
+    ) {
+        return this.createApplicationAction.applyBySlug(slug, body, resume, {
+            lang: req?.lang || 'ar',
+            ip: req?.ip || req?.headers?.['x-forwarded-for'] || '127.0.0.1',
+            userAgent: req?.headers?.['user-agent'] || 'unknown',
+        });
+    }
+
     @Public()
     @Throttle({ default: { limit: 20, ttl: 15 * 60 * 1000 } })
     @Post(endpoint.job.apply)
-    @UseInterceptors(
-        FileInterceptor('resume', {
-            limits: { fileSize: MAX_RESUME_SIZE_BYTES, files: 1 },
-        }),
-    )
+    @HttpCode(HttpStatus.CREATED)
+    @UseInterceptors(FileInterceptor('resume'))
     async applyToJob(
         @Body('jobId') jobId: string,
-        @Body(new CustomZodValidationPipe(JobApplicationFormSchema)) data: JobApplicationFormModel,
-        @UploadedFile(
-            new ParseFilePipe({
-                validators: [
-                    new FileTypeValidator({ fileType: /^application\/pdf$/ }),
-                    new SizeValidator({ maxSize: MAX_RESUME_SIZE_BYTES }),
-                ],
-                exceptionFactory: (error: string) =>
-                    new BadRequestException(
-                        error.includes('File size') ? error : 'Only PDF resumes are allowed!',
-                    ),
-                fileIsRequired: true,
-            }),
-        )
-        resume: Express.Multer.File,
+        @Body() data: Record<string, any>,
+        @UploadedFile() resume: Express.Multer.File,
+        @Req() req: any,
     ) {
         if (!jobId) throw new BadRequestException('jobId is required');
-        await this.createApplicationAction.execute(jobId, data, resume);
-        return { message: 'Application submitted successfully' };
+        return this.createApplicationAction.applyBySlug(jobId, data, resume, {
+            lang: req?.lang || 'ar',
+            ip: req?.ip || req?.headers?.['x-forwarded-for'] || '127.0.0.1',
+            userAgent: req?.headers?.['user-agent'] || 'unknown',
+        });
+    }
+
+    @ProtectedWithPermissions(PermissionEnum.AdminPortalApplicationsExport)
+    @Get('/api/admin/applications/export.csv')
+    async exportApplicationsCsv(
+        @Query() query: { jobId?: string; status?: string },
+        @Res() res: any,
+    ) {
+        const csv = await this.createApplicationAction.exportCsvAdmin(query);
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', 'attachment; filename="applications.csv"');
+        return res.status(HttpStatus.OK).send(csv);
+    }
+
+    @ProtectedWithPermissions(
+        PermissionEnum.AdminPortalApplicationsView,
+        PermissionEnum.AdminPortalCareersView,
+    )
+    @Get('/api/admin/applications')
+    async getAdminApplications(
+        @Query(new CustomZodValidationPipe(JobApplicationQuerySchema)) query: JobApplicationQueryModel,
+    ) {
+        return this.getAllApplicationsAction.execute(query);
+    }
+
+    @ProtectedWithPermissions(
+        PermissionEnum.AdminPortalApplicationsView,
+        PermissionEnum.AdminPortalCareersView,
+    )
+    @Get('/api/admin/applications/:id')
+    async getAdminApplicationById(@Param('id') id: string) {
+        return this.getApplicationByIdAction.execute(id);
+    }
+
+    @ProtectedWithPermissions(
+        PermissionEnum.AdminPortalApplicationsUpdate,
+        PermissionEnum.AdminPortalCareersUpdate,
+    )
+    @Patch('/api/admin/applications/:id')
+    async patchAdminApplication(
+        @Param('id') id: string,
+        @Body() body: { status?: string; assignedToId?: string | null },
+    ) {
+        return this.createApplicationAction.updateStatusAdmin(id, body);
+    }
+
+    @ProtectedWithPermissions(
+        PermissionEnum.AdminPortalApplicationsUpdate,
+        PermissionEnum.AdminPortalCareersUpdate,
+    )
+    @Post('/api/admin/applications/:id/notes')
+    async addAdminApplicationNote(
+        @Param('id') id: string,
+        @Body() body: { body?: string },
+        @Req() req: any,
+    ) {
+        const authorId = req?.user?.id || 'admin';
+        return this.createApplicationAction.addNoteAdmin(id, authorId, body?.body || '');
+    }
+
+    @ProtectedWithPermissions(PermissionEnum.AdminPortalApplicationsView)
+    @Get('/api/admin/applications/:id/resume')
+    async downloadApplicationResume(
+        @Param('id') id: string,
+        @Req() req: any,
+        @Res() res: any,
+    ) {
+        const adminId = req?.user?.id || 'admin';
+        const signed = await this.createApplicationAction.issueSignedResumeUrl(id, adminId);
+        return res.redirect(HttpStatus.FOUND, signed.url);
     }
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalCareersView)

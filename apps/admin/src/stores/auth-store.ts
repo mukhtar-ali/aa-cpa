@@ -5,11 +5,13 @@ const ACCESS_TOKEN_KEY = 'admin_access_token'
 const USER_KEY = 'admin_user'
 
 function getStoredToken(): string {
+    if (typeof localStorage === 'undefined') return ''
     return localStorage.getItem(ACCESS_TOKEN_KEY) ?? ''
 }
 
 function getStoredUser(): AuthUser | null {
     try {
+        if (typeof localStorage === 'undefined') return null
         const item = localStorage.getItem(USER_KEY)
         return item ? (JSON.parse(item) as AuthUser) : null
     } catch {

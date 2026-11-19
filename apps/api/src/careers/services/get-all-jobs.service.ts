@@ -2,31 +2,68 @@ import { Injectable } from '@nestjs/common';
 import { JobQueryModel } from '@repo/shared';
 import { PrismaService } from '@/prisma/prisma.service';
 import { buildPaginationResult } from '@/common/pagination/pagination.util';
-import { jobMapEntityToModel } from '../helpers/job.mapper';
+import { JobMapper } from '../helpers/job.mapper';
 
 @Injectable()
 export class GetAllJobsService {
     constructor(private prisma: PrismaService) {}
 
-    async execute(query: JobQueryModel, webOnly: boolean) {
-        const { pageNumber = 1, pageSize = 10 } = query;
+    async execute(query: JobQueryModel, webOnly: boolean, lang: string = 'ar') {
+        const pageNumber = Number(query.pageNumber || (query as any).page) || 1;
+        const pageSize = Number(query.pageSize || (query as any).limit) || 10;
         const where: any = { isDeleted: false };
-        if (query.search) {
-            where.translations = { some: { title: { contains: query.search } } };
+
+        const search = query.search || query.q;
+        if (search) {
+            where.translations = { some: { title: { contains: search } } };
         }
-        // The public (web) list is ALWAYS published-only: a caller-supplied isPublished must never override it.
-        if (webOnly) where.isPublished = true;
-        else if (query.isPublished !== undefined) where.isPublished = query.isPublished;
-        if (query.employmentType?.length) where.employmentType = { in: query.employmentType };
+
+        // The public (web) list is ALWAYS published-only and open-only (closesAt > now or null)
+        if (webOnly) {
+            where.isPublished = true;
+            where.OR = [
+                { closesAt: null },
+                { closesAt: { gt: new Date() } },
+            ];
+        } else if (query.isPublished !== undefined) {
+            where.isPublished = query.isPublished === true || query.isPublished === 'true';
+        }
+
+        if (query.departmentId) {
+            where.departmentId = query.departmentId;
+        } else if (query.department) {
+            where.department = { slug: query.department };
+        }
+
+        if (query.officeId) {
+            where.officeId = query.officeId;
+        }
+
+        if (query.employmentType?.length) {
+            where.employmentType = Array.isArray(query.employmentType)
+                ? { in: query.employmentType }
+                : query.employmentType;
+        }
 
         const [items, total] = await Promise.all([
             this.prisma.job.findMany({
-                where, skip: (pageNumber - 1) * pageSize, take: pageSize,
-                orderBy: { publishedAt: 'desc' },
-                include: { translations: true },
+                where,
+                skip: (pageNumber - 1) * pageSize,
+                take: pageSize,
+                orderBy: { order: 'asc' },
+                include: {
+                    translations: true,
+                    department: true,
+                    office: true,
+                },
             }),
             this.prisma.job.count({ where }),
         ]);
-        return buildPaginationResult(items.map(jobMapEntityToModel), total, pageNumber, pageSize);
+
+        const mapped = webOnly
+            ? items.map((item) => JobMapper.toSummaryWeb(item, lang))
+            : items.map((item) => JobMapper.toAdmin(item));
+
+        return buildPaginationResult(mapped, total, pageNumber, pageSize);
     }
 }

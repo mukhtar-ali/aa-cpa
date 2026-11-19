@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head><meta charset="utf-8"><title>New Job Application</title></head>
+<body style="font-family: Arial, sans-serif; color: #1a202c;">
+  <h2>New Job Application — {{jobTitle}}</h2>
+  <p><strong>Full Name:</strong> {{fullName}}</p>
+  <p><strong>Mobile:</strong> {{mobile}}</p>
+  <p><strong>Email:</strong> {{email}}</p>
+  {{#if linkedinUrl}}<p><strong>LinkedIn:</strong> {{linkedinUrl}}</p>{{/if}}
+  {{#if motivation}}<p><strong>Motivation:</strong> {{motivation}}</p>{{/if}}
+</body>
+</html>

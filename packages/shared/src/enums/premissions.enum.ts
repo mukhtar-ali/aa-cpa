@@ -6,23 +6,53 @@ export enum PermissionEnum {
     AdminPortalUsersView = 'admin_portal.users.view',
     AdminPortalUsersActivate = 'admin_portal.users.activate',
     AdminPortalManageContent = 'admin_portal.manage_content',
-    AdminPortalProjectsCreate = 'admin_portal.projects.create',
-    AdminPortalProjectsUpdate = 'admin_portal.projects.update',
-    AdminPortalProjectsDelete = 'admin_portal.projects.delete',
-    AdminPortalProjectsView = 'admin_portal.projects.view',
-    AdminPortalGroupLocations = 'admin_portal.group_locations',
-    AdminPortalMediaCreate = 'admin_portal.media.create',
-    AdminPortalMediaUpdate = 'admin_portal.media.update',
-    AdminPortalMediaDelete = 'admin_portal.media.delete',
-    AdminPortalMediaView = 'admin_portal.media.view',
+
+    // CPA Services
+    AdminPortalServicesCreate = 'admin_portal.services.create',
+    AdminPortalServicesUpdate = 'admin_portal.services.update',
+    AdminPortalServicesDelete = 'admin_portal.services.delete',
+    AdminPortalServicesView = 'admin_portal.services.view',
+
+    // CPA Sectors
+    AdminPortalSectorsCreate = 'admin_portal.sectors.create',
+    AdminPortalSectorsUpdate = 'admin_portal.sectors.update',
+    AdminPortalSectorsDelete = 'admin_portal.sectors.delete',
+    AdminPortalSectorsView = 'admin_portal.sectors.view',
+
+    // CPA Site Content (Sections, Offices, Testimonials, Logos, Credentials, FAQs)
+    AdminPortalSiteContentView = 'admin_portal.site_content.view',
+    AdminPortalSiteContentUpdate = 'admin_portal.site_content.update',
+
+    // CPA Leads (Contact requests + Quote requests)
+    AdminPortalLeadsView = 'admin_portal.leads.view',
+    AdminPortalLeadsUpdate = 'admin_portal.leads.update',
+    AdminPortalLeadsExport = 'admin_portal.leads.export',
+    AdminPortalLeadsErase = 'admin_portal.leads.erase',
+
+    // CPA Job Applications
+    AdminPortalApplicationsView = 'admin_portal.applications.view',
+    AdminPortalApplicationsUpdate = 'admin_portal.applications.update',
+    AdminPortalApplicationsExport = 'admin_portal.applications.export',
+    AdminPortalApplicationsErase = 'admin_portal.applications.erase',
+
+    // CPA Estimator
+    AdminPortalEstimatorUpdate = 'admin_portal.estimator.update',
+
+    // CPA Settings
+    AdminPortalSettingsNotifications = 'admin_portal.settings.notifications',
+
+    // Articles / News
     AdminPortalNewsCreate = 'admin_portal.news.create',
     AdminPortalNewsUpdate = 'admin_portal.news.update',
     AdminPortalNewsDelete = 'admin_portal.news.delete',
     AdminPortalNewsView = 'admin_portal.news.view',
+
+    // Careers / Jobs
     AdminPortalCareersCreate = 'admin_portal.careers.create',
     AdminPortalCareersUpdate = 'admin_portal.careers.update',
     AdminPortalCareersDelete = 'admin_portal.careers.delete',
     AdminPortalCareersView = 'admin_portal.careers.view',
+
     MonitoringView = 'monitoring.view',
 }
 
@@ -62,33 +92,75 @@ export const PERMISSIONS_UI: PermissionGroupUI[] = [
         permissions: [{ key: PermissionEnum.AdminPortalManageContent, displayName: 'Manage Content' }],
     },
     {
-        group: 'admin_portal_projects',
-        displayName: 'Admin Portal - Projects Management',
+        group: 'admin_portal_services',
+        displayName: 'Admin Portal - Services Management',
         permissions: [
-            { key: PermissionEnum.AdminPortalProjectsCreate, displayName: 'Create Project' },
-            { key: PermissionEnum.AdminPortalProjectsUpdate, displayName: 'Update Project' },
-            { key: PermissionEnum.AdminPortalProjectsDelete, displayName: 'Delete Project' },
-            { key: PermissionEnum.AdminPortalProjectsView, displayName: 'View Projects' },
+            { key: PermissionEnum.AdminPortalServicesCreate, displayName: 'Create Service' },
+            { key: PermissionEnum.AdminPortalServicesUpdate, displayName: 'Update Service' },
+            { key: PermissionEnum.AdminPortalServicesDelete, displayName: 'Delete Service' },
+            { key: PermissionEnum.AdminPortalServicesView, displayName: 'View Services' },
         ],
     },
     {
-        group: 'admin_portal_media',
-        displayName: 'Admin Portal - Media Management',
+        group: 'admin_portal_sectors',
+        displayName: 'Admin Portal - Sectors Management',
         permissions: [
-            { key: PermissionEnum.AdminPortalMediaCreate, displayName: 'Create Media' },
-            { key: PermissionEnum.AdminPortalMediaUpdate, displayName: 'Update Media' },
-            { key: PermissionEnum.AdminPortalMediaDelete, displayName: 'Delete Media' },
-            { key: PermissionEnum.AdminPortalMediaView, displayName: 'View Media' },
+            { key: PermissionEnum.AdminPortalSectorsCreate, displayName: 'Create Sector' },
+            { key: PermissionEnum.AdminPortalSectorsUpdate, displayName: 'Update Sector' },
+            { key: PermissionEnum.AdminPortalSectorsDelete, displayName: 'Delete Sector' },
+            { key: PermissionEnum.AdminPortalSectorsView, displayName: 'View Sectors' },
+        ],
+    },
+    {
+        group: 'admin_portal_site_content',
+        displayName: 'Admin Portal - Site Content',
+        permissions: [
+            { key: PermissionEnum.AdminPortalSiteContentView, displayName: 'View Site Content' },
+            { key: PermissionEnum.AdminPortalSiteContentUpdate, displayName: 'Update Site Content' },
+        ],
+    },
+    {
+        group: 'admin_portal_leads',
+        displayName: 'Admin Portal - Leads & Contacts',
+        permissions: [
+            { key: PermissionEnum.AdminPortalLeadsView, displayName: 'View Leads' },
+            { key: PermissionEnum.AdminPortalLeadsUpdate, displayName: 'Update Leads' },
+            { key: PermissionEnum.AdminPortalLeadsExport, displayName: 'Export Leads CSV' },
+            { key: PermissionEnum.AdminPortalLeadsErase, displayName: 'Erase Lead Data' },
+        ],
+    },
+    {
+        group: 'admin_portal_applications',
+        displayName: 'Admin Portal - Job Applications',
+        permissions: [
+            { key: PermissionEnum.AdminPortalApplicationsView, displayName: 'View Applications' },
+            { key: PermissionEnum.AdminPortalApplicationsUpdate, displayName: 'Update Applications' },
+            { key: PermissionEnum.AdminPortalApplicationsExport, displayName: 'Export Applications CSV' },
+            { key: PermissionEnum.AdminPortalApplicationsErase, displayName: 'Erase Application Data' },
+        ],
+    },
+    {
+        group: 'admin_portal_estimator',
+        displayName: 'Admin Portal - Estimator',
+        permissions: [
+            { key: PermissionEnum.AdminPortalEstimatorUpdate, displayName: 'Update Estimator Config' },
+        ],
+    },
+    {
+        group: 'admin_portal_settings',
+        displayName: 'Admin Portal - Settings',
+        permissions: [
+            { key: PermissionEnum.AdminPortalSettingsNotifications, displayName: 'Manage Notification & Spam Settings' },
         ],
     },
     {
         group: 'admin_portal_news',
-        displayName: 'Admin Portal - News Management',
+        displayName: 'Admin Portal - Articles Management',
         permissions: [
-            { key: PermissionEnum.AdminPortalNewsCreate, displayName: 'Create News' },
-            { key: PermissionEnum.AdminPortalNewsUpdate, displayName: 'Update News' },
-            { key: PermissionEnum.AdminPortalNewsDelete, displayName: 'Delete News' },
-            { key: PermissionEnum.AdminPortalNewsView, displayName: 'View News' },
+            { key: PermissionEnum.AdminPortalNewsCreate, displayName: 'Create Article' },
+            { key: PermissionEnum.AdminPortalNewsUpdate, displayName: 'Update Article' },
+            { key: PermissionEnum.AdminPortalNewsDelete, displayName: 'Delete Article' },
+            { key: PermissionEnum.AdminPortalNewsView, displayName: 'View Articles' },
         ],
     },
     {
@@ -100,5 +172,10 @@ export const PERMISSIONS_UI: PermissionGroupUI[] = [
             { key: PermissionEnum.AdminPortalCareersDelete, displayName: 'Delete Job' },
             { key: PermissionEnum.AdminPortalCareersView, displayName: 'View Careers' },
         ],
+    },
+    {
+        group: 'monitoring',
+        displayName: 'System Monitoring',
+        permissions: [{ key: PermissionEnum.MonitoringView, displayName: 'View Monitoring' }],
     },
 ];

@@ -7,7 +7,7 @@ import { langStorage } from './i18n.helper';
 export class LocaleInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
         const stored = langStorage.getStore();
-        const lang: 'en' | 'ar' = stored === 'ar' ? 'ar' : 'en';
+        const lang: 'en' | 'ar' = stored === 'en' ? 'en' : 'ar';
         return next.handle().pipe(
             map((data) => (data && typeof data === 'object' ? localize(data, lang) : data)),
         );

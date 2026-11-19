@@ -70,16 +70,16 @@ test.describe('Module 5: Admin News & Careers Management', () => {
     await dialog.getByRole('tab', { name: 'EN' }).click();
     await dialog.locator('input[name="title.en"]').fill('Senior QA Automation Lead');
     await dialog.locator('input[name="location.en"]').fill('Remote');
-    await dialog.locator('textarea[name="description.en"]').fill('Lead our browser automation and testing efforts.');
+    await dialog.locator('textarea[name="summary.en"]').fill('Lead our browser automation and testing efforts.');
 
     // Fill Arabic tab
     await dialog.getByRole('tab', { name: 'AR' }).click();
     await dialog.locator('input[name="title.ar"]').fill('قائد مهندسي ضمان الجودة');
     await dialog.locator('input[name="location.ar"]').fill('عن بعد');
-    await dialog.locator('textarea[name="description.ar"]').fill('قيادة استراتيجية الاختبار الآلي وجودة النظم البرمجية.');
+    await dialog.locator('textarea[name="summary.ar"]').fill('قيادة استراتيجية الاختبار الآلي وجودة النظم البرمجية.');
 
     // Fill Slug
-    await dialog.locator('input[placeholder*="auto-generated"]').fill(uniqueSlug);
+    await dialog.locator('input[name="slug"]').fill(uniqueSlug);
 
     // Toggle Published Switch
     const publishSwitch = dialog.getByRole('switch').first();

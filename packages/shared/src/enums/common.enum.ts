@@ -10,12 +10,31 @@ export enum MediaType {
 }
 
 export enum SectionType {
+    SiteChrome = 'site-chrome',
+    PageHome = 'page-home',
+    PageAbout = 'page-about',
+    PageServices = 'page-services',
+    ServiceShared = 'service-shared',
+    PageSectors = 'page-sectors',
+    PageArticles = 'page-articles',
+    PageCareers = 'page-careers',
+    PageContact = 'page-contact',
+    LegalPrivacy = 'legal-privacy',
+    LegalTerms = 'legal-terms',
+    LegalAccessibility = 'legal-accessibility',
+    EstimatorConfig = 'estimator-config',
+    NotificationSettings = 'notification-settings',
+    SpamSettings = 'spam-settings',
+
+    // Legacy section types kept until Phase 4 cleanup
     WebsiteInfo = 'website-info',
     HomeHero = 'home-hero',
     HomeAbout = 'home-about',
     Fonts = 'fonts',
     homeWhy = 'home-why',
 }
+
+export const ALL_SECTION_TYPES = Object.values(SectionType);
 
 export enum SeoPage {
     Home = 'home',

@@ -1,22 +1,25 @@
 import { z } from 'zod';
-import { ContactFormSchema, ContactQuerySchema, ContactStatusSchema, ContactUsFormSchema, ContactUsHeroSchema } from '../validations/contact.schema';
-import { Localized } from '../utils/localized.type';
+import {
+    ContactRequestSchema,
+    ConsentRecordSummarySchema,
+    ContactUsFormSchema,
+    ContactUsHeroSchema,
+    LeadAdminSchema,
+    LeadNoteSchema,
+    LeadQuerySchema,
+    LeadSourceSchema,
+    LeadStatusSchema,
+    LeadUpdateSchema,
+} from '../validations/contact.schema';
 
-export interface IContactModel {
-    id: string;
-    fullName: string;
-    subject: string;
-    email: string;
-    department: string;
-    message: string;
-    status: string;
-}
-
-export type ContactQueryModel = z.infer<typeof ContactQuerySchema>;
-export type ContactStatusModel = z.infer<typeof ContactStatusSchema>;
-export type ContactModel = IContactModel & { id: string; createdAt: string; updatedAt: string };
-export type ContactHeroSectionModel = z.infer<typeof ContactUsHeroSchema>;
+export type LeadStatus = z.infer<typeof LeadStatusSchema>;
+export type LeadSource = z.infer<typeof LeadSourceSchema>;
+export type LeadNote = z.infer<typeof LeadNoteSchema>;
+export type LeadUpdate = z.infer<typeof LeadUpdateSchema>;
+export type ContactRequest = z.infer<typeof ContactRequestSchema>;
+export type ContactForm = ContactRequest;
+export type ConsentRecordSummary = z.infer<typeof ConsentRecordSummarySchema>;
+export type LeadAdmin = z.infer<typeof LeadAdminSchema>;
+export type LeadQuery = z.infer<typeof LeadQuerySchema>;
 export type ContactFormSectionModel = z.infer<typeof ContactUsFormSchema>;
-export type ContactFormModel = z.infer<typeof ContactFormSchema>;
-export type ContactHeroSectionModelWeb = Localized<ContactHeroSectionModel>;
-export type ContactFormSectionModelWeb = Localized<ContactFormSectionModel>;
+export type ContactHeroSectionModel = z.infer<typeof ContactUsHeroSchema>;

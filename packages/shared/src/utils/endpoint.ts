@@ -23,6 +23,204 @@ export const endpoint = {
         updatePermissions: '/api/users/permissions/update',
         getPermissionsByUserId: '/api/users/permissions',
     },
+    upload: {
+        image: '/api/upload/image',
+        pdf: '/api/upload/pdf',
+        video: '/api/upload/video',
+    },
+
+    // -----------------------------------------------------------------
+    // Public Web Endpoints (contracts/public-api.md)
+    // -----------------------------------------------------------------
+    site: {
+        chrome: '/api/site/chrome',
+        seoGlobal: '/api/site/seo-global',
+    },
+    pages: {
+        home: '/api/pages/home',
+        about: '/api/pages/about',
+        services: '/api/pages/services',
+        sectors: '/api/pages/sectors',
+        articles: '/api/pages/articles',
+        careers: '/api/pages/careers',
+        contact: '/api/pages/contact',
+        legal: '/api/pages/legal',
+    },
+    services: {
+        list: '/api/services',
+        getBySlug: (slug: string) => `/api/services/${slug}`,
+    },
+    sectors: {
+        list: '/api/sectors',
+        getBySlug: (slug: string) => `/api/sectors/${slug}`,
+    },
+    articles: {
+        list: '/api/articles',
+        getBySlug: (slug: string) => `/api/articles/${slug}`,
+    },
+    jobs: {
+        list: '/api/jobs',
+        getBySlug: (slug: string) => `/api/jobs/${slug}`,
+        apply: (slug: string) => `/api/jobs/${slug}/apply`,
+    },
+    estimator: {
+        get: '/api/estimator',
+        estimate: '/api/estimator/estimate',
+        quote: '/api/estimator/quote',
+    },
+    contact: {
+        submit: '/api/contact',
+        // Legacy keys kept for admin backwards compatibility until migration
+        list: '/api/contact/list',
+        unreadCount: '/api/contact/unread-count',
+        getById: '/api/contact',
+        create: '/api/contact',
+        updateStatus: '/api/contact',
+        delete: '/api/contact',
+    },
+    preview: {
+        token: '/api/preview/token',
+    },
+    monitoring: {
+        ingest: '/api/monitoring',
+        overview: '/api/monitoring/overview',
+        metrics: '/api/monitoring/metrics',
+        events: '/api/monitoring/events',
+        errors: '/api/monitoring/errors',
+        errorDetail: '/api/monitoring/errors',
+    },
+    dashboard: {
+        stats: '/api/dashboard/stats',
+    },
+
+    // -----------------------------------------------------------------
+    // Admin Endpoints (contracts/admin-api.md)
+    // -----------------------------------------------------------------
+    adminServices: {
+        list: '/api/admin/services',
+        getById: (id: string) => `/api/admin/services/${id}`,
+        create: '/api/admin/services',
+        update: (id: string) => `/api/admin/services/${id}`,
+        delete: (id: string) => `/api/admin/services/${id}`,
+        reorder: '/api/admin/services/reorder',
+        publish: (id: string) => `/api/admin/services/${id}/publish`,
+    },
+    adminSectors: {
+        list: '/api/admin/sectors',
+        getById: (id: string) => `/api/admin/sectors/${id}`,
+        create: '/api/admin/sectors',
+        update: (id: string) => `/api/admin/sectors/${id}`,
+        delete: (id: string) => `/api/admin/sectors/${id}`,
+        reorder: '/api/admin/sectors/reorder',
+        publish: (id: string) => `/api/admin/sectors/${id}/publish`,
+    },
+    adminNews: {
+        list: '/api/admin/news',
+        getById: (id: string) => `/api/admin/news/${id}`,
+        create: '/api/admin/news',
+        update: (id: string) => `/api/admin/news/${id}`,
+        delete: (id: string) => `/api/admin/news/${id}`,
+        reorder: '/api/admin/news/reorder',
+        publish: (id: string) => `/api/admin/news/${id}/publish`,
+    },
+    adminArticleCategories: {
+        list: '/api/admin/article-categories',
+        getById: (id: string) => `/api/admin/article-categories/${id}`,
+        create: '/api/admin/article-categories',
+        update: (id: string) => `/api/admin/article-categories/${id}`,
+        delete: (id: string) => `/api/admin/article-categories/${id}`,
+    },
+    adminAuthors: {
+        list: '/api/admin/authors',
+        getById: (id: string) => `/api/admin/authors/${id}`,
+        create: '/api/admin/authors',
+        update: (id: string) => `/api/admin/authors/${id}`,
+        delete: (id: string) => `/api/admin/authors/${id}`,
+    },
+    adminJobs: {
+        list: '/api/admin/jobs',
+        getById: (id: string) => `/api/admin/jobs/${id}`,
+        create: '/api/admin/jobs',
+        update: (id: string) => `/api/admin/jobs/${id}`,
+        delete: (id: string) => `/api/admin/jobs/${id}`,
+        publish: (id: string) => `/api/admin/jobs/${id}/publish`,
+    },
+    adminJobDepartments: {
+        list: '/api/admin/job-departments',
+        getById: (id: string) => `/api/admin/job-departments/${id}`,
+        create: '/api/admin/job-departments',
+        update: (id: string) => `/api/admin/job-departments/${id}`,
+        delete: (id: string) => `/api/admin/job-departments/${id}`,
+    },
+    adminOffices: {
+        list: '/api/admin/offices',
+        getById: (id: string) => `/api/admin/offices/${id}`,
+        create: '/api/admin/offices',
+        update: (id: string) => `/api/admin/offices/${id}`,
+        delete: (id: string) => `/api/admin/offices/${id}`,
+        reorder: '/api/admin/offices/reorder',
+    },
+    adminTestimonials: {
+        list: '/api/admin/testimonials',
+        getById: (id: string) => `/api/admin/testimonials/${id}`,
+        create: '/api/admin/testimonials',
+        update: (id: string) => `/api/admin/testimonials/${id}`,
+        delete: (id: string) => `/api/admin/testimonials/${id}`,
+        reorder: '/api/admin/testimonials/reorder',
+    },
+    adminClientLogos: {
+        list: '/api/admin/client-logos',
+        getById: (id: string) => `/api/admin/client-logos/${id}`,
+        create: '/api/admin/client-logos',
+        update: (id: string) => `/api/admin/client-logos/${id}`,
+        delete: (id: string) => `/api/admin/client-logos/${id}`,
+        reorder: '/api/admin/client-logos/reorder',
+    },
+    adminCredentials: {
+        list: '/api/admin/credentials',
+        getById: (id: string) => `/api/admin/credentials/${id}`,
+        create: '/api/admin/credentials',
+        update: (id: string) => `/api/admin/credentials/${id}`,
+        delete: (id: string) => `/api/admin/credentials/${id}`,
+        reorder: '/api/admin/credentials/reorder',
+    },
+    adminFaqs: {
+        list: '/api/admin/faqs',
+        getById: (id: string) => `/api/admin/faqs/${id}`,
+        create: '/api/admin/faqs',
+        update: (id: string) => `/api/admin/faqs/${id}`,
+        delete: (id: string) => `/api/admin/faqs/${id}`,
+        reorder: '/api/admin/faqs/reorder',
+    },
+    adminSections: {
+        getByType: (type: string) => `/api/admin/sections/${type}`,
+        updateByType: (type: string) => `/api/admin/sections/${type}`,
+    },
+    adminLeads: {
+        list: '/api/admin/leads',
+        getById: (id: string) => `/api/admin/leads/${id}`,
+        update: (id: string) => `/api/admin/leads/${id}`,
+        addNote: (id: string) => `/api/admin/leads/${id}/notes`,
+        exportCsv: '/api/admin/leads/export.csv',
+    },
+    adminApplications: {
+        list: '/api/admin/applications',
+        getById: (id: string) => `/api/admin/applications/${id}`,
+        update: (id: string) => `/api/admin/applications/${id}`,
+        addNote: (id: string) => `/api/admin/applications/${id}/notes`,
+        resume: (id: string) => `/api/admin/applications/${id}/resume`,
+        exportCsv: '/api/admin/applications/export.csv',
+    },
+    adminPrivacy: {
+        export: '/api/admin/privacy/export',
+        erase: '/api/admin/privacy/erase',
+    },
+    adminOutbox: {
+        list: '/api/admin/outbox',
+        retry: (id: string) => `/api/admin/outbox/${id}/retry`,
+    },
+
+    // Legacy module references kept until Phase 4 (US7) cleanup
     common: {
         websiteInfo: '/api/common/website-info',
         web: '/api/common/website-info/web',
@@ -37,15 +235,9 @@ export const endpoint = {
         aboutTeaser: '/api/home/about-teaser',
         web: '/api/home/web',
     },
-    upload: {
-        image: '/api/upload/image',
-        pdf: '/api/upload/pdf',
-        video: '/api/upload/video',
-    },
     project: {
         list: '/api/projects',
         listWeb: '/api/projects/web',
-        // One call for the whole Projects page: { seo, hero, items }.
         pageWeb: '/api/projects/page/web',
         lookupWeb: '/api/projects/lookup/web',
         getById: '/api/projects',
@@ -84,20 +276,6 @@ export const endpoint = {
     projectLocations: {
         listWeb: '/api/project-location/web',
     },
-    contact: {
-        list: '/api/contact/list',
-        unreadCount: '/api/contact/unread-count',
-        getById: '/api/contact',
-        create: '/api/contact',
-        updateStatus: '/api/contact',
-        delete: '/api/contact',
-        hero: '/api/contact/hero',
-        heroWeb: '/api/contact/hero/web',
-        // One call for the whole Contact page: { seo, hero, form }.
-        pageWeb: '/api/contact/page/web',
-        form: '/api/contact/form',
-        formWeb: '/api/contact/form/web',
-    },
     media: {
         listWeb: '/api/media/web',
         list: '/api/media',
@@ -110,7 +288,6 @@ export const endpoint = {
     },
     news: {
         listWeb: '/api/news/web',
-        // One call for the whole News page: { seo, hero, items }.
         pageWeb: '/api/news/page/web',
         getBySlugWeb: '/api/news/web',
         list: '/api/news',
@@ -120,12 +297,10 @@ export const endpoint = {
         delete: '/api/news',
     },
     pageHero: {
-        // GET/PUT `${base}/${ListingHeroPage}` (admin) and GET `${base}/${ListingHeroPage}/web` (public).
         base: '/api/page-hero',
     },
     careersPage: {
         web: '/api/careers-page/web',
-        // One call for the whole Careers page: { seo, hero (the careers page settings), items }.
         pageWeb: '/api/careers-page/page/web',
         settings: '/api/careers-page/settings',
     },
@@ -145,10 +320,6 @@ export const endpoint = {
         getById: '/api/job-applications',
         updateStatus: '/api/job-applications',
         delete: '/api/job-applications',
-    },
-    community: {
-        admin: '/api/community/admin',
-        web: '/api/community/web',
     },
     about: {
         web: '/api/about/web',
@@ -173,20 +344,5 @@ export const endpoint = {
         getByPageKey: '/api/seo',
         update: '/api/seo',
         web: '/api/seo/web',
-    },
-    investorRelation: {
-        admin: '/api/investor-relations',
-        web: '/api/investor-relations/web',
-    },
-    monitoring: {
-        ingest: '/api/monitoring',
-        overview: '/api/monitoring/overview',
-        metrics: '/api/monitoring/metrics',
-        events: '/api/monitoring/events',
-        errors: '/api/monitoring/errors',
-        errorDetail: '/api/monitoring/errors',
-    },
-    dashboard: {
-        stats: '/api/dashboard/stats',
     },
 };

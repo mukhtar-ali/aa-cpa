@@ -37,7 +37,8 @@ export class ResourceController {
         }),
     )
     async uploadImage(@UploadedFile() image: Express.Multer.File) {
-        return { data: await this.resourceService.uploadFile(image) };
+        const result = await this.resourceService.uploadImage(image);
+        return { data: result.url, url: result.url, width: result.width, height: result.height };
     }
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalManageContent)

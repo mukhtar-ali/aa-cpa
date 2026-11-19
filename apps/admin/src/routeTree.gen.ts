@@ -25,25 +25,32 @@ import { Route as AuthenticatedUserRouteRouteImport } from './routes/_authentica
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedUserIndexRouteImport } from './routes/_authenticated/user/index'
+import { Route as AuthenticatedSiteContentIndexRouteImport } from './routes/_authenticated/site-content/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
-import { Route as AuthenticatedProjectsIndexRouteImport } from './routes/_authenticated/projects/index'
+import { Route as AuthenticatedServicesIndexRouteImport } from './routes/_authenticated/services/index'
+import { Route as AuthenticatedSectorsIndexRouteImport } from './routes/_authenticated/sectors/index'
 import { Route as AuthenticatedNewsIndexRouteImport } from './routes/_authenticated/news/index'
 import { Route as AuthenticatedMonitoringIndexRouteImport } from './routes/_authenticated/monitoring/index'
-import { Route as AuthenticatedInquiriesIndexRouteImport } from './routes/_authenticated/inquiries/index'
+import { Route as AuthenticatedLeadsIndexRouteImport } from './routes/_authenticated/leads/index'
+import { Route as AuthenticatedJobDepartmentsIndexRouteImport } from './routes/_authenticated/job-departments/index'
 import { Route as AuthenticatedHomeIndexRouteImport } from './routes/_authenticated/home/index'
+import { Route as AuthenticatedEstimatorIndexRouteImport } from './routes/_authenticated/estimator/index'
 import { Route as AuthenticatedContactSubmissionsIndexRouteImport } from './routes/_authenticated/contact-submissions/index'
 import { Route as AuthenticatedContactPageIndexRouteImport } from './routes/_authenticated/contact-page/index'
 import { Route as AuthenticatedCareersIndexRouteImport } from './routes/_authenticated/careers/index'
+import { Route as AuthenticatedAuthorsIndexRouteImport } from './routes/_authenticated/authors/index'
+import { Route as AuthenticatedArticleCategoriesIndexRouteImport } from './routes/_authenticated/article-categories/index'
 import { Route as AuthenticatedAboutPageIndexRouteImport } from './routes/_authenticated/about-page/index'
 import { Route as AuthenticatedUserAppearanceRouteImport } from './routes/_authenticated/user/appearance'
 import { Route as AuthenticatedUserAccountRouteImport } from './routes/_authenticated/user/account'
+import { Route as AuthenticatedSettingsSpamRouteImport } from './routes/_authenticated/settings/spam'
 import { Route as AuthenticatedSettingsSocialRouteImport } from './routes/_authenticated/settings/social'
 import { Route as AuthenticatedSettingsSeoTrackingRouteImport } from './routes/_authenticated/settings/seo-tracking'
 import { Route as AuthenticatedSettingsSeoRouteImport } from './routes/_authenticated/settings/seo'
+import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsEmailRouteImport } from './routes/_authenticated/settings/email'
 import { Route as AuthenticatedMonitoringErrorsRouteImport } from './routes/_authenticated/monitoring/errors'
 import { Route as AuthenticatedMonitoringAnalyticsRouteImport } from './routes/_authenticated/monitoring/analytics'
-import { Route as AuthenticatedProjectsProjectIdUnitsRouteImport } from './routes/_authenticated/projects/$projectId/units'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -125,16 +132,28 @@ const AuthenticatedUserIndexRoute = AuthenticatedUserIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedUserRouteRoute,
 } as any)
+const AuthenticatedSiteContentIndexRoute =
+  AuthenticatedSiteContentIndexRouteImport.update({
+    id: '/site-content/',
+    path: '/site-content/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
-const AuthenticatedProjectsIndexRoute =
-  AuthenticatedProjectsIndexRouteImport.update({
-    id: '/projects/',
-    path: '/projects/',
+const AuthenticatedServicesIndexRoute =
+  AuthenticatedServicesIndexRouteImport.update({
+    id: '/services/',
+    path: '/services/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSectorsIndexRoute =
+  AuthenticatedSectorsIndexRouteImport.update({
+    id: '/sectors/',
+    path: '/sectors/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedNewsIndexRoute = AuthenticatedNewsIndexRouteImport.update({
@@ -148,10 +167,15 @@ const AuthenticatedMonitoringIndexRoute =
     path: '/monitoring/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedInquiriesIndexRoute =
-  AuthenticatedInquiriesIndexRouteImport.update({
-    id: '/inquiries/',
-    path: '/inquiries/',
+const AuthenticatedLeadsIndexRoute = AuthenticatedLeadsIndexRouteImport.update({
+  id: '/leads/',
+  path: '/leads/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedJobDepartmentsIndexRoute =
+  AuthenticatedJobDepartmentsIndexRouteImport.update({
+    id: '/job-departments/',
+    path: '/job-departments/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedHomeIndexRoute = AuthenticatedHomeIndexRouteImport.update({
@@ -159,6 +183,12 @@ const AuthenticatedHomeIndexRoute = AuthenticatedHomeIndexRouteImport.update({
   path: '/home/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedEstimatorIndexRoute =
+  AuthenticatedEstimatorIndexRouteImport.update({
+    id: '/estimator/',
+    path: '/estimator/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedContactSubmissionsIndexRoute =
   AuthenticatedContactSubmissionsIndexRouteImport.update({
     id: '/contact-submissions/',
@@ -175,6 +205,18 @@ const AuthenticatedCareersIndexRoute =
   AuthenticatedCareersIndexRouteImport.update({
     id: '/careers/',
     path: '/careers/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAuthorsIndexRoute =
+  AuthenticatedAuthorsIndexRouteImport.update({
+    id: '/authors/',
+    path: '/authors/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedArticleCategoriesIndexRoute =
+  AuthenticatedArticleCategoriesIndexRouteImport.update({
+    id: '/article-categories/',
+    path: '/article-categories/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedAboutPageIndexRoute =
@@ -195,6 +237,12 @@ const AuthenticatedUserAccountRoute =
     path: '/account',
     getParentRoute: () => AuthenticatedUserRouteRoute,
   } as any)
+const AuthenticatedSettingsSpamRoute =
+  AuthenticatedSettingsSpamRouteImport.update({
+    id: '/spam',
+    path: '/spam',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
 const AuthenticatedSettingsSocialRoute =
   AuthenticatedSettingsSocialRouteImport.update({
     id: '/social',
@@ -211,6 +259,12 @@ const AuthenticatedSettingsSeoRoute =
   AuthenticatedSettingsSeoRouteImport.update({
     id: '/seo',
     path: '/seo',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedSettingsNotificationsRoute =
+  AuthenticatedSettingsNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
 const AuthenticatedSettingsEmailRoute =
@@ -231,12 +285,6 @@ const AuthenticatedMonitoringAnalyticsRoute =
     path: '/monitoring/analytics',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedProjectsProjectIdUnitsRoute =
-  AuthenticatedProjectsProjectIdUnitsRouteImport.update({
-    id: '/projects/$projectId/units',
-    path: '/projects/$projectId/units',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -255,24 +303,31 @@ export interface FileRoutesByFullPath {
   '/monitoring/analytics': typeof AuthenticatedMonitoringAnalyticsRoute
   '/monitoring/errors': typeof AuthenticatedMonitoringErrorsRoute
   '/settings/email': typeof AuthenticatedSettingsEmailRoute
+  '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/settings/seo': typeof AuthenticatedSettingsSeoRoute
   '/settings/seo-tracking': typeof AuthenticatedSettingsSeoTrackingRoute
   '/settings/social': typeof AuthenticatedSettingsSocialRoute
+  '/settings/spam': typeof AuthenticatedSettingsSpamRoute
   '/user/account': typeof AuthenticatedUserAccountRoute
   '/user/appearance': typeof AuthenticatedUserAppearanceRoute
   '/about-page/': typeof AuthenticatedAboutPageIndexRoute
+  '/article-categories/': typeof AuthenticatedArticleCategoriesIndexRoute
+  '/authors/': typeof AuthenticatedAuthorsIndexRoute
   '/careers/': typeof AuthenticatedCareersIndexRoute
   '/contact-page/': typeof AuthenticatedContactPageIndexRoute
   '/contact-submissions/': typeof AuthenticatedContactSubmissionsIndexRoute
+  '/estimator/': typeof AuthenticatedEstimatorIndexRoute
   '/home/': typeof AuthenticatedHomeIndexRoute
-  '/inquiries/': typeof AuthenticatedInquiriesIndexRoute
+  '/job-departments/': typeof AuthenticatedJobDepartmentsIndexRoute
+  '/leads/': typeof AuthenticatedLeadsIndexRoute
   '/monitoring/': typeof AuthenticatedMonitoringIndexRoute
   '/news/': typeof AuthenticatedNewsIndexRoute
-  '/projects/': typeof AuthenticatedProjectsIndexRoute
+  '/sectors/': typeof AuthenticatedSectorsIndexRoute
+  '/services/': typeof AuthenticatedServicesIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/site-content/': typeof AuthenticatedSiteContentIndexRoute
   '/user/': typeof AuthenticatedUserIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
-  '/projects/$projectId/units': typeof AuthenticatedProjectsProjectIdUnitsRoute
 }
 export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
@@ -289,24 +344,31 @@ export interface FileRoutesByTo {
   '/monitoring/analytics': typeof AuthenticatedMonitoringAnalyticsRoute
   '/monitoring/errors': typeof AuthenticatedMonitoringErrorsRoute
   '/settings/email': typeof AuthenticatedSettingsEmailRoute
+  '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/settings/seo': typeof AuthenticatedSettingsSeoRoute
   '/settings/seo-tracking': typeof AuthenticatedSettingsSeoTrackingRoute
   '/settings/social': typeof AuthenticatedSettingsSocialRoute
+  '/settings/spam': typeof AuthenticatedSettingsSpamRoute
   '/user/account': typeof AuthenticatedUserAccountRoute
   '/user/appearance': typeof AuthenticatedUserAppearanceRoute
   '/about-page': typeof AuthenticatedAboutPageIndexRoute
+  '/article-categories': typeof AuthenticatedArticleCategoriesIndexRoute
+  '/authors': typeof AuthenticatedAuthorsIndexRoute
   '/careers': typeof AuthenticatedCareersIndexRoute
   '/contact-page': typeof AuthenticatedContactPageIndexRoute
   '/contact-submissions': typeof AuthenticatedContactSubmissionsIndexRoute
+  '/estimator': typeof AuthenticatedEstimatorIndexRoute
   '/home': typeof AuthenticatedHomeIndexRoute
-  '/inquiries': typeof AuthenticatedInquiriesIndexRoute
+  '/job-departments': typeof AuthenticatedJobDepartmentsIndexRoute
+  '/leads': typeof AuthenticatedLeadsIndexRoute
   '/monitoring': typeof AuthenticatedMonitoringIndexRoute
   '/news': typeof AuthenticatedNewsIndexRoute
-  '/projects': typeof AuthenticatedProjectsIndexRoute
+  '/sectors': typeof AuthenticatedSectorsIndexRoute
+  '/services': typeof AuthenticatedServicesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/site-content': typeof AuthenticatedSiteContentIndexRoute
   '/user': typeof AuthenticatedUserIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
-  '/projects/$projectId/units': typeof AuthenticatedProjectsProjectIdUnitsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -327,24 +389,31 @@ export interface FileRoutesById {
   '/_authenticated/monitoring/analytics': typeof AuthenticatedMonitoringAnalyticsRoute
   '/_authenticated/monitoring/errors': typeof AuthenticatedMonitoringErrorsRoute
   '/_authenticated/settings/email': typeof AuthenticatedSettingsEmailRoute
+  '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/_authenticated/settings/seo': typeof AuthenticatedSettingsSeoRoute
   '/_authenticated/settings/seo-tracking': typeof AuthenticatedSettingsSeoTrackingRoute
   '/_authenticated/settings/social': typeof AuthenticatedSettingsSocialRoute
+  '/_authenticated/settings/spam': typeof AuthenticatedSettingsSpamRoute
   '/_authenticated/user/account': typeof AuthenticatedUserAccountRoute
   '/_authenticated/user/appearance': typeof AuthenticatedUserAppearanceRoute
   '/_authenticated/about-page/': typeof AuthenticatedAboutPageIndexRoute
+  '/_authenticated/article-categories/': typeof AuthenticatedArticleCategoriesIndexRoute
+  '/_authenticated/authors/': typeof AuthenticatedAuthorsIndexRoute
   '/_authenticated/careers/': typeof AuthenticatedCareersIndexRoute
   '/_authenticated/contact-page/': typeof AuthenticatedContactPageIndexRoute
   '/_authenticated/contact-submissions/': typeof AuthenticatedContactSubmissionsIndexRoute
+  '/_authenticated/estimator/': typeof AuthenticatedEstimatorIndexRoute
   '/_authenticated/home/': typeof AuthenticatedHomeIndexRoute
-  '/_authenticated/inquiries/': typeof AuthenticatedInquiriesIndexRoute
+  '/_authenticated/job-departments/': typeof AuthenticatedJobDepartmentsIndexRoute
+  '/_authenticated/leads/': typeof AuthenticatedLeadsIndexRoute
   '/_authenticated/monitoring/': typeof AuthenticatedMonitoringIndexRoute
   '/_authenticated/news/': typeof AuthenticatedNewsIndexRoute
-  '/_authenticated/projects/': typeof AuthenticatedProjectsIndexRoute
+  '/_authenticated/sectors/': typeof AuthenticatedSectorsIndexRoute
+  '/_authenticated/services/': typeof AuthenticatedServicesIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/site-content/': typeof AuthenticatedSiteContentIndexRoute
   '/_authenticated/user/': typeof AuthenticatedUserIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
-  '/_authenticated/projects/$projectId/units': typeof AuthenticatedProjectsProjectIdUnitsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -365,24 +434,31 @@ export interface FileRouteTypes {
     | '/monitoring/analytics'
     | '/monitoring/errors'
     | '/settings/email'
+    | '/settings/notifications'
     | '/settings/seo'
     | '/settings/seo-tracking'
     | '/settings/social'
+    | '/settings/spam'
     | '/user/account'
     | '/user/appearance'
     | '/about-page/'
+    | '/article-categories/'
+    | '/authors/'
     | '/careers/'
     | '/contact-page/'
     | '/contact-submissions/'
+    | '/estimator/'
     | '/home/'
-    | '/inquiries/'
+    | '/job-departments/'
+    | '/leads/'
     | '/monitoring/'
     | '/news/'
-    | '/projects/'
+    | '/sectors/'
+    | '/services/'
     | '/settings/'
+    | '/site-content/'
     | '/user/'
     | '/users/'
-    | '/projects/$projectId/units'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/forgot-password'
@@ -399,24 +475,31 @@ export interface FileRouteTypes {
     | '/monitoring/analytics'
     | '/monitoring/errors'
     | '/settings/email'
+    | '/settings/notifications'
     | '/settings/seo'
     | '/settings/seo-tracking'
     | '/settings/social'
+    | '/settings/spam'
     | '/user/account'
     | '/user/appearance'
     | '/about-page'
+    | '/article-categories'
+    | '/authors'
     | '/careers'
     | '/contact-page'
     | '/contact-submissions'
+    | '/estimator'
     | '/home'
-    | '/inquiries'
+    | '/job-departments'
+    | '/leads'
     | '/monitoring'
     | '/news'
-    | '/projects'
+    | '/sectors'
+    | '/services'
     | '/settings'
+    | '/site-content'
     | '/user'
     | '/users'
-    | '/projects/$projectId/units'
   id:
     | '__root__'
     | '/_authenticated'
@@ -436,24 +519,31 @@ export interface FileRouteTypes {
     | '/_authenticated/monitoring/analytics'
     | '/_authenticated/monitoring/errors'
     | '/_authenticated/settings/email'
+    | '/_authenticated/settings/notifications'
     | '/_authenticated/settings/seo'
     | '/_authenticated/settings/seo-tracking'
     | '/_authenticated/settings/social'
+    | '/_authenticated/settings/spam'
     | '/_authenticated/user/account'
     | '/_authenticated/user/appearance'
     | '/_authenticated/about-page/'
+    | '/_authenticated/article-categories/'
+    | '/_authenticated/authors/'
     | '/_authenticated/careers/'
     | '/_authenticated/contact-page/'
     | '/_authenticated/contact-submissions/'
+    | '/_authenticated/estimator/'
     | '/_authenticated/home/'
-    | '/_authenticated/inquiries/'
+    | '/_authenticated/job-departments/'
+    | '/_authenticated/leads/'
     | '/_authenticated/monitoring/'
     | '/_authenticated/news/'
-    | '/_authenticated/projects/'
+    | '/_authenticated/sectors/'
+    | '/_authenticated/services/'
     | '/_authenticated/settings/'
+    | '/_authenticated/site-content/'
     | '/_authenticated/user/'
     | '/_authenticated/users/'
-    | '/_authenticated/projects/$projectId/units'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -584,6 +674,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUserIndexRouteImport
       parentRoute: typeof AuthenticatedUserRouteRoute
     }
+    '/_authenticated/site-content/': {
+      id: '/_authenticated/site-content/'
+      path: '/site-content'
+      fullPath: '/site-content/'
+      preLoaderRoute: typeof AuthenticatedSiteContentIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/'
@@ -591,11 +688,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
-    '/_authenticated/projects/': {
-      id: '/_authenticated/projects/'
-      path: '/projects'
-      fullPath: '/projects/'
-      preLoaderRoute: typeof AuthenticatedProjectsIndexRouteImport
+    '/_authenticated/services/': {
+      id: '/_authenticated/services/'
+      path: '/services'
+      fullPath: '/services/'
+      preLoaderRoute: typeof AuthenticatedServicesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sectors/': {
+      id: '/_authenticated/sectors/'
+      path: '/sectors'
+      fullPath: '/sectors/'
+      preLoaderRoute: typeof AuthenticatedSectorsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/news/': {
@@ -612,11 +716,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMonitoringIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/inquiries/': {
-      id: '/_authenticated/inquiries/'
-      path: '/inquiries'
-      fullPath: '/inquiries/'
-      preLoaderRoute: typeof AuthenticatedInquiriesIndexRouteImport
+    '/_authenticated/leads/': {
+      id: '/_authenticated/leads/'
+      path: '/leads'
+      fullPath: '/leads/'
+      preLoaderRoute: typeof AuthenticatedLeadsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/job-departments/': {
+      id: '/_authenticated/job-departments/'
+      path: '/job-departments'
+      fullPath: '/job-departments/'
+      preLoaderRoute: typeof AuthenticatedJobDepartmentsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/home/': {
@@ -624,6 +735,13 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home/'
       preLoaderRoute: typeof AuthenticatedHomeIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estimator/': {
+      id: '/_authenticated/estimator/'
+      path: '/estimator'
+      fullPath: '/estimator/'
+      preLoaderRoute: typeof AuthenticatedEstimatorIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/contact-submissions/': {
@@ -647,6 +765,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCareersIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/authors/': {
+      id: '/_authenticated/authors/'
+      path: '/authors'
+      fullPath: '/authors/'
+      preLoaderRoute: typeof AuthenticatedAuthorsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/article-categories/': {
+      id: '/_authenticated/article-categories/'
+      path: '/article-categories'
+      fullPath: '/article-categories/'
+      preLoaderRoute: typeof AuthenticatedArticleCategoriesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/about-page/': {
       id: '/_authenticated/about-page/'
       path: '/about-page'
@@ -668,6 +800,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUserAccountRouteImport
       parentRoute: typeof AuthenticatedUserRouteRoute
     }
+    '/_authenticated/settings/spam': {
+      id: '/_authenticated/settings/spam'
+      path: '/spam'
+      fullPath: '/settings/spam'
+      preLoaderRoute: typeof AuthenticatedSettingsSpamRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
     '/_authenticated/settings/social': {
       id: '/_authenticated/settings/social'
       path: '/social'
@@ -687,6 +826,13 @@ declare module '@tanstack/react-router' {
       path: '/seo'
       fullPath: '/settings/seo'
       preLoaderRoute: typeof AuthenticatedSettingsSeoRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
+    '/_authenticated/settings/notifications': {
+      id: '/_authenticated/settings/notifications'
+      path: '/notifications'
+      fullPath: '/settings/notifications'
+      preLoaderRoute: typeof AuthenticatedSettingsNotificationsRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
     '/_authenticated/settings/email': {
@@ -710,31 +856,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMonitoringAnalyticsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/projects/$projectId/units': {
-      id: '/_authenticated/projects/$projectId/units'
-      path: '/projects/$projectId/units'
-      fullPath: '/projects/$projectId/units'
-      preLoaderRoute: typeof AuthenticatedProjectsProjectIdUnitsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
   }
 }
 
 interface AuthenticatedSettingsRouteRouteChildren {
   AuthenticatedSettingsEmailRoute: typeof AuthenticatedSettingsEmailRoute
+  AuthenticatedSettingsNotificationsRoute: typeof AuthenticatedSettingsNotificationsRoute
   AuthenticatedSettingsSeoRoute: typeof AuthenticatedSettingsSeoRoute
   AuthenticatedSettingsSeoTrackingRoute: typeof AuthenticatedSettingsSeoTrackingRoute
   AuthenticatedSettingsSocialRoute: typeof AuthenticatedSettingsSocialRoute
+  AuthenticatedSettingsSpamRoute: typeof AuthenticatedSettingsSpamRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
 
 const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteChildren =
   {
     AuthenticatedSettingsEmailRoute: AuthenticatedSettingsEmailRoute,
+    AuthenticatedSettingsNotificationsRoute:
+      AuthenticatedSettingsNotificationsRoute,
     AuthenticatedSettingsSeoRoute: AuthenticatedSettingsSeoRoute,
     AuthenticatedSettingsSeoTrackingRoute:
       AuthenticatedSettingsSeoTrackingRoute,
     AuthenticatedSettingsSocialRoute: AuthenticatedSettingsSocialRoute,
+    AuthenticatedSettingsSpamRoute: AuthenticatedSettingsSpamRoute,
     AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
   }
 
@@ -768,16 +912,21 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMonitoringAnalyticsRoute: typeof AuthenticatedMonitoringAnalyticsRoute
   AuthenticatedMonitoringErrorsRoute: typeof AuthenticatedMonitoringErrorsRoute
   AuthenticatedAboutPageIndexRoute: typeof AuthenticatedAboutPageIndexRoute
+  AuthenticatedArticleCategoriesIndexRoute: typeof AuthenticatedArticleCategoriesIndexRoute
+  AuthenticatedAuthorsIndexRoute: typeof AuthenticatedAuthorsIndexRoute
   AuthenticatedCareersIndexRoute: typeof AuthenticatedCareersIndexRoute
   AuthenticatedContactPageIndexRoute: typeof AuthenticatedContactPageIndexRoute
   AuthenticatedContactSubmissionsIndexRoute: typeof AuthenticatedContactSubmissionsIndexRoute
+  AuthenticatedEstimatorIndexRoute: typeof AuthenticatedEstimatorIndexRoute
   AuthenticatedHomeIndexRoute: typeof AuthenticatedHomeIndexRoute
-  AuthenticatedInquiriesIndexRoute: typeof AuthenticatedInquiriesIndexRoute
+  AuthenticatedJobDepartmentsIndexRoute: typeof AuthenticatedJobDepartmentsIndexRoute
+  AuthenticatedLeadsIndexRoute: typeof AuthenticatedLeadsIndexRoute
   AuthenticatedMonitoringIndexRoute: typeof AuthenticatedMonitoringIndexRoute
   AuthenticatedNewsIndexRoute: typeof AuthenticatedNewsIndexRoute
-  AuthenticatedProjectsIndexRoute: typeof AuthenticatedProjectsIndexRoute
+  AuthenticatedSectorsIndexRoute: typeof AuthenticatedSectorsIndexRoute
+  AuthenticatedServicesIndexRoute: typeof AuthenticatedServicesIndexRoute
+  AuthenticatedSiteContentIndexRoute: typeof AuthenticatedSiteContentIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
-  AuthenticatedProjectsProjectIdUnitsRoute: typeof AuthenticatedProjectsProjectIdUnitsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -787,18 +936,23 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMonitoringAnalyticsRoute: AuthenticatedMonitoringAnalyticsRoute,
   AuthenticatedMonitoringErrorsRoute: AuthenticatedMonitoringErrorsRoute,
   AuthenticatedAboutPageIndexRoute: AuthenticatedAboutPageIndexRoute,
+  AuthenticatedArticleCategoriesIndexRoute:
+    AuthenticatedArticleCategoriesIndexRoute,
+  AuthenticatedAuthorsIndexRoute: AuthenticatedAuthorsIndexRoute,
   AuthenticatedCareersIndexRoute: AuthenticatedCareersIndexRoute,
   AuthenticatedContactPageIndexRoute: AuthenticatedContactPageIndexRoute,
   AuthenticatedContactSubmissionsIndexRoute:
     AuthenticatedContactSubmissionsIndexRoute,
+  AuthenticatedEstimatorIndexRoute: AuthenticatedEstimatorIndexRoute,
   AuthenticatedHomeIndexRoute: AuthenticatedHomeIndexRoute,
-  AuthenticatedInquiriesIndexRoute: AuthenticatedInquiriesIndexRoute,
+  AuthenticatedJobDepartmentsIndexRoute: AuthenticatedJobDepartmentsIndexRoute,
+  AuthenticatedLeadsIndexRoute: AuthenticatedLeadsIndexRoute,
   AuthenticatedMonitoringIndexRoute: AuthenticatedMonitoringIndexRoute,
   AuthenticatedNewsIndexRoute: AuthenticatedNewsIndexRoute,
-  AuthenticatedProjectsIndexRoute: AuthenticatedProjectsIndexRoute,
+  AuthenticatedSectorsIndexRoute: AuthenticatedSectorsIndexRoute,
+  AuthenticatedServicesIndexRoute: AuthenticatedServicesIndexRoute,
+  AuthenticatedSiteContentIndexRoute: AuthenticatedSiteContentIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
-  AuthenticatedProjectsProjectIdUnitsRoute:
-    AuthenticatedProjectsProjectIdUnitsRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

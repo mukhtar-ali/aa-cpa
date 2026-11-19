@@ -1,8 +1,8 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export const LANGUAGES = [
-  { code: 'en', label: 'EN' },
   { code: 'ar', label: 'AR' },
+  { code: 'en', label: 'EN' },
 ] as const
 
 export type LanguageCode = (typeof LANGUAGES)[number]['code']

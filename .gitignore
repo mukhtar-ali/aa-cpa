@@ -54,3 +54,6 @@ package-lock.json
 # Claude Code / Spec Kit local state
 .claude/settings.local.json
 .specify/feature.json
+.locked/
+.pnpm-store
+.node_modules_old*

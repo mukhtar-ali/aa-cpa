@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head><meta charset="utf-8"><title>New Estimator Quote Request</title></head>
+<body style="font-family: Arial, sans-serif; color: #1a202c;">
+  <h2>New Quote Request from Fee Estimator</h2>
+  <p><strong>Full Name:</strong> {{fullName}}</p>
+  {{#if company}}<p><strong>Company:</strong> {{company}}</p>{{/if}}
+  <p><strong>Mobile:</strong> {{mobile}}</p>
+  <p><strong>Email:</strong> {{email}}</p>
+  <p><strong>Estimated Range:</strong> {{range.min}} – {{range.max}} {{range.currency}}</p>
+</body>
+</html>

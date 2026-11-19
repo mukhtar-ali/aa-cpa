@@ -17,15 +17,21 @@ interface ApplicationsListProps {
 const STATUS_OPTIONS = [
   { value: 'pending', label: 'Pending' },
   { value: 'reviewed', label: 'Reviewed' },
-  { value: 'rejected', label: 'Rejected' },
+  { value: 'shortlisted', label: 'Shortlisted' },
+  { value: 'interview', label: 'Interview' },
+  { value: 'offer', label: 'Offer' },
   { value: 'hired', label: 'Hired' },
+  { value: 'rejected', label: 'Rejected' },
 ] as const
 
 const STATUS_BADGE_VARIANT: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
   pending: 'secondary',
   reviewed: 'outline',
-  rejected: 'destructive',
+  shortlisted: 'outline',
+  interview: 'secondary',
+  offer: 'default',
   hired: 'default',
+  rejected: 'destructive',
 }
 
 export function ApplicationsList({ items, isLoading }: ApplicationsListProps) {
@@ -48,17 +54,21 @@ export function ApplicationsList({ items, isLoading }: ApplicationsListProps) {
   }
 
   const pendingDelete = items.find((i) => i.id === pendingDeleteId) ?? null
+  const getApplicantName = (app: JobApplicationModel) => {
+    const anyApp = app as any
+    if (anyApp.fullName) return anyApp.fullName
+    return [app.firstName, app.lastName].filter(Boolean).join(' ')
+  }
 
   return (
     <div className='space-y-2'>
       {items.map((application) => (
         <Card key={application.id} className='flex flex-wrap items-center justify-between gap-3 p-4'>
           <div>
-            <p className='font-medium'>
-              {application.firstName} {application.lastName}
-            </p>
+            <p className='font-medium'>{getApplicantName(application)}</p>
             <p className='text-xs text-muted-foreground'>
-              {application.email} · applying for {application.job?.title?.en ?? 'a deleted job'}
+              {application.email} · applying for{' '}
+              {application.job?.title?.ar || application.job?.title?.en || 'a job posting'}
             </p>
           </div>
           <div className='flex items-center gap-2'>
@@ -107,7 +117,7 @@ export function ApplicationsList({ items, isLoading }: ApplicationsListProps) {
             setPendingDeleteId(null)
           }}
           title={<span className='text-destructive'>Delete Application</span>}
-          desc={`Delete the application from ${pendingDelete.firstName} ${pendingDelete.lastName}? This action cannot be undone.`}
+          desc={`Delete the application from ${getApplicantName(pendingDelete)}? This action cannot be undone.`}
           confirmText={
             <>
               {deleteApplication.isPending && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}

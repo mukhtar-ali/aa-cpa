@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head><meta charset="utf-8"><title>طلب عرض سعر جديد من الحاسبة التقديرية</title></head>
+<body style="font-family: Tahoma, Arial, sans-serif; direction: rtl; text-align: right; color: #1a202c;">
+  <h2>طلب عرض سعر من الحاسبة التقديرية</h2>
+  <p><strong>الاسم:</strong> {{fullName}}</p>
+  {{#if company}}<p><strong>المنشأة:</strong> {{company}}</p>{{/if}}
+  <p><strong>الجوال:</strong> {{mobile}}</p>
+  <p><strong>البريد الإلكتروني:</strong> {{email}}</p>
+  <p><strong>النطاق التقديري:</strong> {{range.min}} – {{range.max}} {{range.currency}}</p>
+</body>
+</html>

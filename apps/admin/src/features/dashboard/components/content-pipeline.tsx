@@ -1,6 +1,6 @@
 import { formatDistanceToNow } from 'date-fns'
 import { useNavigate } from '@tanstack/react-router'
-import { Briefcase, Eye, Landmark, Newspaper } from 'lucide-react'
+import { Briefcase, Eye, Newspaper } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import type { DashboardContentItem, DashboardContentType, DashboardStats } from '@/lib/dashboard-api'
@@ -12,19 +12,18 @@ interface ContentPipelineProps {
 
 const COLUMN_CONFIG: Record<
   DashboardContentType,
-  { label: string; icon: typeof Landmark; headerClass: string; href: string }
+  { label: string; icon: typeof Newspaper; headerClass: string; href: string }
 > = {
-  projects: { label: 'Projects', icon: Landmark, headerClass: 'border-border', href: '/projects' },
   news: { label: 'News & Events', icon: Newspaper, headerClass: 'border-border', href: '/news' },
   jobs: { label: 'Careers', icon: Briefcase, headerClass: 'border-border', href: '/careers' },
 }
 
 export function ContentPipeline({ stats, isLoading }: ContentPipelineProps) {
   const navigate = useNavigate()
-  const columns: DashboardContentType[] = ['projects', 'news', 'jobs']
+  const columns: DashboardContentType[] = ['news', 'jobs']
 
   return (
-    <div className='grid gap-4 sm:grid-cols-1 lg:grid-cols-3'>
+    <div className='grid gap-4 sm:grid-cols-1 lg:grid-cols-2'>
       {columns.map((type) => {
         const config = COLUMN_CONFIG[type]
         const Icon = config.icon

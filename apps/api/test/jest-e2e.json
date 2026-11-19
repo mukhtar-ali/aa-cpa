@@ -1,0 +1,23 @@
+{
+    "moduleFileExtensions": ["js", "json", "ts"],
+    "rootDir": ".",
+    "testRegex": ".e2e-spec.ts$",
+    "transform": {
+        "^.+\\.(t|j)s$": [
+            "ts-jest",
+            {
+                "tsconfig": {
+                    "allowJs": true
+                }
+            }
+        ]
+    },
+    "moduleNameMapper": {
+        "^@/(.*)$": "<rootDir>/../src/$1"
+    },
+    "transformIgnorePatterns": [
+        "node_modules/(?!(?:\\.pnpm/)?(uuid|htmlparser2|domelementtype|domhandler|domutils|dom-serializer|entities|is-plain-object|escape-string-regexp|parse-srcset))"
+    ],
+    "globalSetup": "<rootDir>/setup-db.ts",
+    "testEnvironment": "node"
+}

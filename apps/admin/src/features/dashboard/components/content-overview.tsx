@@ -1,4 +1,4 @@
-import { Briefcase, Landmark, Newspaper } from 'lucide-react'
+import { Briefcase, Newspaper } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { DashboardContentType, DashboardStats } from '@/lib/dashboard-api'
@@ -8,15 +8,14 @@ interface ContentOverviewProps {
   isLoading: boolean
 }
 
-const TYPE_CONFIG: Record<DashboardContentType, { label: string; icon: typeof Landmark; iconClass: string; chipClass: string; barClass: string }> = {
-  projects: { label: 'Projects', icon: Landmark, iconClass: 'text-muted-foreground', chipClass: 'bg-muted', barClass: 'bg-primary' },
+const TYPE_CONFIG: Record<DashboardContentType, { label: string; icon: typeof Newspaper; iconClass: string; chipClass: string; barClass: string }> = {
   news: { label: 'Articles', icon: Newspaper, iconClass: 'text-muted-foreground', chipClass: 'bg-muted', barClass: 'bg-primary' },
   jobs: { label: 'Jobs', icon: Briefcase, iconClass: 'text-muted-foreground', chipClass: 'bg-muted', barClass: 'bg-primary' },
 }
 
 export function ContentOverview({ stats, isLoading }: ContentOverviewProps) {
-  const totalPublished = stats ? stats.projects.published + stats.news.published + stats.jobs.published : 0
-  const totalAll = stats ? stats.projects.total + stats.news.total + stats.jobs.total : 0
+  const totalPublished = stats ? stats.news.published + stats.jobs.published : 0
+  const totalAll = stats ? stats.news.total + stats.jobs.total : 0
   const publishedRatio = totalAll > 0 ? totalPublished / totalAll : 0
   const circumference = 2 * Math.PI * 15.9155
 

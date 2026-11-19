@@ -1,0 +1,271 @@
+export const seedServices = [
+  {
+    slug: 'external-audit',
+    icon: 'ShieldCheck',
+    order: 1,
+    isPublished: true,
+    publishedAt: new Date('2026-01-01T00:00:00Z'),
+    highlight: {
+      label: { ar: 'الامتثال للمعايير', en: 'Standards Compliance' },
+      value: { ar: '100% معايير SOCPA و IFRS', en: '100% SOCPA & IFRS' },
+      note: { ar: 'معتمد من الهيئة السعودية للمراجعين والمحاسبين', en: 'Accredited by SOCPA' },
+    },
+    methodology: [
+      {
+        title: { ar: 'تخطيط التدقيق وتقييم المخاطر', en: 'Audit Planning & Risk Assessment' },
+        body: { ar: 'فهم عميق لأعمال المنشأة وبيئتها الرقابية لتحديد مجالات المخاطر الجوهرية وتصميم خطة تدقيق ملائمة.', en: 'In-depth understanding of the entity and its internal control environment to design tailored audit procedures.' },
+      },
+      {
+        title: { ar: 'اختبار الضوابط الرقابية', en: 'Testing Internal Controls' },
+        body: { ar: 'تقييم فاعلية نظم الرقابة الداخلية وإجراءات تكنولوجيا المعلومات المساندة للتقارير المالية.', en: 'Evaluating internal financial controls and IT systems reliability.' },
+      },
+      {
+        title: { ar: 'الإجراءات الجوهرية والتحليل المالي', en: 'Substantive Testing & Analytics' },
+        body: { ar: 'تنفيذ اختبارات تفصيلية للأرصدة والعمليات والتحليلات المقارنة لدعم صحة القوائم المالية.', en: 'Performing substantive tests of balances and analytical reviews to verify financial statements.' },
+      },
+      {
+        title: { ar: 'إصدار تقرير المراجع المستقل', en: 'Independent Audit Report Issuance' },
+        body: { ar: 'إصدار تقرير مهني محايد يوضح الرأي حول عدالة القوائم المالية وتقديم خطاب الإدارة بالملاحظات.', en: 'Issuing the independent auditor opinion and management letter with control recommendations.' },
+      },
+    ],
+    deliverables: [
+      { title: { ar: 'تقرير المراجع المستقل السنوي', en: 'Annual Independent Auditor Report' } },
+      { title: { ar: 'تقرير فحص القوائم المالية الأولية (الفصلية)', en: 'Quarterly Interim Review Report' } },
+      { title: { ar: 'خطاب الإدارة حول الرقابة الداخلية', en: 'Management Letter on Internal Controls' } },
+    ],
+    translations: {
+      ar: {
+        title: 'التدقيق والتأكيد الخارجي',
+        summary: 'خدمات تدقيق مهنية مستقلة تعزز موثوقية قوائمك المالية وثقة المستثمرين والجهات الرقابية.',
+        heroSubtitle: 'فحص مالي مستقل متوافق مع معايير المحاسبة والمراجعة السعودية والدولية.',
+        statement: 'نقدم خدمات تدقيق مالي خارجية معتمدة تعزز الشفافية وترسخ موثوقية الأداء المالي لمنشأتك أمام البنوك والجهات التمويلية والتنظيمية.',
+        audience: 'الشركات المساهمة، الشركات ذات المسؤولية المحدودة، والمنشآت الخاضعة لإشراف هيئة السوق المالية أو البنك المركزي السعودي.',
+        whyUs: 'فريق معتمد من مراجعي الحسابات القانونيين بخبرات تفوق 20 عاماً في السوق السعودي.',
+        metaTitle: 'خدمات التدقيق الخارجي المعتمد | شركة محاسبون قانونيون',
+        metaDescription: 'تدقيق مالي مستقل معتمد من SOCPA لتعزيز موثوقية قوائمك المالية وثقة المستثمرين والجهات الرقابية في المملكة.',
+      },
+      en: {
+        title: 'External Audit & Assurance',
+        summary: 'Independent professional audit services enhancing the credibility of financial statements and stakeholder confidence.',
+        heroSubtitle: 'Certified financial audits compliant with Saudi and international accounting standards.',
+        statement: 'We provide accredited independent audit services that reinforce transparency and credibility for investors, lenders, and regulators.',
+        audience: 'Joint stock companies, LLCs, and regulated financial entities across Saudi Arabia.',
+        whyUs: 'Experienced SOCPA-certified licensed partners with over 20 years in the GCC market.',
+        metaTitle: 'External Audit Services | Certified Public Accountants',
+        metaDescription: 'Accredited external audit services compliant with SOCPA and IFRS standards in Saudi Arabia.',
+      },
+    },
+  },
+  {
+    slug: 'tax-zakat-advisory',
+    icon: 'ReceiptText',
+    order: 2,
+    isPublished: true,
+    publishedAt: new Date('2026-01-01T00:00:00Z'),
+    highlight: {
+      label: { ar: 'الامتثال الضريبي', en: 'Tax Compliance' },
+      value: { ar: '100% متوافق مع هيئة الزكاة والضريبة والجمارك', en: '100% ZATCA Compliant' },
+      note: { ar: 'إقرارات معتمدة وتخطيط زكوي استراتيجي', en: 'Certified returns & strategic tax planning' },
+    },
+    methodology: [
+      {
+        title: { ar: 'دراسة الوعاء الزكوي والضريبي', en: 'Tax Base & Zakat Assessment' },
+        body: { ar: 'تحليل دقيق لبنود الميزانية العمومية وقائمة الدخل لتحديد الوعاء الزكوي والضريبي الخاضع بدقة.', en: 'Reviewing balance sheet and income statement items to accurately determine taxable base.' },
+      },
+      {
+        title: { ar: 'إعداد الإقرارات وتقديمها', en: 'Return Preparation & Filing' },
+        body: { ar: 'تجهيز ورفع الإقرارات السنوية والفترية عبر منصة ZATCA مع كافة المرفقات النظامية.', en: 'Filing annual zakat and periodic VAT returns on the ZATCA portal with proper supporting docs.' },
+      },
+      {
+        title: { ar: 'إدارة الفحص والاعتراضات', en: 'Audit Management & Disputes' },
+        body: { ar: 'تمثيل العميل أمام لجان الهيئة واللجان الاستئنافية في حال وجود فروقات فحص أو اعتراضات.', en: 'Representing clients in ZATCA field audits, dispute committees, and appeals.' },
+      },
+    ],
+    deliverables: [
+      { title: { ar: 'الإقرار الزكوي والضريبي السنوي المعتمد', en: 'Certified Annual Zakat & Tax Return' } },
+      { title: { ar: 'شهادة الزكاة والدخل النهائية', en: 'Final Zakat Clearance Certificate' } },
+      { title: { ar: 'دراسة التسعير التحويلي والملف المحلي', en: 'Transfer Pricing & Local File Documentation' } },
+    ],
+    translations: {
+      ar: {
+        title: 'الاستشارات الزكوية والضريبية',
+        summary: 'إدارة متكاملة للالتزامات الزكوية وضريبة الدخل وضريبة القيمة المضافة مع هيئة الزكاة والضريبة والجمارك.',
+        heroSubtitle: 'تخطيط زكوي وضريبي استراتيجي يضمن الامتثال ويحسن الكفاءة المالية.',
+        statement: 'نساعد الشركات على تلبية كافة متطلبات هيئة الزكاة والضريبة والجمارك (ZATCA) بسلاسة مع تجنب الغرامات والاستفادة من الحوافز النظامية.',
+        audience: 'الشركات المحلية والمختلطة والأجنبية العاملة في المملكة العربية السعودية.',
+        whyUs: 'مستشارون معتمدون وخبراء سابقون في المنظومة الضريبية والزكوية السعودية.',
+        metaTitle: 'استشارات الزكاة والضريبة | محاسبون قانونيون',
+        metaDescription: 'خدمات متكاملة لإعداد الإقرارات الزكوية وضريبة القيمة المضافة والتسعير التحويلي مع ZATCA.',
+      },
+      en: {
+        title: 'Zakat & Tax Advisory',
+        summary: 'Comprehensive management of zakat, income tax, and VAT compliance with the Zakat, Tax and Customs Authority.',
+        heroSubtitle: 'Strategic tax planning ensuring full regulatory compliance and financial efficiency.',
+        statement: 'We guide companies through ZATCA requirements, mitigating risks, resolving disputes, and optimizing tax positions.',
+        audience: 'Local, mixed-ownership, and multinational corporations operating in Saudi Arabia.',
+        whyUs: 'Certified tax advisors with deep practical experience in Saudi tax legislation.',
+        metaTitle: 'Zakat & Tax Advisory Services | CPA Firm',
+        metaDescription: 'Expert advisory on Zakat, Corporate Income Tax, VAT, and Transfer Pricing with ZATCA.',
+      },
+    },
+  },
+  {
+    slug: 'internal-audit-risk',
+    icon: 'Network',
+    order: 3,
+    isPublished: true,
+    publishedAt: new Date('2026-01-01T00:00:00Z'),
+    highlight: {
+      label: { ar: 'إدارة المخاطر', en: 'Risk Governance' },
+      value: { ar: 'حوكمة مؤسسية متقدمة', en: 'Advanced Governance' },
+      note: { ar: 'سجل مخاطر شامل وخطط معالجة', en: 'Complete risk register & mitigation' },
+    },
+    methodology: [
+      {
+        title: { ar: 'بناء مصفوفة المخاطر والرقابة', en: 'Risk & Control Matrix (RCM)' },
+        body: { ar: 'حصر مخاطر الأعمال التشغيلية والمالية وبناء مصفوفة رقابة متكاملة لتغطية الثغرات.', en: 'Mapping business and operational risks to tailored internal controls.' },
+      },
+      {
+        title: { ar: 'تنفيذ مهام التدقيق الداخلي', en: 'Executing Internal Audit Reviews' },
+        body: { ar: 'فحص العمليات التشغيلية والإدارية وقياس مدى كفاءتها والتزامها بالسياسات والإجراءات.', en: 'Reviewing operational workflows for efficiency, compliance, and policy adherence.' },
+      },
+      {
+        title: { ar: 'رفع التقارير للجنة المراجعة', en: 'Audit Committee Reporting' },
+        body: { ar: 'إعداد تقارير دورية ترفع لمجلس الإدارة ولجنة المراجعة مع خطط تصحيحية ومتابعة تنفيذها.', en: 'Submitting quarterly executive reports to the Audit Committee with action plans.' },
+      },
+    ],
+    deliverables: [
+      { title: { ar: 'ميثاق ولائحة التدقيق الداخلي', en: 'Internal Audit Charter & Policy' } },
+      { title: { ar: 'خطة التدقيق المبنية على المخاطر', en: 'Risk-Based Internal Audit Plan' } },
+      { title: { ar: 'تقارير التدقيق الداخلي الدورية', en: 'Periodic Internal Audit Reports' } },
+    ],
+    translations: {
+      ar: {
+        title: 'التدقيق الداخلي وإدارة المخاطر',
+        summary: 'تطوير نظم الرقابة الداخلية وإدارة المخاطر لتعزيز الحوكمة وحماية أصول المنشأة وتحسين الكفاءة.',
+        heroSubtitle: 'حلول تدقيق داخلي متقدمة تدعم لجان المراجعة ومجالس الإدارة.',
+        statement: 'نقدم خدمات الإسناد الخارجي للتدقيق الداخلي وتقييم المخاطر التشغيلية والمالية بما يمنح الإدارة العليا راحة البال وقدرة أعلى على اتخاذ القرارات.',
+        audience: 'مجالس الإدارة ولجان المراجعة في الشركات المساهمة والعائلية والمؤسسات المتوسطة والكبيرة.',
+        whyUs: 'منهجية معتمدة وفق المعايير الدولية الصادرة عن معهد المدققين الداخليين (IIA).',
+        metaTitle: 'التدقيق الداخلي والحوكمة وإدارة المخاطر | محاسبون قانونيون',
+        metaDescription: 'خدمات إسناد التدقيق الداخلي وتطوير الحوكمة وإدارة المخاطر المؤسسية لشركات المملكة.',
+      },
+      en: {
+        title: 'Internal Audit & Risk Advisory',
+        summary: 'Enhancing internal controls, governance frameworks, and risk management to protect assets and improve efficiency.',
+        heroSubtitle: 'Advanced internal audit solutions supporting boards and audit committees.',
+        statement: 'We deliver co-sourced and outsourced internal audit services that empower leadership with independent operational insights.',
+        audience: 'Boards of directors, audit committees, family conglomerates, and leading enterprises.',
+        whyUs: 'Fully aligned with International Standards for the Professional Practice of Internal Auditing (IIA).',
+        metaTitle: 'Internal Audit & Risk Management | CPA Firm',
+        metaDescription: 'Comprehensive internal audit outsourcing and risk governance advisory services.',
+      },
+    },
+  },
+  {
+    slug: 'accounting-bookkeeping',
+    icon: 'FileSpreadsheet',
+    order: 4,
+    isPublished: true,
+    publishedAt: new Date('2026-01-01T00:00:00Z'),
+    highlight: {
+      label: { ar: 'الأنظمة السحابية', en: 'Cloud ERP' },
+      value: { ar: 'تكامل كامل مع الفاتورة الإلكترونية', en: 'Full E-Invoicing Integration' },
+      note: { ar: 'تقارير شهرية فورية ودقيقة', en: 'Real-time accurate monthly reports' },
+    },
+    methodology: [
+      {
+        title: { ar: 'إعداد شجرة الحسابات والأنظمة', en: 'Chart of Accounts & System Setup' },
+        body: { ar: 'تهيئة البرامج المحاسبية السحابية وتصميم دليل حسابات يتناسب مع طبيعة نشاط المنشأة.', en: 'Configuring cloud accounting software and standardizing custom chart of accounts.' },
+      },
+      {
+        title: { ar: 'تسجيل العمليات والقيود اليومية', en: 'Transaction Recording & Entries' },
+        body: { ar: 'معالجة قيود المبيعات والمشتريات والمصروفات والتسويات البنكية بصورة دورية دقيقة.', en: 'Processing sales, purchases, payroll, and monthly bank reconciliations.' },
+      },
+      {
+        title: { ar: 'إقفال الفترات وإصدار القوائم المالية', en: 'Period Close & Financial Statements' },
+        body: { ar: 'إقفال الحسابات شهرياً وسنوياً وإعداد موازين المراجعة والقوائم المالية الإدارية.', en: 'Monthly closing, trial balance verification, and management reporting pack.' },
+      },
+    ],
+    deliverables: [
+      { title: { ar: 'القوائم المالية الشهرية والإدارية', en: 'Monthly Management Financial Statements' } },
+      { title: { ar: 'تسويات الحسابات البنكية وحركات النقدية', en: 'Bank Reconciliations & Cash Flow Statements' } },
+      { title: { ar: 'ملفات الدعم والفوترة الإلكترونية (فاتورة)', en: 'ZATCA Phase 2 E-Invoicing Support' } },
+    ],
+    translations: {
+      ar: {
+        title: 'المحاسبة ومسك الدفاتر',
+        summary: 'خدمات مسك الدفاتر المحاسبية وإعداد التقارير المالية الدورية بأحدث الأنظمة السحابية المعتمدة.',
+        heroSubtitle: 'إدارة مالية ومحاسبية دقيقة تمكنك من التركيز على نمو أعمالك.',
+        statement: 'نوفر إدارة محاسبية متكاملة ترصد التدفقات النقدية والعمليات المالية بدقة، وتضمن جاهزية سجلاتك للتدقيق والامتثال الضريبي في أي وقت.',
+        audience: 'الشركات الناشئة، المنشآت الصغيرة والمتوسطة، والشركات التي تبحث عن خفض تكاليف الإدارة المالية.',
+        whyUs: 'فريق محاسبي محترف يدير أعمالك بأعلى معايير الدقة والسرية عبر أحدث البرامج السحابية.',
+        metaTitle: 'خدمات المحاسبة ومسك الدفاتر | محاسبون قانونيون',
+        metaDescription: 'مسك دفاتر محاسبية احترافي وإعداد القوائم المالية الشهرية والربط مع الفاتورة الإلكترونية.',
+      },
+      en: {
+        title: 'Accounting & Bookkeeping',
+        summary: 'Professional bookkeeping and regular financial reporting powered by certified cloud accounting systems.',
+        heroSubtitle: 'Accurate financial management allowing you to focus entirely on business expansion.',
+        statement: 'We handle your day-to-day accounting, bank reconciliations, and reporting so your financials are always audit-ready.',
+        audience: 'Startups, SMEs, and growth enterprises looking to optimize accounting overhead.',
+        whyUs: 'Experienced accountants delivering precision, confidentiality, and cloud integration.',
+        metaTitle: 'Bookkeeping & Accounting Services | CPA Firm',
+        metaDescription: 'Reliable accounting, bookkeeping, and management reporting for Saudi businesses.',
+      },
+    },
+  },
+  {
+    slug: 'financial-advisory',
+    icon: 'TrendingUp',
+    order: 5,
+    isPublished: true,
+    publishedAt: new Date('2026-01-01T00:00:00Z'),
+    highlight: {
+      label: { ar: 'الاستشارات الاستراتيجية', en: 'Strategic Advisory' },
+      value: { ar: 'تقييمات وصفقات مليارية', en: 'Billion-SAR Deal Track Record' },
+      note: { ar: 'معتمدون لدى هيئة السوق المالية والهيئات القضائية', en: 'Capital market & court accredited' },
+    },
+    methodology: [
+      {
+        title: { ar: 'الفحص النافي للجهالة', en: 'Due Diligence (FDD)' },
+        body: { ar: 'فحص مالي ومحاسبي شامل لتقييم جودة الأرباح والأصول والمخاطر في صفقات الاستحواذ والاندماج.', en: 'Comprehensive financial review of earnings quality, assets, and liabilities for M&A.' },
+      },
+      {
+        title: { ar: 'تقييم المنشآت والأصول', en: 'Business Valuation' },
+        body: { ar: 'استخدام أحدث أساليب التقييم المالي (DCF، المضاعفات) المعتمدة من الهيئة السعودية للمقيمين المعتمدين (تقييم).', en: 'Applying certified valuation methodologies (DCF, Market Multiples) compliant with Taqeem.' },
+      },
+      {
+        title: { ar: 'دراسات الجدوى وإعادة الهيكلة', en: 'Feasibility & Restructuring' },
+        body: { ar: 'بناء النماذج المالية والخطط المستقبلية لتأمين التمويل أو تحسين الهيكل التمويلي للشركة.', en: 'Building robust financial models and business plans for debt structuring and growth.' },
+      },
+    ],
+    deliverables: [
+      { title: { ar: 'تقرير الفحص النافي للجهالة المالي (FDD)', en: 'Financial Due Diligence Report' } },
+      { title: { ar: 'تقرير تقييم المنشأة المعتمد (تقييم)', en: 'Certified Business Valuation Report' } },
+      { title: { ar: 'دراسة الجدوى الاقتصادية والنموذج المالي', en: 'Economic Feasibility Study & Financial Model' } },
+    ],
+    translations: {
+      ar: {
+        title: 'الاستشارات المالية والمعاملات',
+        summary: 'استشارات مالية استراتيجية تشمل التقييم المعتمد، الفحص النافي للجهالة، ودراسات الجدوى الائتمانية والاستثمارية.',
+        heroSubtitle: 'رؤى مالية استراتيجية تدعم صفقات الاندماج والاستحواذ والتمويل.',
+        statement: 'نساعد المستثمرين ورواد الأعمال على اتخاذ قرارات استثمارية مدروسة من خلال التقييم المالي الموثوق والتحليل المتعمق للفرص والمخاطر.',
+        audience: 'صناديق الاستثمار الجريء، المستثمرون المؤسسيون، وملاك الشركات المقبلة على صفقات تخارج أو استحواذ.',
+        whyUs: 'خبراء معتمدون يجمعون بين المعرفة الأكاديمية العميقة وفهم تفاصيل السوق الاستثماري السعودي.',
+        metaTitle: 'الاستشارات المالية والتقييم | محاسبون قانونيون',
+        metaDescription: 'استشارات صفقات الاندماج والاستحواذ، الفحص النافي للجهالة، والتقييم المعتمد للمنشآت في السعودية.',
+      },
+      en: {
+        title: 'Financial & Transaction Advisory',
+        summary: 'Strategic financial advisory covering certified business valuation, due diligence, and feasibility studies.',
+        heroSubtitle: 'Strategic financial insights powering M&A deals, fundraising, and restructuring.',
+        statement: 'We empower investors and executive leadership to execute transactions with confidence and clarity.',
+        audience: 'Venture funds, private equity, institutional investors, and companies preparing for M&A or IPO.',
+        whyUs: 'Experienced corporate finance professionals with proven GCC transaction expertise.',
+        metaTitle: 'Financial Advisory & Business Valuation | CPA Firm',
+        metaDescription: 'Independent business valuation, financial due diligence, and M&A advisory services.',
+      },
+    },
+  },
+];

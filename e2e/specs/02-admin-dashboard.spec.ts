@@ -15,7 +15,6 @@ test.describe('Module 2: Admin Dashboard & Layout Controls', () => {
     await expect(overview.getByText('New Contact Messages', { exact: true })).toBeVisible();
     await expect(overview.getByText('Pending Applications', { exact: true })).toBeVisible();
     await expect(overview.getByText('Content to Publish', { exact: true })).toBeVisible();
-    await expect(overview.getByText('Open Inquiries', { exact: true })).toBeVisible();
     await expect(overview.getByText('Recent Activity', { exact: true })).toBeVisible();
   });
 
@@ -25,10 +24,8 @@ test.describe('Module 2: Admin Dashboard & Layout Controls', () => {
     // Verify sidebar links
     const sidebar = page.locator('aside, [data-sidebar="sidebar"], nav');
     await expect(sidebar.getByRole('link', { name: /users/i })).toBeVisible();
-    await expect(sidebar.getByRole('link', { name: /projects/i })).toBeVisible();
     await expect(sidebar.getByRole('link', { name: /news/i })).toBeVisible();
     await expect(sidebar.getByRole('link', { name: /careers/i })).toBeVisible();
-    await expect(sidebar.getByRole('link', { name: /inquiries/i })).toBeVisible();
     await expect(sidebar.getByRole('link', { name: 'Contact Submissions' })).toBeVisible();
     await expect(sidebar.getByRole('link', { name: 'Contact Page' })).toBeVisible();
     await expect(sidebar.getByRole('button', { name: /settings/i })).toBeVisible();

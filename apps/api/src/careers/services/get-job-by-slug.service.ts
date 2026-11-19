@@ -1,16 +1,66 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { jobMapEntityToModel } from '../helpers/job.mapper';
+import { JobMapper } from '../helpers/job.mapper';
 
 @Injectable()
 export class GetJobBySlugService {
     constructor(private prisma: PrismaService) {}
 
-    async execute(slug: string, webOnly: boolean) {
+    async execute(slug: string, webOnly: boolean, lang: string = 'ar', previewToken?: string) {
         const where: any = { slug, isDeleted: false };
         if (webOnly) where.isPublished = true;
-        const job = await this.prisma.job.findFirst({ where, include: { translations: true } });
-        if (!job) throw new NotFoundException('Job not found');
-        return jobMapEntityToModel(job);
+
+        const job = await this.prisma.job.findFirst({
+            where,
+            include: {
+                translations: true,
+                department: true,
+                office: true,
+            },
+        });
+
+        if (!job) {
+            const redirect = await this.prisma.slugRedirect.findUnique({
+                where: {
+                    entityType_fromSlug: {
+                        entityType: 'job',
+                        fromSlug: slug,
+                    },
+                },
+            });
+
+            if (redirect) {
+                return { redirectTo: redirect.toSlug };
+            }
+
+            throw new NotFoundException(`Job not found: ${slug}`);
+        }
+
+        if (!webOnly) {
+            return JobMapper.toAdmin(job);
+        }
+
+        // Fetch similar open jobs in same department
+        const similarJobs = await this.prisma.job.findMany({
+            where: {
+                id: { not: job.id },
+                departmentId: job.departmentId,
+                isPublished: true,
+                isDeleted: false,
+                OR: [
+                    { closesAt: null },
+                    { closesAt: { gt: new Date() } },
+                ],
+            },
+            take: 3,
+            orderBy: { order: 'asc' },
+            include: {
+                translations: true,
+                department: true,
+                office: true,
+            },
+        });
+
+        return JobMapper.toDetailWeb(job, lang, similarJobs);
     }
 }

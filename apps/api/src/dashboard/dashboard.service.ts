@@ -7,38 +7,49 @@ export class DashboardService {
 
     async getStats() {
         const today = new Date().toISOString().slice(0, 10);
+        const sevenDaysAgo = new Date(Date.now() - 7 * 86400000);
 
         const [
             totalUsers,
-            totalProjects,
-            publishedProjects,
+            totalServices,
+            publishedServices,
+            totalSectors,
+            publishedSectors,
             totalNews,
             publishedNews,
             totalJobs,
             publishedJobs,
             pendingApplications,
-            openInquiries,
             newContactSubmissions,
+            newLeads7d,
+            applications7d,
+            failedOutbox,
             pageviewsToday,
             errorsToday,
             pageviewsTrend,
             recentContacts,
             recentApplications,
-            recentInquiries,
-            recentProjects,
             recentNews,
             recentJobs,
         ] = await Promise.all([
             this.prisma.user.count({ where: { isDeleted: false } }),
-            this.prisma.project.count({ where: { isDeleted: false } }),
-            this.prisma.project.count({ where: { isDeleted: false, isPublished: true } }),
+            this.prisma.service?.count ? this.prisma.service.count({ where: { isDeleted: false } }) : Promise.resolve(0),
+            this.prisma.service?.count ? this.prisma.service.count({ where: { isDeleted: false, isPublished: true } }) : Promise.resolve(0),
+            this.prisma.sector?.count ? this.prisma.sector.count({ where: { isDeleted: false } }) : Promise.resolve(0),
+            this.prisma.sector?.count ? this.prisma.sector.count({ where: { isDeleted: false, isPublished: true } }) : Promise.resolve(0),
             this.prisma.news.count({ where: { isDeleted: false } }),
             this.prisma.news.count({ where: { isDeleted: false, isPublished: true } }),
             this.prisma.job.count({ where: { isDeleted: false } }),
             this.prisma.job.count({ where: { isDeleted: false, isPublished: true } }),
             this.prisma.jobApplication.count({ where: { status: 'pending' } }),
-            this.prisma.inquiry.count({ where: { isDeleted: false } }),
             this.prisma.contact.count({ where: { isDeleted: false, status: 'new' } }),
+            this.prisma.contact.count({
+                where: { isDeleted: false, createdAt: { gte: sevenDaysAgo } },
+            }),
+            this.prisma.jobApplication.count({
+                where: { createdAt: { gte: sevenDaysAgo } },
+            }),
+            this.prisma.emailOutbox?.count ? this.prisma.emailOutbox.count({ where: { status: 'failed' } }) : Promise.resolve(0),
             this.prisma.monitoringEventRollup.findFirst({
                 where: { name: 'pageview', period: 'daily', periodKey: today },
                 select: { count: true },
@@ -52,26 +63,22 @@ export class DashboardService {
                 where: { isDeleted: false },
                 orderBy: { createdAt: 'desc' },
                 take: 5,
-                select: { id: true, fullName: true, subject: true, createdAt: true },
+                select: { id: true, fullName: true, createdAt: true },
             }),
             this.prisma.jobApplication.findMany({
                 orderBy: { createdAt: 'desc' },
                 take: 5,
-                select: { id: true, firstName: true, lastName: true, createdAt: true, job: { select: { translations: { where: { language: 'en' }, select: { title: true } } } } },
-            }),
-            this.prisma.inquiry.findMany({
-                where: { isDeleted: false },
-                orderBy: { createdAt: 'desc' },
-                take: 5,
-                select: { id: true, fullName: true, projectName: true, createdAt: true },
-            }),
-            this.prisma.project.findMany({
-                where: { isDeleted: false },
-                orderBy: { updatedAt: 'desc' },
-                take: 5,
                 select: {
-                    id: true, slug: true, isPublished: true, updatedAt: true,
-                    translations: { where: { language: 'en' }, select: { title: true } },
+                    id: true,
+                    createdAt: true,
+                    job: {
+                        select: {
+                            translations: {
+                                where: { language: 'ar' },
+                                select: { title: true },
+                            },
+                        },
+                    },
                 },
             }),
             this.prisma.news.findMany({
@@ -79,8 +86,14 @@ export class DashboardService {
                 orderBy: { updatedAt: 'desc' },
                 take: 5,
                 select: {
-                    id: true, slug: true, isPublished: true, updatedAt: true,
-                    translations: { where: { language: 'en' }, select: { title: true } },
+                    id: true,
+                    slug: true,
+                    isPublished: true,
+                    updatedAt: true,
+                    translations: {
+                        where: { language: 'ar' },
+                        select: { title: true },
+                    },
                 },
             }),
             this.prisma.job.findMany({
@@ -88,8 +101,14 @@ export class DashboardService {
                 orderBy: { updatedAt: 'desc' },
                 take: 5,
                 select: {
-                    id: true, slug: true, isPublished: true, updatedAt: true,
-                    translations: { where: { language: 'en' }, select: { title: true } },
+                    id: true,
+                    slug: true,
+                    isPublished: true,
+                    updatedAt: true,
+                    translations: {
+                        where: { language: 'ar' },
+                        select: { title: true },
+                    },
                 },
             }),
         ]);
@@ -99,22 +118,15 @@ export class DashboardService {
                 id: c.id,
                 type: 'contact' as const,
                 label: c.fullName,
-                subLabel: c.subject,
+                subLabel: 'Contact submission',
                 createdAt: c.createdAt.toISOString(),
             })),
-            ...recentApplications.map((a) => ({
+            ...recentApplications.map((a: any) => ({
                 id: a.id,
                 type: 'application' as const,
-                label: `${a.firstName} ${a.lastName}`,
-                subLabel: a.job.translations[0]?.title ?? 'a job posting',
+                label: a.fullName ?? (a.firstName ? `${a.firstName} ${a.lastName ?? ''}`.trim() : 'Applicant'),
+                subLabel: a.job?.translations?.[0]?.title ?? 'a job posting',
                 createdAt: a.createdAt.toISOString(),
-            })),
-            ...recentInquiries.map((i) => ({
-                id: i.id,
-                type: 'inquiry' as const,
-                label: i.fullName,
-                subLabel: i.projectName ?? 'General inquiry',
-                createdAt: i.createdAt.toISOString(),
             })),
         ]
             .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
@@ -135,10 +147,13 @@ export class DashboardService {
 
         return {
             users: { total: totalUsers },
-            projects: { total: totalProjects, published: publishedProjects, draft: totalProjects - publishedProjects },
+            services: { total: totalServices, published: publishedServices, draft: totalServices - publishedServices },
+            sectors: { total: totalSectors, published: publishedSectors, draft: totalSectors - publishedSectors },
             news: { total: totalNews, published: publishedNews, draft: totalNews - publishedNews },
             jobs: { total: totalJobs, published: publishedJobs, draft: totalJobs - publishedJobs, pendingApplications },
-            inquiries: { open: openInquiries },
+            leads: { total: newContactSubmissions, new7d: newLeads7d },
+            applications: { total: pendingApplications, new7d: applications7d },
+            outbox: { failed: failedOutbox },
             contact: { new: newContactSubmissions },
             activity: {
                 pageviewsToday: pageviewsToday?.count ?? 0,
@@ -147,12 +162,10 @@ export class DashboardService {
             pageviewsTrend,
             recentActivity,
             contentByType: [
-                { type: 'projects' as const, total: totalProjects, published: publishedProjects },
                 { type: 'news' as const, total: totalNews, published: publishedNews },
                 { type: 'jobs' as const, total: totalJobs, published: publishedJobs },
             ],
             recentContent: {
-                projects: recentProjects.map(mapContentItem),
                 news: recentNews.map(mapContentItem),
                 jobs: recentJobs.map(mapContentItem),
             },

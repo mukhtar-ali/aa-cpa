@@ -1,16 +1,14 @@
 import {
-    ContactQuerySchema, JobQuerySchema, NewsQuerySchema, ProjectQuerySchema, UnitQuerySchema,
+    ContactQuerySchema, JobQuerySchema, NewsQuerySchema,
 } from '@repo/shared';
 import { GetAllJobsService } from '@/careers/services/get-all-jobs.service';
 import { GetAllNewsService } from '@/news/services/get-all-news.service';
-import { GetAllProjectsService } from '@/project/services/get-all-projects.service';
-import { GetAllUnitsService } from '@/unites/services/get-all-units.service';
 
 // Server-side facet filters (MUK-470): the admin tables send ?isPublished=, ?tag=, ?employmentType=, ?status=.
 
 describe('list query schemas: boolean and multi-value parameters', () => {
     it('parses "false" as false (z.coerce.boolean would have made it true and shown PUBLISHED rows for the Draft filter)', () => {
-        for (const schema of [NewsQuerySchema, JobQuerySchema, ProjectQuerySchema, UnitQuerySchema]) {
+        for (const schema of [NewsQuerySchema, JobQuerySchema]) {
             expect(schema.parse({ isPublished: 'false' }).isPublished).toBe(false);
             expect(schema.parse({ isPublished: 'true' }).isPublished).toBe(true);
             expect(schema.parse({}).isPublished).toBeUndefined();
@@ -19,7 +17,7 @@ describe('list query schemas: boolean and multi-value parameters', () => {
 
     it('rejects a boolean parameter that is neither true nor false', () => {
         expect(NewsQuerySchema.safeParse({ isPublished: 'maybe' }).success).toBe(false);
-        expect(ProjectQuerySchema.safeParse({ isFeatured: '1' }).success).toBe(false);
+        expect(JobQuerySchema.safeParse({ isPublished: 'maybe' }).success).toBe(false);
     });
 
     it('parses comma-separated lists and single values for tag, employmentType and contact status', () => {
@@ -49,24 +47,10 @@ describe('list services apply the facet filters to the page AND the total', () =
         expect(count).toHaveBeenCalledWith({ where: where() });
     });
 
-    it('jobs: employment type list', async () => {
+    it('jobs: employmentType list', async () => {
         const { prisma, where } = make('job');
         await new GetAllJobsService(prisma as never).execute({ pageNumber: 1, pageSize: 10, employmentType: ['contract'] } as never, false);
         expect(where()).toMatchObject({ employmentType: { in: ['contract'] } });
-    });
-
-    it('projects and units: published/draft filter, and the web list is always published-only', async () => {
-        const projects = make('project');
-        await new GetAllProjectsService(projects.prisma as never).execute({ pageNumber: 1, pageSize: 10, isPublished: false } as never, false);
-        expect(projects.where()).toMatchObject({ isPublished: false });
-
-        const units = make('unit');
-        await new GetAllUnitsService(units.prisma as never).execute({ pageNumber: 1, pageSize: 10, isPublished: false } as never, false);
-        expect(units.where()).toMatchObject({ isPublished: false });
-
-        const web = make('unit');
-        await new GetAllUnitsService(web.prisma as never).execute({ pageNumber: 1, pageSize: 10, isPublished: false } as never, true);
-        expect(web.where()).toMatchObject({ isPublished: true });
     });
 
     it('PUBLIC lists stay published-only even when the caller sends isPublished=false (draft leak)', async () => {
@@ -78,14 +62,6 @@ describe('list services apply the facet filters to the page AND the total', () =
         const jobs = make('job');
         await new GetAllJobsService(jobs.prisma as never).execute(JobQuerySchema.parse({ isPublished: 'false' }), true);
         expect(jobs.where()).toMatchObject({ isPublished: true });
-
-        const projects = make('project');
-        await new GetAllProjectsService(projects.prisma as never).execute(ProjectQuerySchema.parse({ isPublished: 'false' }), true);
-        expect(projects.where()).toMatchObject({ isPublished: true });
-
-        const units = make('unit');
-        await new GetAllUnitsService(units.prisma as never).execute(UnitQuerySchema.parse({ isPublished: 'false' }), true);
-        expect(units.where()).toMatchObject({ isPublished: true });
     });
 
     it('does not filter when no facet is given', async () => {
