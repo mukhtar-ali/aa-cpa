@@ -20,6 +20,10 @@
         "check-types": {
             "dependsOn": ["^check-types"]
         },
+        "test": {
+            "dependsOn": ["^build"],
+            "outputs": ["coverage/**"]
+        },
         "db:generate": {
             "cache": false
         },
