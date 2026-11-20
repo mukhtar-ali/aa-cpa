@@ -1,0 +1,55 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Bidi rules" />
+
+# Bidi rules (Arabic RTL + English LTR)
+
+Arabic is the default locale. Every component must read correctly in both directions with no per-locale code.
+Use the Storybook toolbar **locale** switch (`ar` / `en`) to check both; it sets `lang` and `dir` on the story root and
+wraps it in `DesignSystemProvider`.
+
+## 1. Logical utilities only
+
+| Do not write | Write instead |
+| --- | --- |
+| `ml-*` / `mr-*` | `ms-*` / `me-*` |
+| `pl-*` / `pr-*` | `ps-*` / `pe-*` |
+| `left-*` / `right-*` | `start-*` / `end-*` |
+| `text-left` / `text-right` | `text-start` / `text-end` |
+| `rounded-l-*` / `rounded-r-*` | `rounded-s-*` / `rounded-e-*` |
+| `border-l-*` / `border-r-*` | `border-s-*` / `border-e-*` |
+| `scroll-ml-*`, `scroll-pr-*` … | `scroll-ms-*`, `scroll-pe-*` … |
+
+`src/__guards__/no-physical-direction.test.ts` scans every component file and fails on the physical forms. If a physical
+value is genuinely required, add `// ds-allow-physical: <reason>` on that line; the reason is reviewed.
+
+## 2. Mirroring
+
+- Directional icons (arrows, chevrons, "next/previous", sliders) mirror in RTL. The `Icon` component does this through a
+  `rtl:-scale-x-100` class **only** for icons marked directional. Never mirror logos, numbers, play buttons or checkmarks.
+- Directional patterns (flow lines) mirror in RTL; dot grids and logo lines do not need to.
+- Layouts rely on `flex`/`grid` ordering plus logical utilities; do not reverse arrays in code.
+
+## 3. Isolating left-to-right content
+
+Phone numbers, emails, URLs, licence numbers and code stay left-to-right inside Arabic text:
+
+```tsx
+<bdi dir="ltr">+966 11 000 0000</bdi>
+<a dir="ltr" href="mailto:info@example.com">info@example.com</a>
+```
+
+Use `<bdi>` for inline values and `dir="ltr"` on standalone blocks. Do not use `unicode-bidi` hacks.
+
+## 4. Numbers, currency and dates
+
+Always format with the helpers in `@repo/design-system/lib` (`formatNumber`, `formatCurrency`, `formatDate`). They use
+`ar-SA-u-nu-latn` / `en-SA`, so **Arabic pages show Western digits** (`12,000,000`) like the Figma design, and currency is
+SAR. Never concatenate formatted strings by hand.
+
+## 5. Text
+
+- Set `lang` on any element whose language differs from its surroundings (for example an English brand name inside an Arabic
+  sentence, or the label of the language toggle). `LanguageToggle` sets `lang` and `hreflang` on its links.
+- Arabic text needs more line height than Latin; use the paired `text-*` utilities, which already carry it.
+- Do not letter-space Arabic text.

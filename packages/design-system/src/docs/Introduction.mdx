@@ -1,0 +1,66 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Introduction" />
+
+# AA-CPA design system
+
+`@repo/design-system` is the shared visual library for the AA-CPA public website. It turns the approved Figma
+designs into tokens, bilingual (Arabic RTL default, English LTR) components and page sections, so every page template
+looks the same and is built from the same parts. It has no business logic and no content: components take typed
+view-model props and never fetch data.
+
+## Source of truth
+
+| What | Where |
+| --- | --- |
+| Figma file | [AA-CPA, file `1jzfujyx2OJ6EKDRD2X6Xm`](https://www.figma.com/design/1jzfujyx2OJ6EKDRD2X6Xm) — **page "Page 1" only** |
+| Homepage (approved) | `411:169` "Homepage – with logo lines". Frame `1:2` "Homepage" is **not** approved |
+| About Us | `445:36452` |
+| Services | `448:41066` (cards `473:36122`, `473:36200` are reused on Service Details) |
+| Service Details | `448:41873` |
+| Sectors | `547:4555` "Sectors · القطاعات". `552:4605` "Sectors — Redesign" is **not** approved and must never be built |
+| Tokens | `tokens/figma-variables.json`, a checked-in snapshot of the Figma variables (see below) |
+
+The full list of approved pages and the rules for what may be implemented live in `specs/001-design-system/spec.md`.
+
+## How the pieces fit
+
+1. **Tokens** — `tokens/figma-variables.json` holds every Figma variable. `pnpm --filter @repo/design-system tokens`
+   generates `src/styles/tokens.css` (a Tailwind `@theme static` block) and `src/lib/tokens.ts`. A Figma name such as
+   `bg/page` becomes `--color-bg-page` and the Tailwind class `bg-bg-page`; `radius/section` becomes `rounded-section`.
+2. **Theme** — `src/styles/theme.css` adds what is not a 1:1 Figma variable: breakpoints, fluid type (`text-h1` …
+   `text-body-xs`), section spacing (`py-section-*`), motion tokens.
+3. **Components** — grouped as `primitives`, `forms`, `layout`, `sections`, `icons`. Each lives in its own folder with
+   the component, its stories and its tests.
+4. **Guards** — tests fail the build if a component uses physical direction utilities, raw colours or arbitrary pixel
+   values, or if a token drifts from the Figma snapshot.
+
+## Use it
+
+```css
+/* apps/web/src/assets/styles/tailwind.css */
+@import 'tailwindcss';
+@import '@repo/design-system/styles.css';
+```
+
+```tsx
+import { Section, Container } from '@repo/design-system/layout';
+
+export function Example() {
+  return (
+    <Section tone="ice" rounded="both" spacing="lg">
+      <Container>
+        <h2 className="text-h2 text-text-heading">…</h2>
+      </Container>
+    </Section>
+  );
+}
+```
+
+Use only token classes. If a value you need is missing, add it to the Figma variables snapshot (with the Figma
+node it came from) rather than writing a literal.
+
+## Accessibility and RTL in one line each
+
+- Colour pairs meet WCAG 2.2 AA; where Figma did not, a documented override ships. See **Docs / Accessibility**.
+- Logical properties only, directional icons mirror, numbers and emails stay left-to-right. See **Docs / Bidi rules**.

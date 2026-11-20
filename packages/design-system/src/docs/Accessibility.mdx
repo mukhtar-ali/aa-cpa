@@ -1,0 +1,55 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Accessibility" />
+
+# Accessibility
+
+Target: **WCAG 2.2 AA**. Every component has an `axe` test, and Storybook runs the a11y addon in `error` mode.
+
+## Colour contrast overrides
+
+Figma is the source of truth for colour, except where a Figma pair fails contrast. In those cases the shipped token value
+differs, the Figma value is kept in `tokens/figma-variables.json` as `figmaValue` with `a11yOverride: true` and a reason, and
+`src/styles/contrast.test.ts` fails if any pair regresses. All overrides need designer acknowledgement
+(`specs/001-design-system/reviews/signoffs.md`).
+
+| Token | Figma value | Shipped value | Why |
+| --- | --- | --- | --- |
+| `action/primary` | `#238b68` | `#228664` | White 16 px bold label was 4.23:1, now 4.50:1 |
+| `text/link` | `#238b68` | `#1e785a` | 3.57–4.23:1 on page/ice/surface, now 4.56–5.40:1 |
+| `text/muted` | `#737673` | `#686b68` | 3.88–4.16:1 on page/ice, now 4.56–5.40:1 |
+| `gradient/end-text-large` | `#2d9bc8` | `#2a91bc` | Large accent text (H1–H3) was 2.67:1, now 3.02–3.57:1 |
+| `gradient/end-text` | `#2d9bc8` | `#217294` | Accent text below large size must reach 4.5:1 (now ≥ 4.55:1) |
+| `text/accent` | `#c5a880` | `#7a5c24` | Gold tag text was 1.91–2.26:1 on light tones, now 5.24:1 on page. The original gold stays as `text/accent-inverse` on dark tones (7.46:1) |
+| `neutral/500` | `#8e918e` | `#686b68` | Placeholder and helper text was 2.69–3.19:1, now 4.56:1 on page, 5.40:1 on surface |
+
+Rules that follow from this:
+
+- Gradient accent text is only allowed at large sizes (H1–H3). Smaller accent text uses the solid `gradient/end-text` value.
+- `border/subtle` (1.35:1) is for decorative card borders only. Form controls use `border/strong`; focus indication uses
+  `action/primary`, 2 px with an offset (`:focus-visible`, set in `base.css`).
+- Error colour (`status/error`) is never the only signal: errors also have text, an icon or `aria-invalid`.
+
+## Motion
+
+- Motion is CSS only; no animation runtime ships in the library.
+- Everything respects `prefers-reduced-motion: reduce` (`base.css` resets durations; `useReducedMotion` is available for JS).
+- Anything that moves for more than 5 seconds (the logo marquee) has a visible pause/play control and also pauses on
+  hover and focus-within.
+
+## Keyboard and semantics (each pattern is covered by that component's tests)
+
+| Component | Contract |
+| --- | --- |
+| Button / Link | Native `<button>` or `<a href>`; disabled uses `aria-disabled`, loading uses `aria-busy`; visible focus ring |
+| IconButton | Requires an accessible `label` |
+| FilterChipGroup | Radio-like arrow-key navigation (order follows reading direction), `aria-pressed` on chips |
+| Tabs (service tabs) | Radix Tabs: arrow keys, Home/End, `aria-selected`, direction-aware |
+| Accordion (FAQ) | Radix Accordion: Enter/Space toggle, arrow keys between headers |
+| MobileNav | Radix Dialog: focus trap, Esc closes, focus returns to the trigger, `aria-modal` |
+| Breadcrumbs | `nav` landmark with label, `aria-current="page"` on the last item |
+| Pagination | Real links, `aria-current` on the current page, labelled prev/next |
+| Forms | `<label>` association, required marker, `aria-invalid`, `aria-describedby` for help and error text |
+| FileUpload | Picker and drag-drop, keyboard activation, size/type errors announced with `role="alert"` |
+| FormErrorSummary | Receives focus on mount and links to each invalid field |
+| Decorative patterns/icons | `aria-hidden="true"`; informative icons get a `title` |

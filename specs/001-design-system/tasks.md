@@ -233,10 +233,10 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 
 **Independent Test**: quickstart V7.
 
-- [ ] T110 [P] [US6] Write `DS/src/docs/Introduction.mdx` (purpose, Figma links, approved pages table, how to use tokens/components)
-- [ ] T111 [P] [US6] Write `DS/src/docs/Bidi-Rules.mdx` (logical utilities, mirroring, LTR isolation for numbers/emails, locale formatting)
-- [ ] T112 [P] [US6] Write `DS/src/docs/Accessibility.mdx` (contrast overrides table R4, motion policy, keyboard patterns per component)
-- [ ] T113 [P] [US6] Write `DS/README.md` (install, `styles.css` import, font setup in Next, scripts, contribution checklist mirroring task conventions)
+- [x] T110 [P] [US6] Write `DS/src/docs/Introduction.mdx` (purpose, Figma links, approved pages table, how to use tokens/components)
+- [x] T111 [P] [US6] Write `DS/src/docs/Bidi-Rules.mdx` (logical utilities, mirroring, LTR isolation for numbers/emails, locale formatting)
+- [x] T112 [P] [US6] Write `DS/src/docs/Accessibility.mdx` (contrast overrides table R4, motion policy, keyboard patterns per component)
+- [x] T113 [P] [US6] Write `DS/README.md` (install, `styles.css` import, font setup in Next, scripts, contribution checklist mirroring task conventions)
 - [ ] T114 [US6] Add `DS/src/__guards__/stories-coverage.test.ts` asserting every exported component has a `*.stories.tsx` with `parameters.design.url`
 
 **Checkpoint**: V7 passes.
