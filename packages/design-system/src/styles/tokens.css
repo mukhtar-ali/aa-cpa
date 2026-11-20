@@ -17,6 +17,8 @@
   --color-border-inverse-strong: #a9b0aa;
   --color-border-strong: #164c62;
   --color-border-subtle: #dcdedc;
+  --color-emerald-400: #77c0a1;
+  --color-emerald-50: #eaf7f1;
   --color-emerald-600: #238b68;
   --color-gradient-end: #2d9bc8;
   --color-gradient-end-text: #217294;
@@ -78,6 +80,7 @@
   --radius-image: 12px;
   --radius-pill: 100px;
   --radius-section: 30px;
+  --radius-upload: 16px;
   --shadow-button-primary: 0 2px 0 0 rgba(0, 0, 0, 0.043);
   --space-0: 0px;
   --space-16: 16px;

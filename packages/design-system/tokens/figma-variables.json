@@ -19,7 +19,14 @@
       "530:4416",
       "522:1194",
       "529:4427",
-      "411:3863"
+      "411:3863",
+      "522:1214",
+      "529:4333",
+      "423:1145",
+      "411:3878",
+      "411:3871",
+      "530:4416",
+      "499:1149"
     ],
     "capturedAt": "2026-11-20",
     "note": "Snapshot of get_variable_defs(411:169) plus component-frame values. value = shipped value; figmaValue = original when a11yOverride."
@@ -570,6 +577,24 @@
       "type": "FLOAT",
       "value": "5px",
       "description": "Checkbox 522:1194"
+    },
+    {
+      "name": "emerald/50",
+      "type": "COLOR",
+      "value": "#eaf7f1",
+      "description": "File upload drop zone fill (522:1214)"
+    },
+    {
+      "name": "emerald/400",
+      "type": "COLOR",
+      "value": "#77c0a1",
+      "description": "File upload dashed border (522:1214); 1.94:1 on emerald/50, the zone is identified by its text and icon"
+    },
+    {
+      "name": "radius/upload",
+      "type": "FLOAT",
+      "value": "16px",
+      "description": "File upload zone 522:1214"
     }
   ]
 }
