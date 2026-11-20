@@ -4,12 +4,12 @@ import localFont from 'next/font/local';
 import Script from 'next/script';
 import { ToastContainer } from 'react-toastify';
 import { endpoint, GA_ID_REGEX, GlobalSeoSettingsModelWeb, GTM_ID_REGEX } from '@repo/shared';
-import { WebLayout } from '@/src/components/ui/layouts/WebLayout';
+import { CustomHeader } from '@/src/components/ui/layouts/CustomHeader';
+import { CustomFooter } from '@/src/components/ui/layouts/CustomFooter';
+import { ChromeSwitch } from '@/src/reference/ChromeSwitch';
 import { getHeaderProjects, getWebsiteInfo } from '@/src/lib/server-data';
 import { FBPixel } from '@/src/components/ui/FBPixel';
 import { MonitoringReporter } from '@/src/monitoring/MonitoringReporter';
-import PageTransition from '@/src/animations/PageTransition';
-import { PreloaderWrapper } from '@/src/animations/PreloaderWrapper';
 import '@/src/assets/styles/tailwind.css';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -175,11 +175,9 @@ export default async function RootLayout({
                 <FBPixel />
                 <MonitoringReporter />
                 <ToastContainer position="top-center" rtl={dir === 'rtl'} />
-                <PreloaderWrapper>
-                    <PageTransition>
-                        <WebLayout websiteInfo={websiteInfo} projects={headerProjects}>{children}</WebLayout>
-                    </PageTransition>
-                </PreloaderWrapper>
+                <ChromeSwitch header={<CustomHeader projects={headerProjects} />} footer={<CustomFooter info={websiteInfo} />}>
+                    {children}
+                </ChromeSwitch>
             </body>
         </html>
     );
