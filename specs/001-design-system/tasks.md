@@ -172,12 +172,12 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - [ ] T071 [US4] Implement `CredentialsGrid` (dark, logo cells, placeholder cells) + stories; Figma `585:6030`, `561:1235`
 - [ ] T072 [US4] Implement `ServiceTabs` (client, Radix Tabs vertical, large tab labels, image with floating stat card, link CTA) + stories; Figma `411:3712`, `425:2`
 - [ ] T073 [P] [US4] Implement `PillarCard` (dark/light, sm/wide) + stories; Figma `411:3745`, `411:3759`, `411:3738`
-- [ ] T074 [P] [US4] Implement `StatTile` and `StatsStrip` (dividers, light/dark) + stories; Figma `411:3772`, `530:4369`
+- [x] T074 [P] [US4] Implement `StatTile` and `StatsStrip` (dividers, light/dark) + stories; Figma `411:3772`, `530:4369`
 - [ ] T075 [US4] Implement `ReasonsSection` composing SectionHeading, PillarCard, image, StatsStrip + stories; Figma `411:3728`
 - [ ] T076 [P] [US4] Implement `ProcessSteps` (4 bordered cards, index numerals) + stories; Figma `411:3825`, `530:4391`
 - [ ] T077 [P] [US4] Implement `PhotoQuoteBand` (image half + inverse panel with logo-mark pattern) + stories; Figma `411:3846`
-- [ ] T078 [P] [US4] Implement `NewsCard` and `NewsGrid` (with optional FilterChipGroup and Pagination slots) + stories; Figma `423:1145`, `426:29895`
-- [ ] T079 [P] [US4] Implement `Testimonial` + stories; Figma `411:3871`–`411:3880`
+- [x] T078 [P] [US4] Implement `NewsCard` and `NewsGrid` (with optional FilterChipGroup and Pagination slots) + stories; Figma `423:1145`, `426:29895`
+- [x] T079 [P] [US4] Implement `Testimonial` + stories; Figma `411:3871`–`411:3880`
 - [ ] T080 [US4] Implement `Estimator` (client; dark card, progress, dark TextInput currency mode, next/back, result step and optional "request a formal quote" form step designed in same language, disclaimer) and `EstimatorSection` + stories with mock config; Figma `411:3854`, `411:3855`
 
 ### 6b. Other approved pages' sections
