@@ -26,3 +26,6 @@ export {
 export { Header, type HeaderProps } from './Header';
 export { MobileNav, type MobileNavProps } from './MobileNav';
 export { WhatsAppFloat, type WhatsAppFloatProps } from './WhatsAppFloat';
+export { UtilityBar, type UtilityBarProps } from './UtilityBar';
+export { Footer, BackToTop, type FooterProps, type BackToTopProps } from './Footer';
+export { PageHero, type PageHeroProps } from './PageHero';

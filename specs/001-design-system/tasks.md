@@ -133,18 +133,18 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 
 ### Tests
 
-- [ ] T051 [P] [US3] Write `UtilityBar.test.tsx` and `Header.test.tsx` (landmark `banner`, nav `aria-label`, `aria-current`, CTA, desktop nav hidden <lg and menu button shown) under `DS/src/layout/`
+- [x] T051 [P] [US3] Write `UtilityBar.test.tsx` and `Header.test.tsx` (landmark `banner`, nav `aria-label`, `aria-current`, CTA, desktop nav hidden <lg and menu button shown) under `DS/src/layout/`
 - [x] T052 [P] [US3] Write `MobileNav.test.tsx` (opens on button, focus trap, Escape closes, focus returns, links close the panel) under `DS/src/layout/MobileNav/`
-- [ ] T053 [P] [US3] Write `Footer.test.tsx` (`contentinfo`, columns as lists with headings, contact items LTR-isolated, back-to-top button) and `PageHero.test.tsx`, `WhatsAppFloat.test.tsx` under `DS/src/layout/`
+- [x] T053 [P] [US3] Write `Footer.test.tsx` (`contentinfo`, columns as lists with headings, contact items LTR-isolated, back-to-top button) and `PageHero.test.tsx`, `WhatsAppFloat.test.tsx` under `DS/src/layout/`
 
 ### Implementation
 
 - [x] T054 [US3] Design mobile/tablet header + drawer states as stories first (`Header.stories.tsx` 360/768/1024 viewports) and record client review in `specs/001-design-system/reviews/mobile-nav.md`
-- [ ] T055 [US3] Implement `UtilityBar` + stories; Figma top row of `411:3807`
+- [x] T055 [US3] Implement `UtilityBar` + stories; Figma top row of `411:3807`
 - [x] T056 [US3] Implement `Header` (server shell; `theme` hero/solid; nav links default/active from `64:27`) + stories; Figma `2:3`, `411:3807`
 - [x] T057 [US3] Implement `MobileNav` (client, Radix Dialog, side sheet from inline-end, includes CTA and language toggle) + stories
-- [ ] T058 [US3] Implement `Footer` (logo, description, socials IconButtons, 3 link columns, contact items, legal rows, back-to-top client leaf with reduced-motion aware scrolling, giant wordmark SVG from Figma `407:85` exported to `DS/assets/brand/wordmark.svg`) + stories; Figma `407:85`, `411:3881`
-- [ ] T059 [P] [US3] Implement `PageHero` (dark photo with navy overlay, title, subtitle, optional breadcrumbs/action) + stories; Figma hero of `445:36452`, `448:41873`
+- [x] T058 [US3] Implement `Footer` (logo, description, socials IconButtons, 3 link columns, contact items, legal rows, back-to-top client leaf with reduced-motion aware scrolling, giant wordmark (live gradient-faded text in Figma 407:85, so no SVG export was needed)) + stories; Figma `407:85`, `411:3881`
+- [x] T059 [P] [US3] Implement `PageHero` (dark photo with navy overlay, title, subtitle, optional breadcrumbs/action) + stories; Figma hero of `445:36452`, `448:41873`
 - [x] T060 [P] [US3] Implement `WhatsAppFloat` (fixed bottom inline-end, safe-area inset) + stories; Figma `226:10011`
 
 **Checkpoint**: V3 passes.

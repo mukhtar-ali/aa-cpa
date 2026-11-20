@@ -1,4 +1,5 @@
 export { Avatar, type AvatarProps } from './Avatar';
+export { Breadcrumbs, type BreadcrumbsProps } from './Breadcrumbs';
 export { Button, type ButtonProps } from './Button';
 export { CategoryBadge, type CategoryBadgeProps } from './CategoryBadge';
 export { Chip } from './Chip';
@@ -7,6 +8,7 @@ export { Eyebrow, type EyebrowProps } from './Eyebrow';
 export { FilterChipGroup, type FilterChipGroupProps, type FilterChipItem } from './FilterChipGroup';
 export { Heading, type HeadingProps, type HeadingLevel, type HeadingSize } from './Heading';
 export { IconButton, type IconButtonProps } from './IconButton';
+export { LanguageToggle, type LanguageToggleProps } from './LanguageToggle';
 export { Link, type LinkProps } from './Link';
 export { MetaPill, type MetaPillProps } from './MetaPill';
 export { Pagination, pageItems, type PaginationProps, type PaginationLabels } from './Pagination';

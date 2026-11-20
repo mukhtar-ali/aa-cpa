@@ -30,6 +30,8 @@ export interface IconButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLBut
   variant?: 'outline' | 'solid' | 'ghost-light';
   size?: 'sm' | 'md';
   href?: string;
+  /** Link mode only: open in a new tab safely (target=_blank, rel=noopener noreferrer). */
+  external?: boolean;
   /** Point the icon the opposite way (previous). See Icon `reverse`. */
   reverseIcon?: boolean;
 }
@@ -40,7 +42,7 @@ export interface IconButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLBut
  * @figma 529:4427
  */
 export const IconButton = React.forwardRef<HTMLElement, IconButtonProps>(
-  ({ label, icon, variant, size, href, reverseIcon, disabled, className, type = 'button', onClick, ...props }, ref) => {
+  ({ label, icon, variant, size, href, external, reverseIcon, disabled, className, type = 'button', onClick, ...props }, ref) => {
     const classes = cn(iconButtonVariants({ variant, size }), className);
     const content = <Icon name={icon} size={20} reverse={reverseIcon} />;
     if (href !== undefined) {
@@ -50,6 +52,8 @@ export const IconButton = React.forwardRef<HTMLElement, IconButtonProps>(
           href={disabled ? undefined : href}
           aria-label={label}
           aria-disabled={disabled || undefined}
+          target={external ? '_blank' : undefined}
+          rel={external ? 'noopener noreferrer' : undefined}
           className={classes}
           {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
         >

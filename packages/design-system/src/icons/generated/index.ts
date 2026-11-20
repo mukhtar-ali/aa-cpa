@@ -11,6 +11,7 @@ import { CloseIcon } from './CloseIcon';
 import { FileIcon } from './FileIcon';
 import { GlobeCheckIcon } from './GlobeCheckIcon';
 import { HexagonDotIcon } from './HexagonDotIcon';
+import { InstagramIcon } from './InstagramIcon';
 import { LinkIcon } from './LinkIcon';
 import { LinkedinIcon } from './LinkedinIcon';
 import { LocationIcon } from './LocationIcon';
@@ -24,8 +25,9 @@ import { SettingsIcon } from './SettingsIcon';
 import { StarIcon } from './StarIcon';
 import { UploadIcon } from './UploadIcon';
 import { WhatsappIcon } from './WhatsappIcon';
+import { XIcon } from './XIcon';
 
-export const iconNames = ['arrow', 'award', 'briefcase', 'calendar', 'check', 'chevron', 'clock', 'close', 'file', 'globe-check', 'hexagon-dot', 'link', 'linkedin', 'location', 'mail', 'menu', 'message', 'phone', 'scan', 'search', 'settings', 'star', 'upload', 'whatsapp'] as const;
+export const iconNames = ['arrow', 'award', 'briefcase', 'calendar', 'check', 'chevron', 'clock', 'close', 'file', 'globe-check', 'hexagon-dot', 'instagram', 'link', 'linkedin', 'location', 'mail', 'menu', 'message', 'phone', 'scan', 'search', 'settings', 'star', 'upload', 'whatsapp', 'x'] as const;
 export type IconName = (typeof iconNames)[number];
 
 export const iconRegistry: Record<IconName, IconComponent> = {
@@ -40,6 +42,7 @@ export const iconRegistry: Record<IconName, IconComponent> = {
   'file': FileIcon,
   'globe-check': GlobeCheckIcon,
   'hexagon-dot': HexagonDotIcon,
+  'instagram': InstagramIcon,
   'link': LinkIcon,
   'linkedin': LinkedinIcon,
   'location': LocationIcon,
@@ -53,6 +56,7 @@ export const iconRegistry: Record<IconName, IconComponent> = {
   'star': StarIcon,
   'upload': UploadIcon,
   'whatsapp': WhatsappIcon,
+  'x': XIcon,
 };
 
 export const iconMeta: Record<IconName, { size: number; directional: boolean }> = {
@@ -67,6 +71,7 @@ export const iconMeta: Record<IconName, { size: number; directional: boolean }> 
   'file': { size: 22, directional: false },
   'globe-check': { size: 48, directional: false },
   'hexagon-dot': { size: 48, directional: false },
+  'instagram': { size: 20, directional: false },
   'link': { size: 20, directional: false },
   'linkedin': { size: 20, directional: false },
   'location': { size: 18, directional: false },
@@ -80,6 +85,7 @@ export const iconMeta: Record<IconName, { size: number; directional: boolean }> 
   'star': { size: 22, directional: false },
   'upload': { size: 24, directional: false },
   'whatsapp': { size: 20, directional: false },
+  'x': { size: 20, directional: false },
 };
 
-export { ArrowIcon, AwardIcon, BriefcaseIcon, CalendarIcon, CheckIcon, ChevronIcon, ClockIcon, CloseIcon, FileIcon, GlobeCheckIcon, HexagonDotIcon, LinkIcon, LinkedinIcon, LocationIcon, MailIcon, MenuIcon, MessageIcon, PhoneIcon, ScanIcon, SearchIcon, SettingsIcon, StarIcon, UploadIcon, WhatsappIcon };
+export { ArrowIcon, AwardIcon, BriefcaseIcon, CalendarIcon, CheckIcon, ChevronIcon, ClockIcon, CloseIcon, FileIcon, GlobeCheckIcon, HexagonDotIcon, InstagramIcon, LinkIcon, LinkedinIcon, LocationIcon, MailIcon, MenuIcon, MessageIcon, PhoneIcon, ScanIcon, SearchIcon, SettingsIcon, StarIcon, UploadIcon, WhatsappIcon, XIcon };

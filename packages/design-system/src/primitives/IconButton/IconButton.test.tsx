@@ -33,6 +33,13 @@ describe('IconButton', () => {
     expect(screen.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://example.com');
   });
 
+  it('external links open in a new tab safely', () => {
+    render(<IconButton label="LinkedIn" icon="linkedin" href="https://example.com" external />);
+    const el = screen.getByRole('link', { name: 'LinkedIn' });
+    expect(el).toHaveAttribute('target', '_blank');
+    expect(el).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
   it('disabled blocks clicks and sets aria-disabled', async () => {
     const onClick = vi.fn();
     render(<IconButton label="x" icon="close" disabled onClick={onClick} />);
