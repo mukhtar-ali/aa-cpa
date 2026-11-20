@@ -47,7 +47,7 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
           </p>
         ) : null}
         {error ? (
-          <p id={errorId} className="text-body-xs text-status-error">
+          <p id={errorId} role="alert" className={cn('text-body-xs', theme === 'dark' ? 'text-status-error-inverse' : 'text-status-error')}>
             {error}
           </p>
         ) : null}

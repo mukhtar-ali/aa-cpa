@@ -630,6 +630,12 @@
       "type": "STRING",
       "value": "0 12px 32px -6px rgba(19, 32, 21, 0.18)",
       "description": "Floating stat card shadow (425:2)"
+    },
+    {
+      "name": "status/error-inverse",
+      "type": "COLOR",
+      "value": "#f28b82",
+      "description": "Error text and border on dark tones (not in Figma): status/error is 3.17:1 on bg/inverse and 2.52:1 on bg/inverse-raised; this is 7.06:1 and 5.62:1"
     }
   ]
 }

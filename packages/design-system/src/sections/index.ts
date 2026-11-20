@@ -1,4 +1,6 @@
 export { CredentialsGrid, type CredentialsGridProps } from './CredentialsGrid';
+export { Estimator, toDigits, type EstimatorProps } from './Estimator';
+export { EstimatorSection, type EstimatorSectionProps } from './EstimatorSection';
 export { GapSection, type GapSectionProps } from './GapSection';
 export { HomeHero, type HomeHeroProps } from './HomeHero';
 export { LogoMarquee, type LogoMarqueeProps } from './LogoMarquee';

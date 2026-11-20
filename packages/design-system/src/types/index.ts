@@ -211,6 +211,10 @@ export interface EstimatorLabels {
   result: string;
   disclaimer: string;
   restart: string;
+  /** Shown (and announced) when the answer is empty or out of range. */
+  invalid: string;
+  /** Shown (and announced) when the estimate or the quote request fails. */
+  error: string;
 }
 
 export interface EstimatorQuoteConfig {

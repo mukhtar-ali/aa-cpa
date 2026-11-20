@@ -159,11 +159,11 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 
 ### 6a. Homepage sections (needed by US5)
 
-- [ ] T061 [P] [US4] Write tests for `SectionHeading`, `Statement`, `HomeHero`, `GapSection` under `DS/src/sections/`
-- [ ] T062 [P] [US4] Write tests for `LogoMarquee` (pause/play button `aria-pressed`, paused under reduced motion, duplicated track `aria-hidden`, logos named once), `CredentialsGrid` (placeholders hidden unless `showPlaceholders`) under `DS/src/sections/`
-- [ ] T063 [P] [US4] Write tests for `ServiceTabs` (tablist semantics, arrow keys respect RTL/LTR, panel content swaps), `PillarCard`, `ReasonsSection`, `StatTile`/`StatsStrip` (list semantics, locale formatting) under `DS/src/sections/`
-- [ ] T064 [P] [US4] Write tests for `ProcessSteps`, `PhotoQuoteBand`, `NewsCard`, `NewsGrid`, `Testimonial` under `DS/src/sections/`
-- [ ] T065 [P] [US4] Write tests for `Estimator` (state machine from data-model: next/back/validation error announced/result/restart, optional quote form → submit success/error, progress text and `progressbar` values, currency formatting) and `EstimatorSection` under `DS/src/sections/Estimator/`
+- [x] T061 [P] [US4] Write tests for `SectionHeading`, `Statement`, `HomeHero`, `GapSection` under `DS/src/sections/`
+- [x] T062 [P] [US4] Write tests for `LogoMarquee` (pause/play button `aria-pressed`, paused under reduced motion, duplicated track `aria-hidden`, logos named once), `CredentialsGrid` (placeholders hidden unless `showPlaceholders`) under `DS/src/sections/`
+- [x] T063 [P] [US4] Write tests for `ServiceTabs` (tablist semantics, arrow keys respect RTL/LTR, panel content swaps), `PillarCard`, `ReasonsSection`, `StatTile`/`StatsStrip` (list semantics, locale formatting) under `DS/src/sections/`
+- [x] T064 [P] [US4] Write tests for `ProcessSteps`, `PhotoQuoteBand`, `NewsCard`, `NewsGrid`, `Testimonial` under `DS/src/sections/`
+- [x] T065 [P] [US4] Write tests for `Estimator` (state machine from data-model: next/back/validation error announced/result/restart, optional quote form → submit success/error, progress text and `progressbar` values, currency formatting) and `EstimatorSection` under `DS/src/sections/Estimator/`
 - [x] T066 [US4] Implement `SectionHeading` (light/dark, eyebrow, accent gradient line, description, action, `split` layout) + stories; Figma `530:4339`, `411:3827`
 - [x] T067 [US4] Implement `Statement` + stories; Figma `411:3796`
 - [x] T068 [US4] Implement `HomeHero` (hero tone + flow-lines + dots grid, masked portrait image, two actions) + stories; Figma `411:3700`–`411:3711`, `411:3702`
@@ -178,7 +178,7 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - [x] T077 [P] [US4] Implement `PhotoQuoteBand` (image half + inverse panel with logo-mark pattern) + stories; Figma `411:3846`
 - [x] T078 [P] [US4] Implement `NewsCard` and `NewsGrid` (with optional FilterChipGroup and Pagination slots) + stories; Figma `423:1145`, `426:29895`
 - [x] T079 [P] [US4] Implement `Testimonial` + stories; Figma `411:3871`–`411:3880`
-- [ ] T080 [US4] Implement `Estimator` (client; dark card, progress, dark TextInput currency mode, next/back, result step and optional "request a formal quote" form step designed in same language, disclaimer) and `EstimatorSection` + stories with mock config; Figma `411:3854`, `411:3855`
+- [x] T080 [US4] Implement `Estimator` (client; dark card, progress, dark TextInput currency mode, next/back, result step and optional "request a formal quote" form step designed in same language, disclaimer) and `EstimatorSection` + stories with mock config; Figma `411:3854`, `411:3855`
 
 ### 6b. Other approved pages' sections
 

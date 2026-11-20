@@ -42,6 +42,7 @@ const pairs: Pair[] = [
   { fg: 'status/error', bg: [...LIGHT, 'neutral/50'], min: 4.5, note: 'error text' },
   { fg: 'gradient/end-text-large', bg: LIGHT, min: 3.0, note: 'R4 large accent text' },
   { fg: 'gradient/end-text', bg: LIGHT, min: 4.5, note: 'R4 small accent text' },
+  { fg: 'status/error-inverse', bg: ['bg/inverse', 'bg/inverse-raised'], min: 4.5, note: 'error text on dark (estimator, dark fields)' },
   { fg: 'text/inverse', bg: DARK, min: 4.5, note: 'text on dark' },
   { fg: 'text/inverse-muted', bg: ['bg/inverse', 'bg/inverse-raised'], min: 4.5, note: 'muted on dark' },
   { fg: 'text/accent-inverse', bg: ['bg/inverse', 'bg/inverse-raised'], min: 4.5, note: 'gold on dark' },

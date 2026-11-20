@@ -24,7 +24,7 @@ export const controlVariants = cva(
         dark: [
           'rounded-none border-border-inverse-strong bg-bg-inverse-raised text-text-inverse placeholder:text-text-inverse-muted',
           'focus-visible:border-text-inverse focus-visible:ring-bg-inverse-raised',
-          'aria-[invalid=true]:border-status-error',
+          'aria-[invalid=true]:border-status-error-inverse',
         ],
       },
       kind: {
