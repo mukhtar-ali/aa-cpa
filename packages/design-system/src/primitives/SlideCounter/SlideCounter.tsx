@@ -13,7 +13,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 /**
  * "01 / 05" counter with a progress bar (services page). Numbers use Western digits in both languages and are isolated
- * left-to-right; the bar fills from the inline start. The frame was not readable, so sizes follow the tokens (to verify).
+ * as LTR text; the bar fills from the inline start. The frame was not readable, so sizes follow the tokens (to verify).
  *
  * @figma 448:41066 (unverified)
  */
