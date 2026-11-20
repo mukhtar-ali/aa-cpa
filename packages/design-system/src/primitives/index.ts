@@ -1,6 +1,15 @@
+export { Avatar, type AvatarProps } from './Avatar';
 export { Button, type ButtonProps } from './Button';
+export { CategoryBadge, type CategoryBadgeProps } from './CategoryBadge';
+export { Chip } from './Chip';
 export { Divider, type DividerProps } from './Divider';
+export { Eyebrow, type EyebrowProps } from './Eyebrow';
+export { FilterChipGroup, type FilterChipGroupProps, type FilterChipItem } from './FilterChipGroup';
 export { Heading, type HeadingProps, type HeadingLevel, type HeadingSize } from './Heading';
+export { IconButton, type IconButtonProps } from './IconButton';
 export { Link, type LinkProps } from './Link';
+export { MetaPill, type MetaPillProps } from './MetaPill';
+export { Pagination, pageItems, type PaginationProps, type PaginationLabels } from './Pagination';
+export { Rating, type RatingProps } from './Rating';
 export { Text, type TextProps } from './Text';
 export { VisuallyHidden } from './VisuallyHidden';

@@ -39,6 +39,20 @@ describe('Icon', () => {
     expect(svg()).toHaveClass('rtl:-scale-x-100');
   });
 
+  it('reverse flips in LTR and restores the drawn shape in RTL, replacing the default mirror', () => {
+    const { container } = render(<Icon name="chevron" reverse />);
+    const svg = container.querySelector('svg')!;
+    expect(svg).toHaveClass('-scale-x-100', 'rtl:scale-x-100');
+    expect(svg).not.toHaveClass('rtl:-scale-x-100');
+  });
+
+  it('chevron and arrow are directional by default', () => {
+    expect(iconMeta.chevron.directional).toBe(true);
+    expect(iconMeta.arrow.directional).toBe(true);
+    const { container } = render(<Icon name="arrow" />);
+    expect(container.querySelector('svg')).toHaveClass('rtl:-scale-x-100');
+  });
+
   it('marks exactly the listed directional icons for mirroring', () => {
     for (const name of iconNames) {
       expect(iconMeta[name].directional, name).toBe(DIRECTIONAL.has(name));
