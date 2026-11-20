@@ -119,7 +119,7 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - [ ] T047 [P] [US2] Implement `Breadcrumbs`, `Pagination`, `SlideCounter`, `Logo` (SVGs from Figma `65:56` on-dark, `78:197` on-light into `DS/assets/brand/`), `LanguageToggle` + stories; Figma `530:4416`, `64:28`
 - [x] T048 [US2] Implement `Field`, `TextInput`, `Textarea`, `Select` (native, custom chevron mirrored) with light/dark themes + stories; Figma `522:1185`, dark `411:3863`, select on `524:3651`
 - [x] T049 [US2] Implement `Checkbox`, `FileUpload` (client), `FormErrorSummary` + stories; Figma `522:1194`, `522:1214`
-- [ ] T050 [US2] Add `DS/src/__guards__/tailwind-scan.test.ts` or documented manual check (quickstart V2.6) proving package-only classes are emitted in `WEB` CSS
+- [x] T050 [US2] Add `DS/src/__guards__/tailwind-scan.test.ts` or documented manual check (quickstart V2.6) proving package-only classes are emitted in `WEB` CSS
 
 **Checkpoint**: V2 passes.
 
@@ -134,18 +134,18 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 ### Tests
 
 - [ ] T051 [P] [US3] Write `UtilityBar.test.tsx` and `Header.test.tsx` (landmark `banner`, nav `aria-label`, `aria-current`, CTA, desktop nav hidden <lg and menu button shown) under `DS/src/layout/`
-- [ ] T052 [P] [US3] Write `MobileNav.test.tsx` (opens on button, focus trap, Escape closes, focus returns, links close the panel) under `DS/src/layout/MobileNav/`
+- [x] T052 [P] [US3] Write `MobileNav.test.tsx` (opens on button, focus trap, Escape closes, focus returns, links close the panel) under `DS/src/layout/MobileNav/`
 - [ ] T053 [P] [US3] Write `Footer.test.tsx` (`contentinfo`, columns as lists with headings, contact items LTR-isolated, back-to-top button) and `PageHero.test.tsx`, `WhatsAppFloat.test.tsx` under `DS/src/layout/`
 
 ### Implementation
 
-- [ ] T054 [US3] Design mobile/tablet header + drawer states as stories first (`Header.stories.tsx` 360/768/1024 viewports) and record client review in `specs/001-design-system/reviews/mobile-nav.md`
+- [x] T054 [US3] Design mobile/tablet header + drawer states as stories first (`Header.stories.tsx` 360/768/1024 viewports) and record client review in `specs/001-design-system/reviews/mobile-nav.md`
 - [ ] T055 [US3] Implement `UtilityBar` + stories; Figma top row of `411:3807`
-- [ ] T056 [US3] Implement `Header` (server shell; `theme` hero/solid; nav links default/active from `64:27`) + stories; Figma `2:3`, `411:3807`
-- [ ] T057 [US3] Implement `MobileNav` (client, Radix Dialog, side sheet from inline-end, includes CTA and language toggle) + stories
+- [x] T056 [US3] Implement `Header` (server shell; `theme` hero/solid; nav links default/active from `64:27`) + stories; Figma `2:3`, `411:3807`
+- [x] T057 [US3] Implement `MobileNav` (client, Radix Dialog, side sheet from inline-end, includes CTA and language toggle) + stories
 - [ ] T058 [US3] Implement `Footer` (logo, description, socials IconButtons, 3 link columns, contact items, legal rows, back-to-top client leaf with reduced-motion aware scrolling, giant wordmark SVG from Figma `407:85` exported to `DS/assets/brand/wordmark.svg`) + stories; Figma `407:85`, `411:3881`
 - [ ] T059 [P] [US3] Implement `PageHero` (dark photo with navy overlay, title, subtitle, optional breadcrumbs/action) + stories; Figma hero of `445:36452`, `448:41873`
-- [ ] T060 [P] [US3] Implement `WhatsAppFloat` (fixed bottom inline-end, safe-area inset) + stories; Figma `226:10011`
+- [x] T060 [P] [US3] Implement `WhatsAppFloat` (fixed bottom inline-end, safe-area inset) + stories; Figma `226:10011`
 
 **Checkpoint**: V3 passes.
 
@@ -237,7 +237,7 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - [x] T111 [P] [US6] Write `DS/src/docs/Bidi-Rules.mdx` (logical utilities, mirroring, LTR isolation for numbers/emails, locale formatting)
 - [x] T112 [P] [US6] Write `DS/src/docs/Accessibility.mdx` (contrast overrides table R4, motion policy, keyboard patterns per component)
 - [x] T113 [P] [US6] Write `DS/README.md` (install, `styles.css` import, font setup in Next, scripts, contribution checklist mirroring task conventions)
-- [ ] T114 [US6] Add `DS/src/__guards__/stories-coverage.test.ts` asserting every exported component has a `*.stories.tsx` with `parameters.design.url`
+- [x] T114 [US6] Add `DS/src/__guards__/stories-coverage.test.ts` asserting every exported component has a `*.stories.tsx` with `parameters.design.url`
 
 **Checkpoint**: V7 passes.
 
