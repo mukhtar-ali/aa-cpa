@@ -77,12 +77,14 @@
   --radius-card: 20px;
   --radius-checkbox: 5px;
   --radius-field: 12px;
+  --radius-float: 8px;
   --radius-image: 12px;
   --radius-pill: 100px;
   --radius-section: 30px;
   --radius-thumb: 10px;
   --radius-upload: 16px;
   --shadow-button-primary: 0 2px 0 0 rgba(0, 0, 0, 0.043);
+  --shadow-card-float: 0 12px 32px -6px rgba(19, 32, 21, 0.18);
   --shadow-float: 0 8px 12px 0 rgba(0, 0, 0, 0.18);
   --space-0: 0px;
   --space-16: 16px;

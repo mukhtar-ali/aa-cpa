@@ -30,7 +30,14 @@
       "411:3807",
       "226:10011",
       "411:3702",
-      "411:3798"
+      "411:3798",
+      "425:2",
+      "411:3846",
+      "411:3855",
+      "530:4339",
+      "530:4391",
+      "411:3745",
+      "585:6030"
     ],
     "capturedAt": "2026-11-20",
     "note": "Snapshot of get_variable_defs(411:169) plus component-frame values. value = shipped value; figmaValue = original when a11yOverride."
@@ -611,6 +618,18 @@
       "type": "FLOAT",
       "value": "10px",
       "description": "Small masked photo in the gap section (mask rectangle 10px radius, 411:3798)"
+    },
+    {
+      "name": "radius/float",
+      "type": "FLOAT",
+      "value": "8px",
+      "description": "Floating stat card (425:2)"
+    },
+    {
+      "name": "shadow/card-float",
+      "type": "STRING",
+      "value": "0 12px 32px -6px rgba(19, 32, 21, 0.18)",
+      "description": "Floating stat card shadow (425:2)"
     }
   ]
 }

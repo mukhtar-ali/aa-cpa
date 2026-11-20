@@ -168,14 +168,14 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - [x] T067 [US4] Implement `Statement` + stories; Figma `411:3796`
 - [x] T068 [US4] Implement `HomeHero` (hero tone + flow-lines + dots grid, masked portrait image, two actions) + stories; Figma `411:3700`–`411:3711`, `411:3702`
 - [x] T069 [US4] Implement `GapSection` (statement + two masked images + eyebrow/body) + stories; Figma `411:3788`
-- [ ] T070 [US4] Implement `LogoMarquee` (client; CSS keyframes, two rows opposite directions, edge fade, pause control) + stories; Figma `569:5848`
+- [x] T070 [US4] Implement `LogoMarquee` (client; CSS keyframes, two rows opposite directions, edge fade, pause control) + stories; Figma `569:5848`
 - [x] T071 [US4] Implement `CredentialsGrid` (dark, logo cells, placeholder cells) + stories; Figma `585:6030`, `561:1235`
-- [ ] T072 [US4] Implement `ServiceTabs` (client, Radix Tabs vertical, large tab labels, image with floating stat card, link CTA) + stories; Figma `411:3712`, `425:2`
+- [x] T072 [US4] Implement `ServiceTabs` (client, Radix Tabs vertical, large tab labels, image with floating stat card, link CTA) + stories; Figma `411:3712`, `425:2`
 - [x] T073 [P] [US4] Implement `PillarCard` (dark/light, sm/wide) + stories; Figma `411:3745`, `411:3759`, `411:3738`
 - [x] T074 [P] [US4] Implement `StatTile` and `StatsStrip` (dividers, light/dark) + stories; Figma `411:3772`, `530:4369`
 - [x] T075 [US4] Implement `ReasonsSection` composing SectionHeading, PillarCard, image, StatsStrip + stories; Figma `411:3728`
 - [x] T076 [P] [US4] Implement `ProcessSteps` (4 bordered cards, index numerals) + stories; Figma `411:3825`, `530:4391`
-- [ ] T077 [P] [US4] Implement `PhotoQuoteBand` (image half + inverse panel with logo-mark pattern) + stories; Figma `411:3846`
+- [x] T077 [P] [US4] Implement `PhotoQuoteBand` (image half + inverse panel with logo-mark pattern) + stories; Figma `411:3846`
 - [x] T078 [P] [US4] Implement `NewsCard` and `NewsGrid` (with optional FilterChipGroup and Pagination slots) + stories; Figma `423:1145`, `426:29895`
 - [x] T079 [P] [US4] Implement `Testimonial` + stories; Figma `411:3871`–`411:3880`
 - [ ] T080 [US4] Implement `Estimator` (client; dark card, progress, dark TextInput currency mode, next/back, result step and optional "request a formal quote" form step designed in same language, disclaimer) and `EstimatorSection` + stories with mock config; Figma `411:3854`, `411:3855`

@@ -53,3 +53,31 @@
   --motion-duration-slow: 400ms;
   --motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
 }
+
+/* LogoMarquee (research R10): CSS-only, direction follows the reading direction, paused on hover, focus and via the pause button. */
+@keyframes ds-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(var(--ds-marquee-dir, 1) * -50%));
+  }
+}
+
+[dir='rtl'] {
+  --ds-marquee-dir: -1;
+}
+
+.ds-marquee-track {
+  animation: ds-marquee var(--ds-marquee-duration, 60s) linear infinite;
+}
+
+.ds-marquee-track[data-reverse='true'] {
+  animation-direction: reverse;
+}
+
+.ds-marquee-track[data-paused='true'],
+.ds-marquee-group:hover .ds-marquee-track,
+.ds-marquee-group:focus-within .ds-marquee-track {
+  animation-play-state: paused;
+}
