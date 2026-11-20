@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button } from './Button';
+import { Icon } from '../../icons';
 
 const meta: Meta<typeof Button> = {
   title: 'Primitives/Button',
@@ -10,7 +11,7 @@ const meta: Meta<typeof Button> = {
     docs: {
       description: {
         component:
-          'Primary (Figma 411:3706) and sizes (64:20) are verified. secondary, outline-light and link are provisional until compared with 411:3709, 411:3735 and 411:3714.',
+          'Verified against the approved homepage: primary 411:3706, secondary 411:3709, paper (beige, for dark sections) 411:3735, link (gradient label) 411:3714. md is 48 px tall like the homepage; lg is 52 px.',
       },
     },
   },
@@ -19,7 +20,7 @@ const meta: Meta<typeof Button> = {
 export default meta;
 type Story = StoryObj<typeof Button>;
 
-const variants = ['primary', 'secondary', 'outline-light', 'link'] as const;
+const variants = ['primary', 'secondary', 'paper', 'link'] as const;
 
 export const AllVariants: Story = {
   render: () => (
@@ -27,7 +28,7 @@ export const AllVariants: Story = {
       {(['md', 'lg'] as const).map((size) => (
         <div key={size} className="flex flex-wrap items-center gap-4">
           {variants.map((variant) => (
-            <div key={variant} className={variant === 'outline-light' ? 'bg-bg-inverse p-3' : 'p-3'}>
+            <div key={variant} className={variant === 'paper' ? 'bg-bg-inverse p-3' : 'p-3'}>
               <Button variant={variant} size={size}>
                 {variant} {size}
               </Button>
@@ -53,8 +54,10 @@ export const States: Story = {
 export const WithIcons: Story = {
   render: () => (
     <div className="flex flex-wrap items-center gap-4">
-      <Button endIcon={<span aria-hidden="true">→</span>}>End arrow (mirrors in RTL)</Button>
-      <Button startIcon={<span aria-hidden="true">+</span>}>Start icon</Button>
+      <Button variant="link" endIcon={<Icon name="arrow" />}>
+        Link with arrow (mirrors in RTL)
+      </Button>
+      <Button startIcon={<Icon name="search" />}>Start icon</Button>
     </div>
   ),
 };
@@ -62,9 +65,11 @@ export const WithIcons: Story = {
 export const Arabic: Story = {
   render: () => (
     <div dir="rtl" lang="ar" className="flex flex-wrap items-center gap-4">
-      <Button endIcon={<span aria-hidden="true">→</span>}>أعرف المزيد</Button>
-      <Button variant="secondary">تواصل معنا</Button>
-      <Button variant="link">اقرأ المزيد</Button>
+      <Button>أعرف المزيد</Button>
+      <Button variant="secondary">خدماتنا</Button>
+      <Button variant="link" endIcon={<Icon name="arrow" />}>
+        الحصول على عرض سعر
+      </Button>
     </div>
   ),
 };

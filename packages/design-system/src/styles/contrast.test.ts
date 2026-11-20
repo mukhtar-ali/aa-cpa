@@ -48,6 +48,7 @@ const pairs: Pair[] = [
   { fg: 'icon/accent', bg: ['bg/inverse'], min: 3.0, note: 'icon (non-text)' },
   { fg: 'text/on-action', bg: ['action/primary'], min: 4.5, note: 'R4 button label' },
   { fg: 'border/strong', bg: LIGHT, min: 3.0, note: 'form control border (non-text)' },
+  { fg: 'neutral/300', bg: [...LIGHT, 'neutral/50'], min: 3.0, note: 'checkbox border (non-text), override' },
   { fg: 'emerald/600', bg: ['bg/surface'], min: 3.0, note: 'focus border (non-text)' },
   { fg: 'action/primary', bg: LIGHT, min: 3.0, note: 'focus ring (non-text)' },
 ];

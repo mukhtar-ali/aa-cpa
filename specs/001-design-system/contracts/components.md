@@ -55,7 +55,7 @@ Legend: **S** = server-safe (no `"use client"`), **C** = client component.
 
 | Component | Props (summary) | Variants / states | S/C | Figma |
 | --- | --- | --- | --- | --- |
-| Button | `variant: 'primary' \| 'secondary' \| 'outline-light' \| 'link'; size: 'md' \| 'lg'; href?; loading?; disabled?; startIcon?; endIcon?; asChild?` | hover, focus-visible, pressed, disabled, loading (`aria-busy`) | S | `64:20` set; homepage `411:3706` primary, `411:3709` secondary, `411:3735` paper-on-dark, `411:3714` link+arrow |
+| Button | `variant: 'primary' \| 'secondary' \| 'paper' \| 'link'; size: 'md' \| 'lg'; href?; loading?; disabled?; startIcon?; endIcon?; asChild?` | hover, focus-visible, pressed, disabled, loading (`aria-busy`) | S | `64:20` set; homepage `411:3706` primary, `411:3709` secondary, `411:3735` paper-on-dark, `411:3714` link+arrow |
 | IconButton | `label (required); icon; variant: 'outline' \| 'solid' \| 'ghost-light'; size: 'sm' \| 'md'; href?` | as above | S | Share `505:3864`, Slider nav `529:4427`, footer socials |
 | Link | `href; external?; variant: 'inline' \| 'nav' \| 'arrow'` | hover/focus | S | text/link usage |
 | Heading | `level: 1–6; size?: 'h1'…'h6' (visual override); accent?: string (second line, gradient); tone?: 'default' \| 'inverse'` | gradient accent only for h1–h3 sizes (R4) | S | `Heading/H1…H6` styles |

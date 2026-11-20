@@ -10,7 +10,16 @@
       "411:3713",
       "411:3729",
       "423:1145",
-      "522:1185"
+      "522:1185",
+      "64:20",
+      "411:3709",
+      "411:3735",
+      "411:3714",
+      "499:1149",
+      "530:4416",
+      "522:1194",
+      "529:4427",
+      "411:3863"
     ],
     "capturedAt": "2026-11-20",
     "note": "Snapshot of get_variable_defs(411:169) plus component-frame values. value = shipped value; figmaValue = original when a11yOverride."
@@ -540,6 +549,27 @@
       "type": "FLOAT",
       "value": "1320px",
       "description": "ASSUMED: contract requires a 'wide' Container; not measured in Figma"
+    },
+    {
+      "name": "neutral/300",
+      "type": "COLOR",
+      "value": "#767976",
+      "figmaValue": "#c4c7c4",
+      "a11yOverride": true,
+      "reason": "Checkbox border was 1.44-1.71:1; non-text UI boundary needs 3:1 (now 3.72:1 on page, 4.41:1 on white). R4 extension, designer sign-off",
+      "description": "Unchecked checkbox border"
+    },
+    {
+      "name": "border/chip",
+      "type": "COLOR",
+      "value": "#d7dfe3",
+      "description": "Filter chip border (hard-coded in Figma, no variable); decorative, the label carries the meaning"
+    },
+    {
+      "name": "radius/checkbox",
+      "type": "FLOAT",
+      "value": "5px",
+      "description": "Checkbox 522:1194"
     }
   ]
 }

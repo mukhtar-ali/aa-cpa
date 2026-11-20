@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { Button } from './Button';
 
-const variants = ['primary', 'secondary', 'outline-light', 'link'] as const;
+const variants = ['primary', 'secondary', 'paper', 'link'] as const;
 const sizes = ['md', 'lg'] as const;
 
 describe('Button', () => {
@@ -23,8 +23,30 @@ describe('Button', () => {
         </Button>,
       );
       const el = screen.getByRole('button');
-      expect(el).toHaveClass('rounded-button', 'font-bold', size === 'md' ? 'min-h-11' : 'min-h-13');
+      expect(el).toHaveClass('rounded-button');
+      if (variant !== 'link') expect(el).toHaveClass(size === 'md' ? 'min-h-12' : 'min-h-13');
     });
+  });
+
+  it('md is the 48 px homepage button and lg the 52 px one', () => {
+    const { rerender } = render(<Button>Go</Button>);
+    expect(screen.getByRole('button')).toHaveClass('min-h-12', 'px-6', 'py-2.5');
+    rerender(<Button size="lg">Go</Button>);
+    expect(screen.getByRole('button')).toHaveClass('min-h-13', 'px-8', 'py-3');
+  });
+
+  it('secondary and paper match the beige Figma buttons (411:3709, 411:3735)', () => {
+    const { rerender } = render(<Button variant="secondary">Go</Button>);
+    expect(screen.getByRole('button')).toHaveClass('bg-bg-page', 'text-text-link', 'font-bold', 'shadow-button-primary');
+    rerender(<Button variant="paper">Go</Button>);
+    expect(screen.getByRole('button')).toHaveClass('bg-bg-page', 'text-text-strong', 'font-extrabold');
+  });
+
+  it('link renders a large-text gradient label (R4) without a box', () => {
+    render(<Button variant="link">More</Button>);
+    const btn = screen.getByRole('button');
+    expect(btn).toHaveClass('bg-transparent', 'px-0', 'text-body-lg');
+    expect(screen.getByText('More')).toHaveClass('bg-clip-text', 'text-transparent', 'to-gradient-end-text-large');
   });
 
   it('primary uses the action token colours and the button shadow', () => {
@@ -117,7 +139,7 @@ describe('Button', () => {
     );
     const el = screen.getByRole('link', { name: 'Routed' });
     expect(el).toHaveAttribute('href', '/routed');
-    expect(el).toHaveClass('rounded-button', 'bg-action-secondary');
+    expect(el).toHaveClass('rounded-button', 'text-text-link', 'bg-bg-page');
   });
 
   it('merges className and forwards ref', () => {

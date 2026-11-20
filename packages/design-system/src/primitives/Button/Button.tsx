@@ -4,13 +4,13 @@ import { cn } from '../../lib/cn';
 import { Slot } from '../../lib/slot';
 
 /**
- * Sizes from Figma set 64:20: md = 44 px, lg = 52 px (26 px line height + 1 px border + 8 / 12 px vertical padding).
- * Primary values come from node 411:3706. NOTE: `secondary`, `outline-light` and `link` are PROVISIONAL, built from tokens and
- * the contract; verify against 411:3709, 411:3735 and 411:3714 when Figma access is available.
+ * Values from the approved homepage instances: primary 411:3706, secondary 411:3709, paper-on-dark 411:3735, link 411:3714.
+ * The homepage button is 48 px tall (26 px line + 10 px padding + 1 px border, each side); `lg` follows the library set 64:20
+ * proportions (52 px). The old library set 64:20 itself (IBM Plex, other colours) is NOT used as a visual reference.
  */
 const buttonVariants = cva(
   [
-    'inline-flex items-center justify-center gap-2 rounded-button border border-solid font-bold text-body-md',
+    'inline-flex items-center justify-center gap-2 rounded-button border border-solid text-body-md',
     'transition-colors duration-(--motion-duration-fast) ease-standard',
     'aria-disabled:pointer-events-none aria-disabled:opacity-60',
   ],
@@ -18,20 +18,25 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'border-action-primary bg-action-primary text-text-on-action shadow-button-primary hover:bg-text-link hover:border-text-link',
-        secondary: 'border-border-strong bg-action-secondary text-text-heading hover:bg-bg-surface',
-        'outline-light': 'border-border-inverse-strong bg-transparent text-text-inverse hover:bg-bg-inverse-raised',
-        link: 'border-transparent bg-transparent px-0 text-text-link underline underline-offset-4 hover:text-text-heading',
+          'border-action-primary bg-action-primary font-bold text-text-on-action shadow-button-primary hover:border-text-link hover:bg-text-link',
+        secondary:
+          'border-action-secondary bg-bg-page font-bold text-text-link shadow-button-primary hover:bg-bg-surface',
+        paper:
+          'border-action-secondary bg-bg-page font-extrabold text-text-strong shadow-button-primary hover:bg-bg-surface',
+        link: 'border-transparent bg-transparent font-bold text-body-lg hover:opacity-80',
       },
-      size: { md: 'min-h-11 px-5 py-2', lg: 'min-h-13 px-6 py-3' },
+      size: { md: 'min-h-12 px-6 py-2.5', lg: 'min-h-13 px-8 py-3' },
     },
-    compoundVariants: [{ variant: 'link', className: 'px-0' }],
+    compoundVariants: [{ variant: 'link', className: 'min-h-0 px-0 py-2' }],
     defaultVariants: { variant: 'primary', size: 'md' },
   },
 );
 
+const LINK_LABEL = 'bg-linear-to-b from-gradient-start to-gradient-end-text-large bg-clip-text text-transparent';
+
 export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
-  variant?: 'primary' | 'secondary' | 'outline-light' | 'link';
+  /** `paper` is the beige button for dark sections (Figma 411:3735). `link` renders a gradient label. */
+  variant?: 'primary' | 'secondary' | 'paper' | 'link';
   size?: 'md' | 'lg';
   /** Renders an `<a>` when set. */
   href?: string;
@@ -72,6 +77,7 @@ export const Button = React.forwardRef<HTMLElement, ButtonProps>(
     ref,
   ) => {
     const inactive = disabled || loading;
+    const label = variant === 'link' ? <span className={LINK_LABEL}>{children}</span> : children;
     const classes = cn(buttonVariants({ variant, size }), className);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
       if (inactive) {
@@ -95,7 +101,7 @@ export const Button = React.forwardRef<HTMLElement, ButtonProps>(
         ) : (
           startIcon && <span className="inline-flex shrink-0">{startIcon}</span>
         )}
-        {children}
+        {label}
         {endIcon && <span className={cn('inline-flex shrink-0', mirrorEndIcon && 'rtl:-scale-x-100')}>{endIcon}</span>}
       </>
     );

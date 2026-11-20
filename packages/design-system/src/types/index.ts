@@ -24,7 +24,7 @@ export interface LinkRef {
 }
 
 export interface ActionRef extends LinkRef {
-  variant?: 'primary' | 'secondary' | 'outline-light' | 'link';
+  variant?: 'primary' | 'secondary' | 'paper' | 'link';
 }
 
 export interface NavItem {
