@@ -28,7 +28,9 @@
       "530:4416",
       "499:1149",
       "411:3807",
-      "226:10011"
+      "226:10011",
+      "411:3702",
+      "411:3798"
     ],
     "capturedAt": "2026-11-20",
     "note": "Snapshot of get_variable_defs(411:169) plus component-frame values. value = shipped value; figmaValue = original when a11yOverride."
@@ -603,6 +605,12 @@
       "type": "STRING",
       "value": "0 8px 12px 0 rgba(0, 0, 0, 0.18)",
       "description": "WhatsApp float drop shadow (226:10011)"
+    },
+    {
+      "name": "radius/thumb",
+      "type": "FLOAT",
+      "value": "10px",
+      "description": "Small masked photo in the gap section (mask rectangle 10px radius, 411:3798)"
     }
   ]
 }
