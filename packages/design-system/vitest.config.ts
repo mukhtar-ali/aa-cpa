@@ -18,6 +18,10 @@ export default defineConfig({
       exclude: [
         'src/**/*.stories.{ts,tsx}',
         'src/__guards__/**',
+        'src/**/*.mdx',
+        'src/**/index.ts',
+        'src/**/*.d.ts',
+        'src/icons/generated/**',
       ],
     },
   },
