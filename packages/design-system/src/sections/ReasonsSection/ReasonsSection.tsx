@@ -34,7 +34,14 @@ export const ReasonsSection = React.forwardRef<HTMLElement, ReasonsSectionProps>
         <Container className="flex flex-col gap-12">
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-x-6">
             <div className="flex flex-col gap-6 lg:col-span-7 lg:col-start-1">
-              <SectionHeading tone="dark" title={title} description={description} />
+              <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-end sm:justify-between">
+                <SectionHeading tone="dark" title={title} description={description} className="sm:max-w-xl" />
+                {action ? (
+                  <Button href={action.href} variant="paper" className="shrink-0">
+                    {action.label}
+                  </Button>
+                ) : null}
+              </div>
               <div className="grid gap-6 sm:grid-cols-2">
                 {first ? <PillarCard pillar={first} /> : null}
                 {second ? <PillarCard pillar={second} /> : null}
@@ -43,11 +50,6 @@ export const ReasonsSection = React.forwardRef<HTMLElement, ReasonsSectionProps>
             </div>
             <div className="flex flex-col gap-6 lg:col-span-5 lg:col-start-8">
               <img src={image.src} alt={image.decorative ? '' : image.alt} width={image.width} height={image.height} className="aspect-[461/542] w-full object-cover" />
-              {action ? (
-                <Button href={action.href} variant="paper" className="self-start">
-                  {action.label}
-                </Button>
-              ) : null}
             </div>
           </div>
           <StatsStrip stats={stats} locale={locale} />

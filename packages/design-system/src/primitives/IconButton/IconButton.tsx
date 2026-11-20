@@ -68,13 +68,17 @@ export const IconButton = React.forwardRef<HTMLElement, IconButtonProps>(
         aria-label={label}
         aria-disabled={disabled || undefined}
         className={classes}
-        onClick={(e) => {
-          if (disabled) {
-            e.preventDefault();
-            return;
-          }
-          onClick?.(e);
-        }}
+        onClick={
+          disabled || onClick
+            ? (e) => {
+                if (disabled) {
+                  e.preventDefault();
+                  return;
+                }
+                onClick?.(e);
+              }
+            : undefined
+        }
         {...props}
       >
         {content}

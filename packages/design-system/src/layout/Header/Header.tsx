@@ -45,7 +45,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(
           <nav aria-label={navLabel} className="hidden lg:block">
             <ul className="flex items-center gap-10">
               {nav.map((item) => (
-                <li key={item.href}>
+                <li key={`${item.href}-${item.label}`}>
                   <a
                     href={item.href}
                     aria-current={item.active ? 'page' : undefined}

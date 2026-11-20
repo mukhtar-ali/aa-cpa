@@ -17,7 +17,7 @@ describe('GapSection', () => {
   it('renders the statement as an h2 at the H3 size, the eyebrow and the paragraph', () => {
     render(<GapSection {...props} />);
     const h2 = screen.getByRole('heading', { level: 2, name: props.statement });
-    expect(h2).toHaveClass('text-h3');
+    expect(h2).toHaveClass('text-h3', 'bg-clip-text', 'text-transparent');
     expect(screen.getByText('The gap we fill')).toHaveClass('text-body-lg', 'font-bold');
     expect(screen.getByText(props.body)).toHaveClass('text-body-lg');
   });

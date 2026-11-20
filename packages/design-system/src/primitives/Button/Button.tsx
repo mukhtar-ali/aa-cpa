@@ -90,7 +90,8 @@ export const Button = React.forwardRef<HTMLElement, ButtonProps>(
       className: classes,
       'aria-disabled': inactive || undefined,
       'aria-busy': loading || undefined,
-      onClick: handleClick,
+      // Only attach a handler when one is needed: server components cannot serialise event handlers.
+      onClick: inactive || onClick ? handleClick : undefined,
       ...props,
     };
 

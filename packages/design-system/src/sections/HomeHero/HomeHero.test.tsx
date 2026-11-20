@@ -16,7 +16,7 @@ const props = {
 describe('HomeHero', () => {
   it('has the page h1, the intro paragraph and a photo', () => {
     render(<HomeHero {...props} />);
-    expect(screen.getByRole('heading', { level: 1, name: props.title })).toHaveClass('text-text-inverse');
+    expect(screen.getByRole('heading', { level: 1, name: props.title })).toHaveClass('bg-clip-text', 'text-transparent', 'from-gradient-start', 'to-gradient-end');
     expect(screen.getByText(props.body)).toHaveClass('text-body-lg', 'text-text-inverse-muted');
     expect(screen.getByRole('img', { name: 'Riyadh skyline' })).toHaveClass('object-cover', 'aspect-[630/498]');
   });

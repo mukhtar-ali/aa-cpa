@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { cn } from '../../lib/cn';
 import { Icon } from '../../icons';
+import { Pattern } from '../../layout/Pattern';
 import type { ServiceSummary } from '../../types';
 
 export interface ServiceTabsProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
@@ -27,7 +28,8 @@ export function ServiceTabs({ eyebrow, title, services, defaultServiceId, tabsLa
   const first = services[0];
   if (!first) return null;
   return (
-    <section className={cn('bg-bg-page py-section-lg', className)} {...props}>
+    <section className={cn('relative isolate overflow-hidden rounded-t-section bg-bg-surface-ice py-section-lg', className)} {...props}>
+      <Pattern name="flow-lines" tone="light" className="-z-10 opacity-40" />
       <Tabs.Root defaultValue={defaultServiceId ?? first.id} orientation="vertical" className="mx-auto grid max-w-285 gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-x-6 lg:px-8">
         <div className="flex flex-col gap-8 lg:col-span-5 lg:col-start-1">
           <div className="flex flex-col gap-1.5">

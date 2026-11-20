@@ -48,7 +48,7 @@ export function MobileNav({ nav, cta, localeSwitch, menuLabel, closeLabel, navLa
           <nav aria-label={navLabel}>
             <ul className="flex flex-col">
               {nav.map((item) => (
-                <li key={item.href} className="border-b border-border-decor">
+                <li key={`${item.href}-${item.label}`} className="border-b border-border-decor">
                   <Dialog.Close asChild>
                     <a
                       href={item.href}

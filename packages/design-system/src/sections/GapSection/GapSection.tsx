@@ -28,7 +28,7 @@ export const GapSection = React.forwardRef<HTMLElement, GapSectionProps>(({ stat
     <section ref={ref} className={cn('relative isolate overflow-hidden bg-bg-page py-section-lg text-text-heading', className)} {...props}>
       <Pattern name="flow-lines" tone="light" className="-z-10 opacity-40" />
       <Container className="grid gap-12 lg:grid-cols-12 lg:gap-x-6">
-        <Heading level={2} size="h3" className="lg:col-span-5 lg:col-start-1 lg:row-start-1">
+        <Heading level={2} size="h3" className="bg-linear-to-b from-gradient-start to-gradient-end-text-large bg-clip-text text-transparent lg:col-span-5 lg:col-start-1 lg:row-start-1">
           {statement}
         </Heading>
         <div className="flex items-start gap-6 lg:col-span-7 lg:col-start-6 lg:row-start-1">

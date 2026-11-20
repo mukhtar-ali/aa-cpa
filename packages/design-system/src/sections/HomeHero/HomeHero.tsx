@@ -17,7 +17,7 @@ export interface HomeHeroProps extends Omit<React.HTMLAttributes<HTMLElement>, '
 }
 
 /**
- * Homepage hero (Figma 411:3700 to 411:3711): dark hero tone with flow lines, the H1 and two buttons at the inline start, a
+ * Homepage hero (Figma 411:3700 to 411:3711): dark hero tone with flow lines, the H1 (gradient text on dark, as in Figma) and two buttons at the inline start, a
  * 630 x 498 photo in the middle overlapped by the title, and the intro paragraph at the inline end. The grid positions follow the
  * Figma coordinates on a 12-column 1140 px grid; the exact offsets are to be verified in the parity pass.
  *
@@ -29,7 +29,7 @@ export const HomeHero = React.forwardRef<HTMLElement, HomeHeroProps>(({ title, b
     <section ref={ref} className={cn('relative isolate overflow-hidden bg-bg-hero text-text-inverse', className)} {...props}>
       <Pattern name="flow-lines" tone="dark" className="-z-10 opacity-60" />
       <Container className="grid gap-8 pt-36 pb-24 lg:grid-cols-12 lg:grid-rows-[auto_auto] lg:gap-x-6 lg:pt-38 lg:pb-0">
-        <Heading level={1} tone="inverse" className="lg:z-10 lg:col-span-6 lg:col-start-1 lg:row-start-1">
+        <Heading level={1} tone="inverse" className="bg-linear-to-b from-gradient-start to-gradient-end bg-clip-text text-transparent lg:z-10 lg:col-span-6 lg:col-start-1 lg:row-start-1">
           {title}
         </Heading>
         <div className="flex flex-wrap items-start gap-4 lg:z-10 lg:col-span-4 lg:col-start-1 lg:row-start-2 lg:self-start">
