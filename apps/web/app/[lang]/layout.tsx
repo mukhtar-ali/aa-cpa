@@ -36,6 +36,26 @@ const cairoArabic = localFont({
     variable: '--font-cairo-arabic',
     display: 'swap',
 });
+const almaraiLatin = localFont({
+    src: [
+        { path: '../../../../packages/design-system/assets/fonts/almarai-latin-300.woff2', weight: '300', style: 'normal' },
+        { path: '../../../../packages/design-system/assets/fonts/almarai-latin-400.woff2', weight: '400', style: 'normal' },
+        { path: '../../../../packages/design-system/assets/fonts/almarai-latin-700.woff2', weight: '700', style: 'normal' },
+        { path: '../../../../packages/design-system/assets/fonts/almarai-latin-800.woff2', weight: '800', style: 'normal' },
+    ],
+    variable: '--font-almarai-latin',
+    display: 'swap',
+});
+const almaraiArabic = localFont({
+    src: [
+        { path: '../../../../packages/design-system/assets/fonts/almarai-arabic-300.woff2', weight: '300', style: 'normal' },
+        { path: '../../../../packages/design-system/assets/fonts/almarai-arabic-400.woff2', weight: '400', style: 'normal' },
+        { path: '../../../../packages/design-system/assets/fonts/almarai-arabic-700.woff2', weight: '700', style: 'normal' },
+        { path: '../../../../packages/design-system/assets/fonts/almarai-arabic-800.woff2', weight: '800', style: 'normal' },
+    ],
+    variable: '--font-almarai-arabic',
+    display: 'swap',
+});
 const locales = ['en', 'ar'];
 const BASE_URL = process.env.BASE_URL ?? 'http://localhost:3001';
 
@@ -109,7 +129,7 @@ export default async function RootLayout({
     const gaId = seo?.googleAnalyticsId && GA_ID_REGEX.test(seo.googleAnalyticsId) ? seo.googleAnalyticsId : undefined;
 
     return (
-        <html lang={lang} dir={dir} className={`${inter.variable} ${cairoLatin.variable} ${cairoArabic.variable}`}>
+        <html lang={lang} dir={dir} className={`${inter.variable} ${cairoLatin.variable} ${cairoArabic.variable} ${almaraiLatin.variable} ${almaraiArabic.variable}`}>
             <head>
                 {gtmId && (
                     <Script id="gtm-base" strategy="afterInteractive">
