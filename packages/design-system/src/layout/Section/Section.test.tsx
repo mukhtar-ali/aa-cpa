@@ -91,21 +91,38 @@ describe('Section component', () => {
     expect(noneContainer.firstElementChild).toHaveClass('py-0');
   });
 
-  it('renders optional pattern slot marked aria-hidden', () => {
-    const patternNode = <div data-testid="mock-pattern">Pattern Graphic</div>;
-    const { getByTestId, container } = render(
-      <Section pattern={patternNode}>
+  it('renders optional pattern component marked aria-hidden with tone derived from section tone', () => {
+    const { container: darkSec } = render(
+      <Section tone="inverse" pattern="flow-lines">
         <p>Content</p>
       </Section>,
     );
 
-    const patternEl = getByTestId('mock-pattern');
+    const patternEl = darkSec.querySelector('[aria-hidden="true"]');
     expect(patternEl).toBeInTheDocument();
+    expect(patternEl).toHaveClass('text-border-inverse');
+    expect(darkSec.firstElementChild).toHaveClass('relative');
+    expect(darkSec.firstElementChild).toHaveClass('overflow-hidden');
 
-    const patternWrapper = patternEl.parentElement;
-    expect(patternWrapper).toHaveAttribute('aria-hidden', 'true');
-    expect(container.firstElementChild).toHaveClass('relative');
-    expect(container.firstElementChild).toHaveClass('overflow-hidden');
+    // Light tone section derives light pattern tone (logo-lines -> text-border-decor)
+    const { container: lightSec } = render(
+      <Section tone="page" pattern="logo-lines">
+        <p>Content</p>
+      </Section>,
+    );
+    const lightPatternEl = lightSec.querySelector('[aria-hidden="true"]');
+    expect(lightPatternEl).toBeInTheDocument();
+    expect(lightPatternEl).toHaveClass('text-border-decor');
+
+    // Hero tone section derives dark pattern tone (logo-lines -> text-border-inverse)
+    const { container: heroSec } = render(
+      <Section tone="hero" pattern="logo-lines">
+        <p>Content</p>
+      </Section>,
+    );
+    const heroPatternEl = heroSec.querySelector('[aria-hidden="true"]');
+    expect(heroPatternEl).toBeInTheDocument();
+    expect(heroPatternEl).toHaveClass('text-border-inverse');
   });
 
   it('does not render pattern container when pattern prop is absent', () => {

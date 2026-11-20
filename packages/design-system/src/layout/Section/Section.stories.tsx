@@ -109,14 +109,12 @@ export const WithPattern: Story = {
     <Section
       tone="hero"
       spacing="xl"
-      pattern={
-        <div className="w-full h-full opacity-20 bg-[radial-gradient(circle_at_center,_var(--color-action-primary)_1px,_transparent_1px)] bg-[size:24px_24px]" />
-      }
+      pattern="logo-lines"
     >
       <Container>
         <h2 className="text-h2 font-bold text-text-inverse">Section with Background Pattern</h2>
         <p className="text-body-lg text-text-muted mt-2">
-          Demonstrates pattern node slot rendered beneath content in an aria-hidden overlay.
+          Demonstrates pattern slot rendering logo-lines with dark tone derived automatically.
         </p>
       </Container>
     </Section>

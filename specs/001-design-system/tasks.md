@@ -77,12 +77,12 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - [x] T024 [US1] Create `DS/src/styles/theme.css` with `@theme inline` mapping colours, radii, shadows, spacing (`--spacing-section-*`), font family, breakpoints (sm 640, md 768, lg 1024, xl 1280, 2xl 1512), motion tokens (R10) and fluid type tokens per research R12 (`--text-h1` … `--text-body-xs` with paired line heights)
 - [x] T025 [US1] Create `DS/src/styles/base.css` (body font/colour, `:focus-visible` ring using `action/primary` 2px + offset, `prefers-reduced-motion` resets, `.ds-prose` article styles placeholder) and `DS/src/styles/index.css` importing tokens, theme, base and declaring `@source "../"`
 - [x] T026 [P] [US1] Add Almarai 300/400/700/800 woff2 (Arabic+Latin) and `OFL.txt` under `DS/assets/fonts/`, plus `DS/assets/fonts/almarai.css` (`@font-face`, `font-display: swap`, sets `--font-almarai`)
-- [ ] T027 [US1] Load Almarai in `WEB/app/[lang]/layout.tsx` via `next/font/local` (relative path to `packages/design-system/assets/fonts/*`, `variable: '--font-almarai'`, `display: 'swap'`) and import `@repo/design-system/styles.css` at the top of `WEB/src/assets/styles/tailwind.css` (keep legacy starter tokens below it until feature 003)
+- [x] T027 [US1] Load Almarai in `WEB/app/[lang]/layout.tsx` via `next/font/local` (relative path to `packages/design-system/assets/fonts/*`, `variable: '--font-almarai'`, `display: 'swap'`) and import `@repo/design-system/styles.css` at the top of `WEB/src/assets/styles/tailwind.css` (keep legacy starter tokens below it until feature 003)
 - [x] T028 [P] [US1] Export pattern SVGs from Figma (flow lines `413:323`, dots grid `411:171`, logo lines `428:2043` light/dark) to `DS/assets/patterns/` optimised with SVGO
-- [ ] T029 [US1] Write `DS/src/layout/Pattern/Pattern.test.tsx` then implement `Pattern.tsx` (`name`, `tone`, `aria-hidden`, absolutely positioned with logical insets, mirrored in RTL where directional) + stories
+- [x] T029 [US1] Write `DS/src/layout/Pattern/Pattern.test.tsx` then implement `Pattern.tsx` (`name`, `tone`, `aria-hidden`, absolutely positioned with logical insets, mirrored in RTL where directional) + stories
 - [x] T030 [US1] Write `DS/src/layout/Container/Container.test.tsx` then implement `Container.tsx` (1140 content, gutters 16/24/32, `size` variants) + stories
 - [x] T031 [US1] Write `DS/src/layout/Section/Section.test.tsx` then implement `Section.tsx` (`tone` page/ice/surface/inverse/hero, `rounded` none/top/bottom/both using 32px token radius, `spacing`, optional `pattern`, `aria-labelledby` passthrough) + stories; Figma `411:3713`, `411:3729`
-- [ ] T032 [P] [US1] Create Foundations docs stories `DS/src/foundations/Colors.stories.tsx` (swatches from `tokens.ts` incl. Figma name, value, override note and R4 contrast table), `Typography.stories.tsx` (H1–H6, body sizes × weights in AR and EN), `Spacing.stories.tsx`, `Radii-Shadows.stories.tsx`, `Patterns.stories.tsx`
+- [x] T032 [P] [US1] Create Foundations docs stories `DS/src/foundations/Colors.stories.tsx` (swatches from `tokens.ts` incl. Figma name, value, override note and R4 contrast table), `Typography.stories.tsx` (H1–H6, body sizes × weights in AR and EN), `Spacing.stories.tsx`, `Radii-Shadows.stories.tsx`, `Patterns.stories.tsx`
 
 **Checkpoint**: V1 passes.
 
@@ -97,28 +97,28 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 ### Icons
 
 - [ ] T033 [US2] Export icon SVGs from Figma (homepage `411:3741`, `411:3748`, `411:3763`, button icon wrapper `411:3707`, sector icons on `547:4555`, contact/share/meta icons from `527:5423`, `505:3864`, `529:4333`, upload from `522:1214`) to `DS/assets/icons/`, normalised to 24×24 `currentColor`
-- [ ] T034 [US2] Add `DS/scripts/build-icons.mjs` generating typed React components into `DS/src/icons/generated/` and the `IconName` union; wire into `tokens` script chain
-- [ ] T035 [US2] Write `DS/src/icons/Icon.test.tsx` (decorative by default, named with `title`, mirror class only for directional icons in RTL) then implement `DS/src/icons/Icon.tsx` + gallery story
+- [x] T034 [US2] Add `DS/scripts/build-icons.mjs` generating typed React components into `DS/src/icons/generated/` and the `IconName` union; wire into `tokens` script chain
+- [x] T035 [US2] Write `DS/src/icons/Icon.test.tsx` (decorative by default, named with `title`, mirror class only for directional icons in RTL) then implement `DS/src/icons/Icon.tsx` + gallery story
 
 ### Tests first (each [P], separate files)
 
-- [ ] T036 [P] [US2] Write `Button.test.tsx` (4 variants × 2 sizes, renders `<a>` with `href`, disabled/loading → `aria-disabled`/`aria-busy`, end arrow mirrors in RTL, axe) in `DS/src/primitives/Button/`
-- [ ] T037 [P] [US2] Write `IconButton.test.tsx` (requires `label`, variants, link mode, axe) in `DS/src/primitives/IconButton/`
-- [ ] T038 [P] [US2] Write tests for `Link`, `Heading` (levels vs visual size, accent line only for h1–h3 sizes, gradient class), `Text`, `Eyebrow` in their folders under `DS/src/primitives/`
-- [ ] T039 [P] [US2] Write tests for `Chip`, `FilterChipGroup` (radio-like keyboard, `aria-pressed`, RTL arrow order), `MetaPill`, `CategoryBadge`, `Divider`, `Avatar` (initials fallback), `Rating` (accessible label "4 of 5") under `DS/src/primitives/`
+- [x] T036 [P] [US2] Write `Button.test.tsx` (4 variants × 2 sizes, renders `<a>` with `href`, disabled/loading → `aria-disabled`/`aria-busy`, end arrow mirrors in RTL, axe) in `DS/src/primitives/Button/`
+- [x] T037 [P] [US2] Write `IconButton.test.tsx` (requires `label`, variants, link mode, axe) in `DS/src/primitives/IconButton/`
+- [x] T038 [P] [US2] Write tests for `Link`, `Heading` (levels vs visual size, accent line only for h1–h3 sizes, gradient class), `Text`, `Eyebrow` in their folders under `DS/src/primitives/`
+- [x] T039 [P] [US2] Write tests for `Chip`, `FilterChipGroup` (radio-like keyboard, `aria-pressed`, RTL arrow order), `MetaPill`, `CategoryBadge`, `Divider`, `Avatar` (initials fallback), `Rating` (accessible label "4 of 5") under `DS/src/primitives/`
 - [ ] T040 [P] [US2] Write tests for `Breadcrumbs` (`nav` + `aria-current`), `Pagination` (links, current page, prev/next labels, mirroring), `SlideCounter` (progressbar values), `Logo`, `LanguageToggle` (`hreflang`, `lang` on label) under `DS/src/primitives/`
-- [ ] T041 [P] [US2] Write tests for `Field`, `TextInput`, `Textarea`, `Select` (label association, required marker, `aria-invalid`, `aria-describedby` → help + error, dark theme) under `DS/src/forms/`
-- [ ] T042 [P] [US2] Write tests for `Checkbox` (label with link, error) and `FileUpload` (picker, drop, rejects >5 MB and wrong type with announced error via `role="alert"`, remove returns to empty, keyboard activation) and `FormErrorSummary` (focus on mount, links to fields) under `DS/src/forms/`
+- [x] T041 [P] [US2] Write tests for `Field`, `TextInput`, `Textarea`, `Select` (label association, required marker, `aria-invalid`, `aria-describedby` → help + error, dark theme) under `DS/src/forms/`
+- [x] T042 [P] [US2] Write tests for `Checkbox` (label with link, error) and `FileUpload` (picker, drop, rejects >5 MB and wrong type with announced error via `role="alert"`, remove returns to empty, keyboard activation) and `FormErrorSummary` (focus on mount, links to fields) under `DS/src/forms/`
 
 ### Implementation
 
-- [ ] T043 [US2] Implement `Button` (cva variants primary/secondary/outline-light/link, sizes md 44px / lg 52px from `64:20`, shadow token, loading spinner, `asChild` via Radix-free Slot util in `DS/src/lib/slot.tsx`) + stories; Figma `64:20`, `411:3706`, `411:3709`, `411:3735`, `411:3714`
-- [ ] T044 [US2] Implement `IconButton` + stories; Figma `505:3864`, `529:4427`
-- [ ] T045 [P] [US2] Implement `Link`, `Heading`, `Text`, `Eyebrow` + stories; Figma text styles on `411:169`, eyebrow `411:3722`
-- [ ] T046 [P] [US2] Implement `Chip`, `FilterChipGroup` (client), `MetaPill`, `CategoryBadge`, `Divider`, `Avatar`, `Rating` + stories; Figma `499:1149`, `529:4333`, `423:1145`, `411:3785`, `411:3878`, `411:3871`
+- [x] T043 [US2] Implement `Button` (cva variants primary/secondary/paper/link; md 48px (homepage) / lg 52px, shadow token, loading spinner, `asChild` via Radix-free Slot util in `DS/src/lib/slot.tsx`) + stories; Figma `64:20`, `411:3706`, `411:3709`, `411:3735`, `411:3714`
+- [x] T044 [US2] Implement `IconButton` + stories; Figma `505:3864`, `529:4427`
+- [x] T045 [P] [US2] Implement `Link`, `Heading`, `Text`, `Eyebrow` + stories; Figma text styles on `411:169`, eyebrow `411:3722`
+- [x] T046 [P] [US2] Implement `Chip`, `FilterChipGroup` (client), `MetaPill`, `CategoryBadge`, `Divider`, `Avatar`, `Rating` + stories; Figma `499:1149`, `529:4333`, `423:1145`, `411:3785`, `411:3878`, `411:3871`
 - [ ] T047 [P] [US2] Implement `Breadcrumbs`, `Pagination`, `SlideCounter`, `Logo` (SVGs from Figma `65:56` on-dark, `78:197` on-light into `DS/assets/brand/`), `LanguageToggle` + stories; Figma `530:4416`, `64:28`
-- [ ] T048 [US2] Implement `Field`, `TextInput`, `Textarea`, `Select` (native, custom chevron mirrored) with light/dark themes + stories; Figma `522:1185`, dark `411:3863`, select on `524:3651`
-- [ ] T049 [US2] Implement `Checkbox`, `FileUpload` (client), `FormErrorSummary` + stories; Figma `522:1194`, `522:1214`
+- [x] T048 [US2] Implement `Field`, `TextInput`, `Textarea`, `Select` (native, custom chevron mirrored) with light/dark themes + stories; Figma `522:1185`, dark `411:3863`, select on `524:3651`
+- [x] T049 [US2] Implement `Checkbox`, `FileUpload` (client), `FormErrorSummary` + stories; Figma `522:1194`, `522:1214`
 - [ ] T050 [US2] Add `DS/src/__guards__/tailwind-scan.test.ts` or documented manual check (quickstart V2.6) proving package-only classes are emitted in `WEB` CSS
 
 **Checkpoint**: V2 passes.

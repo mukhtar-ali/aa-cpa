@@ -14,3 +14,12 @@ export {
   type SectionRounded,
   type SectionSpacing,
 } from './Section';
+
+export {
+  Pattern,
+  type PatternProps,
+  type PatternName,
+  type PatternTone,
+  LogoLines,
+  type LogoLinesProps,
+} from './Pattern';

@@ -1,6 +1,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/cn';
+import { Pattern, type PatternName } from '../Pattern';
 
 const sectionVariants = cva('w-full', {
   variants: {
@@ -40,7 +41,7 @@ export interface SectionProps
   extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof sectionVariants> {
   as?: React.ElementType;
-  pattern?: React.ReactNode;
+  pattern?: PatternName;
   children?: React.ReactNode;
 }
 
@@ -65,6 +66,7 @@ export const Section = React.forwardRef<HTMLElement, SectionProps>(
     ref,
   ) => {
     const hasPattern = Boolean(pattern);
+    const patternTone = tone === 'inverse' || tone === 'hero' ? 'dark' : 'light';
 
     return (
       <Component
@@ -76,11 +78,7 @@ export const Section = React.forwardRef<HTMLElement, SectionProps>(
         )}
         {...props}
       >
-        {hasPattern && (
-          <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-            {pattern}
-          </div>
-        )}
+        {pattern && <Pattern name={pattern} tone={patternTone} />}
         {hasPattern ? <div className="relative z-10">{children}</div> : children}
       </Component>
     );
