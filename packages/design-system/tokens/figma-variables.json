@@ -37,7 +37,12 @@
       "530:4339",
       "530:4391",
       "411:3745",
-      "585:6030"
+      "585:6030",
+      "448:41771",
+      "448:42778",
+      "448:43007",
+      "463:3590",
+      "463:3596"
     ],
     "capturedAt": "2026-11-20",
     "note": "Snapshot of get_variable_defs(411:169) plus component-frame values. value = shipped value; figmaValue = original when a11yOverride."
@@ -636,6 +641,36 @@
       "type": "COLOR",
       "value": "#f28b82",
       "description": "Error text and border on dark tones (not in Figma): status/error is 3.17:1 on bg/inverse and 2.52:1 on bg/inverse-raised; this is 7.06:1 and 5.62:1"
+    },
+    {
+      "name": "ice/950",
+      "type": "COLOR",
+      "value": "#0f1d22",
+      "description": "Service card heading and text (448:41771)"
+    },
+    {
+      "name": "blue/950",
+      "type": "COLOR",
+      "value": "#030d1a",
+      "description": "Methodology row text (448:42778); same value as bg/hero"
+    },
+    {
+      "name": "emerald/100",
+      "type": "COLOR",
+      "value": "#d3efe2",
+      "description": "CTA card icon background (448:43008)"
+    },
+    {
+      "name": "radius/card-lg",
+      "type": "FLOAT",
+      "value": "32px",
+      "description": "Service card (448:41771)"
+    },
+    {
+      "name": "radius/cta",
+      "type": "FLOAT",
+      "value": "24px",
+      "description": "CTA cards and slider buttons (448:43007)"
     }
   ]
 }
