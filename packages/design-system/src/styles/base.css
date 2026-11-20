@@ -30,3 +30,99 @@ body {
 .ds-prose {
   color: var(--color-text-body);
 }
+
+/*
+ * Article prose (Figma article 506:2706). Use inside `.ds-prose`: intro paragraph, numbered H2 (Heading/H3 size), paragraphs (Body/Medium),
+ * lists with 8 px emerald dots, blockquote as the dark pull-quote card, figures with a caption.
+ */
+.ds-prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+.ds-prose > p {
+  font-size: var(--text-body-md);
+  line-height: var(--text-body-md--line-height);
+  color: var(--color-text-body);
+}
+
+.ds-prose > p:first-child {
+  font-size: var(--text-body-lg);
+  line-height: var(--text-body-lg--line-height);
+}
+
+.ds-prose h2 {
+  margin-block-start: var(--space-24);
+  font-size: var(--text-h3);
+  line-height: var(--text-h3--line-height);
+  font-weight: 700;
+  color: var(--color-text-heading);
+}
+
+.ds-prose h3 {
+  font-size: var(--text-h5);
+  line-height: var(--text-h5--line-height);
+  font-weight: 700;
+  color: var(--color-text-heading);
+}
+
+.ds-prose ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  list-style: none;
+  padding: 0;
+}
+
+.ds-prose ul > li {
+  position: relative;
+  padding-inline-start: 1.5rem;
+  font-size: var(--text-body-md);
+  line-height: var(--text-body-md--line-height);
+  color: var(--color-text-body);
+}
+
+.ds-prose ul > li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.55rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--color-emerald-600);
+}
+
+.ds-prose blockquote {
+  padding: var(--space-24) calc(var(--space-24) + var(--space-8));
+  border-radius: var(--radius-cta);
+  background: var(--color-bg-inverse);
+  color: var(--color-text-inverse);
+  font-size: var(--text-h5);
+  line-height: var(--text-h5--line-height);
+  font-weight: 700;
+}
+
+.ds-prose blockquote cite {
+  display: block;
+  margin-block-start: var(--space-8);
+  font-size: var(--text-body-sm);
+  line-height: var(--text-body-sm--line-height);
+  font-weight: 400;
+  font-style: normal;
+  color: var(--color-text-inverse-muted);
+}
+
+.ds-prose figure img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-image);
+}
+
+.ds-prose figcaption {
+  margin-block-start: var(--space-8);
+  font-size: var(--text-body-xs);
+  line-height: var(--text-body-xs--line-height);
+  color: var(--color-text-muted);
+}

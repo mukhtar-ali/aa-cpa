@@ -12,6 +12,8 @@ export interface NewsCardProps extends Omit<React.HTMLAttributes<HTMLElement>, '
   /** Label of the read-more link, for example "Read more". */
   readMoreLabel: string;
   locale?: Locale;
+  /** Category badge tone: `gold` on news cards, `gradient` on related-article cards. */
+  badgeTone?: 'gold' | 'gradient';
 }
 
 /**
@@ -20,7 +22,7 @@ export interface NewsCardProps extends Omit<React.HTMLAttributes<HTMLElement>, '
  *
  * @figma 423:1145
  */
-export const NewsCard = React.forwardRef<HTMLElement, NewsCardProps>(({ article, readMoreLabel, locale = 'ar', className, ...props }, ref) => (
+export const NewsCard = React.forwardRef<HTMLElement, NewsCardProps>(({ article, readMoreLabel, locale = 'ar', badgeTone = 'gold', className, ...props }, ref) => (
   <article ref={ref} className={cn('group relative flex flex-col gap-3.5', className)} {...props}>
     <img
       src={article.image.src}
@@ -30,7 +32,7 @@ export const NewsCard = React.forwardRef<HTMLElement, NewsCardProps>(({ article,
       className="h-62.5 w-full rounded-image object-cover"
     />
     <div className="flex flex-col items-start gap-3">
-      <CategoryBadge>{article.category}</CategoryBadge>
+      <CategoryBadge tone={badgeTone}>{article.category}</CategoryBadge>
       <h3 className="text-h6 font-bold text-text-heading">
         <a href={article.href} className="after:absolute after:inset-0">
           {article.title}

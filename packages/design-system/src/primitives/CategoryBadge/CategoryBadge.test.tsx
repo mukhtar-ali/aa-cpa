@@ -19,6 +19,12 @@ describe('CategoryBadge', () => {
     expect(container.querySelector('[data-dot]')).toHaveClass('bg-action-primary');
   });
 
+  it('gradient tone is the related-card tag: gradient text and a gradient-start dot', () => {
+    const { container } = render(<CategoryBadge tone="gradient">Tax</CategoryBadge>);
+    expect(screen.getByText('Tax').parentElement).toHaveClass('bg-clip-text', 'text-transparent');
+    expect(container.querySelector('[data-dot]')).toHaveClass('bg-gradient-start');
+  });
+
   it.each(['ar', 'en'])('has no axe violations in %s', async (lang) => {
     const { container } = render(
       <div lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'}>

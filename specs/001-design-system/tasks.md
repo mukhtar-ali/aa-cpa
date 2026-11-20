@@ -183,7 +183,7 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 ### 6b. Other approved pages' sections
 
 - [x] T081 [P] [US4] Write tests for `ServiceCard`, `SlideCounter` integration, `CtaCards`, `FaqAccordion` (Radix: Enter/Space toggles, `aria-expanded`, plus/minus icon) , `MethodologyList` under `DS/src/sections/`
-- [ ] T082 [P] [US4] Write tests for `FeaturedNews`, `ArticleCardCompact`, `RelatedCarousel` (prev/next buttons disabled at ends, scroll-snap, counter), `ArticleHeader`, `ArticleBody` (heading ids, blockquote/figure styles), `TableOfContents` (active item via IntersectionObserver mock, activation focuses section), `AuthorCard`, `ShareBox` (copy success/failure messages announced) under `DS/src/sections/`
+- [x] T082 [P] [US4] Write tests for `FeaturedNews`, `ArticleCardCompact`, `RelatedCarousel` (prev/next buttons disabled at ends, scroll-snap, counter), `ArticleHeader`, `ArticleBody` (heading ids, blockquote/figure styles), `TableOfContents` (active item via IntersectionObserver mock, activation focuses section), `AuthorCard`, `ShareBox` (copy success/failure messages announced) under `DS/src/sections/`
 - [ ] T083 [P] [US4] Write tests for `JobRow`, `JobSummaryCard` (description list semantics), `PerkTile`, `TimelineStepper`, `ApplicationFormLayout` under `DS/src/sections/`
 - [ ] T084 [P] [US4] Write tests for `ContactItem` (tel/mailto/wa links, hours without link), `OfficeCard`, `OfficeMap` (pins as labelled list, map image decorative), `ContactFormLayout` under `DS/src/sections/`
 - [ ] T085 [P] [US4] Write tests for `SectorIndex`, `CaseStoryCard`/`CaseStories`, `LegalDocument` (summary list, numbered sections, TOC, question card with download link) under `DS/src/sections/`
@@ -192,11 +192,11 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - [x] T088 [P] [US4] Implement `CtaCards` + stories; Figma `473:36122`, `473:36200`
 - [x] T089 [P] [US4] Implement `FaqAccordion` (client, Radix Accordion) + stories; Figma `463:1158`
 - [ ] T090 [P] [US4] Implement `FeaturedNews` and `ArticleCardCompact` + stories; Figma featured block on `473:36031`, `501:1155`
-- [ ] T091 [US4] Implement `RelatedCarousel` (client, CSS scroll-snap, slider nav IconButtons, SlideCounter) + stories; Figma related articles on `506:2706`, `529:4427`
-- [ ] T092 [P] [US4] Implement `ArticleHeader`, `AuthorCard` + stories; Figma `506:2706`
-- [ ] T093 [US4] Implement `ArticleBody` (`.ds-prose` styles in `DS/src/styles/base.css`: h2/h3 numbering style, lists with green bullets, pull quote dark card, figure + caption, tags row) + stories; Figma `506:2706`
-- [ ] T094 [US4] Implement `TableOfContents` (client, sticky, active indicator on inline-start border) + stories; Figma `506:2706`, `525:3854`
-- [ ] T095 [P] [US4] Implement `ShareBox` (client copy; dark sidebar and light inline variants) + stories; Figma `506:2706`, `514:3194`
+- [x] T091 [US4] Implement `RelatedCarousel` (client, CSS scroll-snap, slider nav IconButtons, SlideCounter) + stories; Figma related articles on `506:2706`, `529:4427`
+- [x] T092 [P] [US4] Implement `ArticleHeader`, `AuthorCard` + stories; Figma `506:2706`
+- [x] T093 [US4] Implement `ArticleBody` (`.ds-prose` styles in `DS/src/styles/base.css`: h2/h3 numbering style, lists with green bullets, pull quote dark card, figure + caption, tags row) + stories; Figma `506:2706`
+- [x] T094 [US4] Implement `TableOfContents` (client, sticky, active indicator on inline-start border) + stories; Figma `506:2706`, `525:3854`
+- [x] T095 [P] [US4] Implement `ShareBox` (client copy; dark sidebar and light inline variants) + stories; Figma `506:2706`, `514:3194`
 - [ ] T096 [P] [US4] Implement `JobRow` and `JobSummaryCard` + stories; Figma `512:1159`, job summary on `514:3194`
 - [ ] T097 [P] [US4] Implement `PerkTile` and `TimelineStepper` (horizontal ≥ md, vertical < md) + stories; Figma `529:4296`, hiring steps on `519:38941`
 - [ ] T098 [P] [US4] Implement `ApplicationFormLayout` and `ContactFormLayout` (compose forms) + stories; Figma apply form on `514:3194`, form on `524:3651`

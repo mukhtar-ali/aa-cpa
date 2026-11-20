@@ -6,7 +6,7 @@ import { Chip } from './Chip';
 describe('Chip', () => {
   it('renders a pill tag with the chip border and heading text', () => {
     render(<Chip>Audit</Chip>);
-    expect(screen.getByText('Audit')).toHaveClass('rounded-full', 'border-border-chip', 'text-text-heading', 'text-body-sm', 'font-bold');
+    expect(screen.getByText('Audit')).toHaveClass('h-10', 'px-5.5', 'rounded-full', 'border-border-chip', 'text-text-heading', 'text-body-sm', 'font-bold');
   });
 
   it('merges className', () => {
