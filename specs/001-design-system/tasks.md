@@ -191,16 +191,16 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - [x] T087 [P] [US4] Implement `MethodologyList` + stories; Figma "منهجيتنا" block on `448:41873`
 - [x] T088 [P] [US4] Implement `CtaCards` + stories; Figma `473:36122`, `473:36200`
 - [x] T089 [P] [US4] Implement `FaqAccordion` (client, Radix Accordion) + stories; Figma `463:1158`
-- [ ] T090 [P] [US4] Implement `FeaturedNews` and `ArticleCardCompact` + stories; Figma featured block on `473:36031`, `501:1155`
+- [x] T090 [P] [US4] Implement `FeaturedNews` and `ArticleCardCompact` + stories; Figma featured block on `473:36031`, `501:1155`
 - [x] T091 [US4] Implement `RelatedCarousel` (client, CSS scroll-snap, slider nav IconButtons, SlideCounter) + stories; Figma related articles on `506:2706`, `529:4427`
 - [x] T092 [P] [US4] Implement `ArticleHeader`, `AuthorCard` + stories; Figma `506:2706`
 - [x] T093 [US4] Implement `ArticleBody` (`.ds-prose` styles in `DS/src/styles/base.css`: h2/h3 numbering style, lists with green bullets, pull quote dark card, figure + caption, tags row) + stories; Figma `506:2706`
 - [x] T094 [US4] Implement `TableOfContents` (client, sticky, active indicator on inline-start border) + stories; Figma `506:2706`, `525:3854`
 - [x] T095 [P] [US4] Implement `ShareBox` (client copy; dark sidebar and light inline variants) + stories; Figma `506:2706`, `514:3194`
-- [ ] T096 [P] [US4] Implement `JobRow` and `JobSummaryCard` + stories; Figma `512:1159`, job summary on `514:3194`
-- [ ] T097 [P] [US4] Implement `PerkTile` and `TimelineStepper` (horizontal ≥ md, vertical < md) + stories; Figma `529:4296`, hiring steps on `519:38941`
+- [x] T096 [P] [US4] Implement `JobRow` and `JobSummaryCard` + stories; Figma `512:1159`, job summary on `514:3194`
+- [x] T097 [P] [US4] Implement `PerkTile` and `TimelineStepper` (horizontal ≥ md, vertical < md) + stories; Figma `529:4296`, hiring steps on `519:38941`
 - [ ] T098 [P] [US4] Implement `ApplicationFormLayout` and `ContactFormLayout` (compose forms) + stories; Figma apply form on `514:3194`, form on `524:3651`
-- [ ] T099 [P] [US4] Implement `ContactItem`, `OfficeCard`, `OfficeMap` (static SVG map illustration exported from `524:3651`, pins positioned by `coordinates`) + stories; Figma `527:5423`, `529:4280`, `578:1293`
+- [x] T099 [P] [US4] Implement `ContactItem`, `OfficeCard`, `OfficeMap` (static SVG map illustration exported from `524:3651`, pins positioned by `coordinates`) + stories; Figma `527:5423`, `529:4280`, `578:1293`
 - [ ] T100 [P] [US4] Implement `SectorIndex` + stories; Figma "دليل القطاعات" block on `547:4555`
 - [ ] T101 [P] [US4] Implement `CaseStoryCard` and `CaseStories` + stories; Figma case stories on `547:4555`
 - [ ] T102 [US4] Implement `LegalDocument` (TOC sidebar, "have a question" dark card with PDF download, updated-at pill, summary box, numbered sections) + stories; Figma `525:3854`, `525:4136`

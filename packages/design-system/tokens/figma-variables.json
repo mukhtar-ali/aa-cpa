@@ -42,7 +42,18 @@
       "448:42778",
       "448:43007",
       "463:3590",
-      "463:3596"
+      "463:3596",
+      "501:1155",
+      "512:1159",
+      "529:4296",
+      "529:4280",
+      "578:1293",
+      "506:4001",
+      "506:4076",
+      "506:3958",
+      "506:3982",
+      "507:4169",
+      "506:4138"
     ],
     "capturedAt": "2026-11-20",
     "note": "Snapshot of get_variable_defs(411:169) plus component-frame values. value = shipped value; figmaValue = original when a11yOverride."
@@ -671,6 +682,24 @@
       "type": "FLOAT",
       "value": "24px",
       "description": "CTA cards and slider buttons (448:43007)"
+    },
+    {
+      "name": "emerald/500",
+      "type": "COLOR",
+      "value": "#51a584",
+      "description": "Job row hover border (512:1152); same value as accent/progress"
+    },
+    {
+      "name": "radius/perk",
+      "type": "FLOAT",
+      "value": "18px",
+      "description": "Perk tile (529:4296)"
+    },
+    {
+      "name": "radius/thumb-lg",
+      "type": "FLOAT",
+      "value": "14px",
+      "description": "Compact article thumbnail (501:1145)"
     }
   ]
 }
