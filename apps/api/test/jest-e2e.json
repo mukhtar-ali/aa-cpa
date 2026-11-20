@@ -13,7 +13,8 @@
         ]
     },
     "moduleNameMapper": {
-        "^@/(.*)$": "<rootDir>/../src/$1"
+        "^@/(.*)$": "<rootDir>/../src/$1",
+        "^supertest$": "<rootDir>/supertest-shim.ts"
     },
     "transformIgnorePatterns": [
         "node_modules/(?!(?:\\.pnpm/)?(uuid|htmlparser2|domelementtype|domhandler|domutils|dom-serializer|entities|is-plain-object|escape-string-regexp|parse-srcset))"

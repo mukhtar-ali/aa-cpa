@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { PaginationParamsSchema } from '../validations';
 
 export type PaginationParamsModel = z.infer<typeof PaginationParamsSchema>;
+export type PaginationQueryModel = PaginationParamsModel;
 
 export interface PaginatorModel<T> extends IPaginatorMetadataModel {
     items: T[];

@@ -122,7 +122,19 @@ export function Services({
               label='Service Card Image'
               namePrefix='service-image'
               value={form.image as any}
-              onChange={(image) => setForm({ ...form, image })}
+              onChange={(image) =>
+                setForm({
+                  ...form,
+                  image: image
+                    ? {
+                        url: image.url,
+                        width: image.width ?? 1200,
+                        height: image.height ?? 800,
+                        alt: image.alt,
+                      }
+                    : null,
+                })
+              }
             />
 
             <PublishToggle

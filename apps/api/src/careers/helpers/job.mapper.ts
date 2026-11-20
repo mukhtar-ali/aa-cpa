@@ -160,7 +160,7 @@ type JobApplicationWithJob = Prisma.JobApplicationGetPayload<{
     include: { job: { include: { translations: true } } };
 }>;
 
-const TRANSLATABLE_FIELDS = ['title', 'description', 'body', 'location'] as const;
+const TRANSLATABLE_FIELDS = ['title', 'summary', 'body', 'location'] as const;
 
 export const jobMapEntityToModel = (job: JobWithTranslations): JobModel => {
     const { translations, isDeleted, deletedAt, createdAt, updatedAt, ...rest } = job;
@@ -181,17 +181,14 @@ export const jobMapEntityToModel = (job: JobWithTranslations): JobModel => {
 };
 
 export const jobApplicationMapEntityToModel = (application: JobApplicationWithJob): JobApplicationModel => {
-    const { job, createdAt, updatedAt, phone, coverLetter, resumeUrl, notes, ...rest } = application;
+    const { job, createdAt, updatedAt, notes, ...rest } = application;
 
     const sharedTranslations = withSharedLang(job.translations);
     const title = buildMultiLangField(sharedTranslations, 'title');
 
     return {
         ...rest,
-        phone: phone ?? undefined,
-        coverLetter: coverLetter ?? undefined,
-        resumeUrl: resumeUrl ?? undefined,
-        notes: notes ?? undefined,
+        notes: (notes as any) ?? [],
         job: { title, slug: job.slug },
         createdAt: createdAt.toISOString(),
         updatedAt: updatedAt.toISOString(),

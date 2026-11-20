@@ -1,13 +1,13 @@
-# `_nest_next_starter`
+# AA-CPA Monorepo (Ahmad Abdullah CPA)
 
-A full-stack **TypeScript monorepo** (Turborepo + pnpm workspaces) for a bilingual (`en` / `ar`) real estate and enterprise CMS platform.
+A full-stack **TypeScript monorepo** (Turborepo + pnpm workspaces) for **Ahmad Abdullah Certified Public Accountants & Auditing (CPA)**, an Arabic-first bilingual (`ar` / `en`) accounting and professional services firm platform.
 
 ## Tech Stack & Architecture
 
 | Workspace | Path | Port | Stack |
 | :--- | :--- | :---: | :--- |
-| **`@repo/web`** | `apps/web` | `3000` | Next.js 16 (App Router), React 19, Tailwind CSS v4, GSAP, `en`/`ar` i18n |
-| **`@repo/api`** | `apps/api` | `3001` | NestJS 11, Prisma 6 (MySQL), JWT + httpOnly refresh cookies, Swagger, Pino |
+| **`@repo/web`** | `apps/web` | `3000` | Next.js 16 (App Router), React 19, Tailwind CSS v4, GSAP, `ar`/`en` i18n |
+| **`@repo/api`** | `apps/api` | `3001` | NestJS 11, Prisma 6 (MySQL), JWT + httpOnly refresh cookies, Swagger, Pino, PDPL privacy |
 | **`@repo/admin`** | `apps/admin` | `3002` | Vite 7, React 19, shadcn/ui, TanStack Router & Query, Zustand, CKEditor 5 |
 | **`@repo/shared`** | `packages/shared` | — | Shared Zod schemas, TypeScript models, `PermissionEnum`, and API `endpoint` map |
 | **`@repo/ui`** | `packages/ui` | — | Shared React hooks, API client wrapper, and cookie utilities for `apps/web` |
@@ -17,7 +17,7 @@ A full-stack **TypeScript monorepo** (Turborepo + pnpm workspaces) for a bilingu
 ## Repository Layout
 
 ```text
-_nest_next_starter/
+aa-cpa/
 ├── apps/
 │   ├── api/                 # NestJS 11 REST API + Prisma ORM (MySQL)
 │   ├── admin/               # Vite + React 19 + shadcn/ui Admin Portal
@@ -32,6 +32,7 @@ _nest_next_starter/
 │   ├── redis-bullmq-plan.md # Planned Redis + BullMQ queue & caching architecture
 │   └── archive/             # Historical implementation plans and QA audit reports
 ├── e2e/                     # Playwright end-to-end test suite
+├── specs/                   # Feature specifications and implementation task plans
 ├── turbo.json
 ├── pnpm-workspace.yaml
 └── package.json

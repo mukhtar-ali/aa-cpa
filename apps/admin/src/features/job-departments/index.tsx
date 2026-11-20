@@ -72,3 +72,5 @@ export function JobDepartments({
     </div>
   )
 }
+
+export { JobDepartments as JobDepartmentsFeature }

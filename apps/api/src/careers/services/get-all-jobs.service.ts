@@ -26,7 +26,7 @@ export class GetAllJobsService {
                 { closesAt: { gt: new Date() } },
             ];
         } else if (query.isPublished !== undefined) {
-            where.isPublished = query.isPublished === true || query.isPublished === 'true';
+            where.isPublished = (query.isPublished as any) === true || (query.isPublished as any) === 'true';
         }
 
         if (query.departmentId) {
@@ -64,6 +64,6 @@ export class GetAllJobsService {
             ? items.map((item) => JobMapper.toSummaryWeb(item, lang))
             : items.map((item) => JobMapper.toAdmin(item));
 
-        return buildPaginationResult(mapped, total, pageNumber, pageSize);
+        return buildPaginationResult(mapped as any, total, pageNumber, pageSize);
     }
 }

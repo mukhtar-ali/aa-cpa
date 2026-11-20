@@ -87,26 +87,26 @@ export class NewsController {
     // ---- Admin endpoints ----
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalNewsView)
-    @Get(endpoint.news.list)
+    @Get([endpoint.news.list, '/api/admin/news'])
     async getAllNews(@Query(new CustomZodValidationPipe(NewsQuerySchema)) query: NewsQueryModel) {
         return this.getAllNewsAction.execute(query, false);
     }
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalNewsView)
-    @Get(endpoint.news.getById + '/:newsId')
+    @Get([endpoint.news.getById + '/:newsId', '/api/admin/news/:newsId'])
     async getNewsById(@Param('newsId') newsId: string) {
         return this.getNewsByIdAction.execute(newsId);
     }
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalNewsCreate)
-    @Post(endpoint.news.create)
+    @Post([endpoint.news.create, '/api/admin/news'])
     async createNews(@Body(new CustomZodValidationPipe(NewsFormSchema)) data: NewsFormModel) {
         const news = await this.createNewsAction.execute(data);
         return { news };
     }
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalNewsUpdate)
-    @Put(endpoint.news.update + '/:newsId/publish')
+    @Put([endpoint.news.update + '/:newsId/publish', '/api/admin/news/:newsId/publish'])
     async publishNews(
         @Param('newsId') newsId: string,
         @Body() body: { isPublished: boolean },
@@ -116,7 +116,7 @@ export class NewsController {
     }
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalNewsUpdate)
-    @Put(endpoint.news.update + '/:newsId')
+    @Put([endpoint.news.update + '/:newsId', '/api/admin/news/:newsId'])
     async updateNews(
         @Param('newsId') newsId: string,
         @Body(new CustomZodValidationPipe(NewsFormSchema)) data: NewsFormModel,
@@ -126,7 +126,7 @@ export class NewsController {
     }
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalNewsDelete)
-    @Delete(endpoint.news.delete + '/:newsId')
+    @Delete([endpoint.news.delete + '/:newsId', '/api/admin/news/:newsId'])
     async deleteNews(@Param('newsId') newsId: string) {
         await this.deleteNewsAction.execute(newsId);
         return { message: 'News article deleted successfully' };

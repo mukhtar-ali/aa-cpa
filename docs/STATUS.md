@@ -128,3 +128,25 @@ Core implementation, the 14 initial audit gaps, all 17 Wujud parity features, an
 ### Browser QA pass (full stack on MariaDB, agent-browser)
 Checked in a real browser: admin login, News/Units tables (pagination, search keeps focus and filters across pages, server-side Draft facet), public site on phone and desktop in EN and AR (header drawer and Projects dropdown, project units list, unit detail page, inquiry form end to end, RTL, Cairo font). Bugs it found and fixed: the unit page crashed because arrays of `{ en, ar }` were never localized by the API; silent "Validation failed" form errors; "1 Bedrooms"; a page-transition panel that made every page scroll sideways. Also verified on a fresh database: all migrations apply as the least-privilege app user, and the strip-domain drop migration leaves exactly the core tables with no drift.
 - **Required titles**: news, projects, jobs and units now require an English title (Arabic optional); the admin forms show "English title is required" and the API rejects blank titles. Previously a blank record could be saved.
+
+---
+
+### Feature 002: CPA Content & Lead Backend (`002-cpa-content-backend`) — Complete
+- **Domain Transformation**: Legacy real-estate domain (`projects`, `units`, `inquiries`) completely removed from schema, migrations, API, admin, and shared contracts.
+- **CPA Domain Modules**:
+  - `services` & `service_translations`: hierarchical practice areas (`parentServiceId`), bilingual fields, ordering, icon keys, tags.
+  - `sectors` & `sector_translations`: industries served, bilingual description and challenges.
+  - `article_categories`, `authors`, `articles` (`news`): thought leadership, publication workflow, read time, category relations.
+  - `job_departments`, `jobs`, `job_applications`: careers and ATS, PDPL-compliant resume intake with HMAC signed 5-minute audit-logged URLs (`AdminPortalApplicationsView`).
+  - `estimator`: cost estimation rules engine, step navigation, quote lead generation with draft allowlist bypass.
+  - `leads`: consolidated contact and quote requests, UTF-8 BOM CSV exports, status management, internal notes.
+  - `privacy`: Saudi PDPL export/erasure endpoints (`POST /api/admin/privacy/export`, `POST /api/admin/privacy/erase`).
+  - `outbox`: reliable transactional notification delivery with retry mechanism (`GET /api/admin/outbox`, `POST /api/admin/outbox/:id/retry`).
+  - `preview`: HMAC token preview generation across services, sectors, articles, and careers (`POST /api/preview/token`).
+- **CMS Kit & Admin Features**:
+  - `BilingualField`, `TranslationStatusBadge`, `PublishToggle`, `SortableList`, and `ImageField` in `apps/admin/src/components/cms/`.
+  - Admin management interfaces for all 10 CPA modules under `apps/admin/src/features/`.
+  - All unit tests (Vitest 16/16) and type-checking passing cleanly with zero errors.
+- **Test Coverage**:
+  - All 18 E2E test suites in `apps/api/test/` passing cleanly with custom Node 22 native `supertest-shim.ts`.
+  - Full TypeScript validation across `@repo/shared`, `@repo/api`, and `@repo/admin`.

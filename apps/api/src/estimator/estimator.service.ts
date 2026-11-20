@@ -31,7 +31,7 @@ export class EstimatorService {
             where: { type: 'estimator-config' },
         });
         const config = (row?.data as Record<string, any>) || DEFAULT_ESTIMATOR_CONFIG;
-        const allowDraft = customEnv.ESTIMATOR_ALLOW_DRAFT === 'true';
+        const allowDraft = Boolean(customEnv.ESTIMATOR_ALLOW_DRAFT);
 
         if (config.status !== 'approved' && !allowDraft) {
             throw new NotFoundException('Fee estimator is not published');
@@ -91,9 +91,12 @@ export class EstimatorService {
         await this.prisma.monitoringEvent
             ?.create({
                 data: {
+                    sessionId: 'anon',
+                    type: 'metric',
                     name: 'estimator.completed',
-                    path: '/api/estimator/estimate',
-                    props: { lang },
+                    page: '/api/estimator/estimate',
+                    properties: JSON.stringify({ lang }),
+                    timestamp: new Date(),
                 },
             })
             .catch(() => null);

@@ -3,9 +3,20 @@ import { GetJobApplicationByIdService } from './get-job-application-by-id.servic
 
 // Résumés are private objects (MUK-482): the admin API swaps the stored URL for a short-lived signed link.
 
-const row = (id: string, resumeUrl: string | null) => ({
-    id, jobId: 'j1', firstName: 'A', lastName: 'B', email: 'a@b.co', phone: null, coverLetter: null, resumeUrl, notes: null,
-    status: 'pending', createdAt: new Date('2026-01-01'), updatedAt: new Date('2026-01-01'),
+const row = (id: string, resumeKey: string | null) => ({
+    id,
+    jobId: 'j1',
+    fullName: 'A B',
+    email: 'a@b.co',
+    mobile: '0500000000',
+    resumeKey: resumeKey || '',
+    resumeName: resumeKey ? 'resume.pdf' : '',
+    resumeSize: resumeKey ? 1024 : 0,
+    language: 'ar',
+    notes: [],
+    status: 'pending',
+    createdAt: new Date('2026-01-01'),
+    updatedAt: new Date('2026-01-01'),
     job: { slug: 'dev', translations: [{ language: 'en', title: 'Dev' }, { language: 'ar', title: 'م' }] },
 });
 

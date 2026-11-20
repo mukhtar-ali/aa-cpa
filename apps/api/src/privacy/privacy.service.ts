@@ -61,7 +61,7 @@ export class PrivacyService {
         for (const app of applications) {
             if (app.resumeKey) {
                 try {
-                    await this.resourceService.deleteFile(app.resumeKey);
+                    await this.resourceService.deleteObject(app.resumeKey);
                     resumesDeletedCount++;
                 } catch (err) {
                     this.logger.warn(
@@ -125,7 +125,7 @@ export class PrivacyService {
         for (const app of expiredApps) {
             if (app.resumeKey) {
                 try {
-                    await this.resourceService.deleteFile(app.resumeKey);
+                    await this.resourceService.deleteObject(app.resumeKey);
                     resumesDeleted++;
                 } catch {
                     // Ignore missing files

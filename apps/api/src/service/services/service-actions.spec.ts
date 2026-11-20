@@ -101,7 +101,7 @@ describe('Service Actions', () => {
 
             const service = new GetServiceBySlugService(mockPrisma);
             const result = await service.getBySlugWeb('external-audit', 'ar');
-            expect(result.title).toBe('التدقيق الخارجي');
+            expect((result as any).title).toBe('التدقيق الخارجي');
         });
     });
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Headers, Param, Query } from '@nestjs/common';
 import { Public } from '@/auth/decorators/public.decorator';
 import { langStorage } from '@/common/i18n.helper';
 import { ListServicesService } from './services/list-services.service';
@@ -24,8 +24,10 @@ export class ServiceController {
         @Param('slug') slug: string,
         @Query('lang') queryLang?: string,
         @Query('preview') previewToken?: string,
+        @Headers('x-preview-token') headerToken?: string,
     ) {
         const lang = queryLang === 'en' || langStorage.getStore() === 'en' ? 'en' : 'ar';
-        return this.getServiceBySlugAction.getBySlugWeb(slug, lang, previewToken);
+        const token = previewToken || headerToken;
+        return this.getServiceBySlugAction.getBySlugWeb(slug, lang, token);
     }
 }

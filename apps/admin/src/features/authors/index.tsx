@@ -55,3 +55,5 @@ export function Authors({
     </div>
   )
 }
+
+export { Authors as AuthorsFeature }

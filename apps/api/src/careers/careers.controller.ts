@@ -3,10 +3,12 @@ import {
     Body,
     Controller,
     Delete,
+    FileTypeValidator,
     Get,
     HttpCode,
     HttpStatus,
     Param,
+    ParseFilePipe,
     Patch,
     Post,
     Put,
@@ -248,7 +250,7 @@ export class CareersController {
         @Param('slug') slug: string,
         @Body() body: Record<string, any>,
         @UploadedFile() resume: Express.Multer.File,
-        @Req() req: any,
+        @Req() req: any = {},
     ) {
         return this.createApplicationAction.applyBySlug(slug, body, resume, {
             lang: req?.lang || 'ar',
@@ -261,19 +263,37 @@ export class CareersController {
     @Throttle({ default: { limit: 20, ttl: 15 * 60 * 1000 } })
     @Post(endpoint.job.apply)
     @HttpCode(HttpStatus.CREATED)
-    @UseInterceptors(FileInterceptor('resume'))
+    @UseInterceptors(
+        FileInterceptor('resume', {
+            limits: { fileSize: MAX_RESUME_SIZE_BYTES, files: 1 },
+        }),
+    )
     async applyToJob(
         @Body('jobId') jobId: string,
         @Body() data: Record<string, any>,
-        @UploadedFile() resume: Express.Multer.File,
-        @Req() req: any,
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new FileTypeValidator({ fileType: /^application\/pdf$/ }),
+                    new SizeValidator({ maxSize: MAX_RESUME_SIZE_BYTES }),
+                ],
+                exceptionFactory: (error: string) =>
+                    new BadRequestException(
+                        error.includes('File size') ? error : 'Only PDF resumes are allowed!',
+                    ),
+                fileIsRequired: true,
+            }),
+        )
+        resume: Express.Multer.File,
+        @Req() req: any = {},
     ) {
         if (!jobId) throw new BadRequestException('jobId is required');
-        return this.createApplicationAction.applyBySlug(jobId, data, resume, {
+        const res = await this.createApplicationAction.applyBySlug(jobId, data, resume, {
             lang: req?.lang || 'ar',
             ip: req?.ip || req?.headers?.['x-forwarded-for'] || '127.0.0.1',
             userAgent: req?.headers?.['user-agent'] || 'unknown',
         });
+        return res ?? { message: 'Application submitted successfully' };
     }
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalApplicationsExport)
@@ -288,10 +308,7 @@ export class CareersController {
         return res.status(HttpStatus.OK).send(csv);
     }
 
-    @ProtectedWithPermissions(
-        PermissionEnum.AdminPortalApplicationsView,
-        PermissionEnum.AdminPortalCareersView,
-    )
+    @ProtectedWithPermissions(PermissionEnum.AdminPortalApplicationsView)
     @Get('/api/admin/applications')
     async getAdminApplications(
         @Query(new CustomZodValidationPipe(JobApplicationQuerySchema)) query: JobApplicationQueryModel,
@@ -299,19 +316,13 @@ export class CareersController {
         return this.getAllApplicationsAction.execute(query);
     }
 
-    @ProtectedWithPermissions(
-        PermissionEnum.AdminPortalApplicationsView,
-        PermissionEnum.AdminPortalCareersView,
-    )
+    @ProtectedWithPermissions(PermissionEnum.AdminPortalApplicationsView)
     @Get('/api/admin/applications/:id')
     async getAdminApplicationById(@Param('id') id: string) {
         return this.getApplicationByIdAction.execute(id);
     }
 
-    @ProtectedWithPermissions(
-        PermissionEnum.AdminPortalApplicationsUpdate,
-        PermissionEnum.AdminPortalCareersUpdate,
-    )
+    @ProtectedWithPermissions(PermissionEnum.AdminPortalApplicationsUpdate)
     @Patch('/api/admin/applications/:id')
     async patchAdminApplication(
         @Param('id') id: string,
@@ -320,10 +331,7 @@ export class CareersController {
         return this.createApplicationAction.updateStatusAdmin(id, body);
     }
 
-    @ProtectedWithPermissions(
-        PermissionEnum.AdminPortalApplicationsUpdate,
-        PermissionEnum.AdminPortalCareersUpdate,
-    )
+    @ProtectedWithPermissions(PermissionEnum.AdminPortalApplicationsUpdate)
     @Post('/api/admin/applications/:id/notes')
     async addAdminApplicationNote(
         @Param('id') id: string,

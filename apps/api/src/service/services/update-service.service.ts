@@ -154,4 +154,8 @@ export class UpdateServiceService {
 
         return ServiceMapper.toAdmin(fullService);
     }
+
+    async execute(id: string, body: ServiceFormModel) {
+        return this.update(id, body);
+    }
 }

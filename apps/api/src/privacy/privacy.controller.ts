@@ -8,7 +8,7 @@ import {
     Req,
 } from '@nestjs/common';
 import { PermissionEnum } from '@repo/shared';
-import { ProtectedWithPermissions } from '@/auth/decorators/auth.decorator';
+import { Protected, ProtectedWithPermissions } from '@/auth/decorators/auth.decorator';
 import { PrivacyService } from './privacy.service';
 
 @Controller('api/admin/privacy')
@@ -17,11 +17,18 @@ export class PrivacyController {
 
     @Post('export')
     @HttpCode(HttpStatus.OK)
-    @ProtectedWithPermissions(
-        PermissionEnum.AdminPortalLeadsErase,
-        PermissionEnum.AdminPortalApplicationsErase,
-    )
-    async exportData(@Body() body: { email?: string }) {
+    @Protected()
+    async exportData(@Body() body: { email?: string }, @Req() req: any) {
+        const userPerms: string[] = req?.user?.permissions ?? [];
+        const hasEither =
+            userPerms.includes(PermissionEnum.AdminPortalLeadsErase) ||
+            userPerms.includes(PermissionEnum.AdminPortalApplicationsErase);
+
+        if (!hasEither) {
+            throw new ForbiddenException(
+                'leads.erase or applications.erase permission is required for PDPL export',
+            );
+        }
         return this.privacyService.exportForEmail(body?.email || '');
     }
 

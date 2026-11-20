@@ -30,7 +30,10 @@ export class GetAllJobApplicationsService {
         const models = await Promise.all(
             items.map(async (item) => {
                 const model = jobApplicationMapEntityToModel(item);
-                return model.resumeUrl ? { ...model, resumeUrl: await this.resources.signedReadUrlOrOriginal(model.resumeUrl) } : model;
+                const resumeUrl = item.resumeKey
+                    ? await this.resources.signedReadUrlOrOriginal(item.resumeKey)
+                    : undefined;
+                return { ...model, resumeUrl };
             }),
         );
         return buildPaginationResult(models, total, pageNumber, pageSize);

@@ -26,6 +26,8 @@ describe('Admin Leads Management (E2E)', () => {
     };
 
     const mockPrisma = {
+        $transaction: jest.fn().mockImplementation(async (cb: any) => cb(mockPrisma)),
+        $queryRaw: jest.fn().mockResolvedValue([]),
         contact: {
             findMany: jest.fn().mockResolvedValue([leadRow]),
             count: jest.fn().mockResolvedValue(1),

@@ -197,6 +197,7 @@ export const JobApplicationAdminSchema = z.object({
     language: z.string(),
     status: JobApplicationStatusEnum,
     assignedToId: z.string().optional().nullable(),
+    resumeUrl: z.string().optional(),
     assignedTo: z
         .object({
             id: z.string(),

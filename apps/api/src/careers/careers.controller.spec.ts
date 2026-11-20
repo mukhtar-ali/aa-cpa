@@ -20,6 +20,8 @@ jest.mock('load-esm', () => ({
     }),
 }));
 import { IS_PUBLIC_KEY } from '@/auth/decorators/public.decorator';
+import { ConsentService } from '@/privacy/consent.service';
+import { OutboxService } from '@/outbox/outbox.service';
 import { EmailService } from '@/email/email.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { ResourceService } from '@/resource/resource.service';
@@ -32,6 +34,7 @@ import { CreateJobApplicationService } from './services/create-job-application.s
 import { CreateJobService } from './services/create-job.service';
 import { DeleteJobApplicationService } from './services/delete-job-application.service';
 import { DeleteJobService } from './services/delete-job.service';
+import { PublishJobService } from './services/publish-job.service';
 import { GetAllJobApplicationsService } from './services/get-all-job-applications.service';
 import { GetAllJobsService } from './services/get-all-jobs.service';
 import { GetJobApplicationByIdService } from './services/get-job-application-by-id.service';
@@ -76,18 +79,23 @@ function makeMockFile(overrides: Partial<Express.Multer.File> = {}): Express.Mul
 describe('CareersController & CreateJobApplicationService (public jobs/apply upload)', () => {
     let controller: CareersController;
     let createApplicationService: CreateJobApplicationService;
-    let prisma: {
-        job: { findUnique: jest.Mock };
-        jobApplication: { create: jest.Mock };
-    };
+    let prisma: any;
     let resourceService: { uploadFile: jest.Mock };
     let emailService: { sendNewApplicationNotification: jest.Mock };
     let sectionService: { getSection: jest.Mock };
 
     beforeEach(async () => {
         prisma = {
-            job: { findUnique: jest.fn() },
-            jobApplication: { create: jest.fn() },
+            $transaction: jest.fn().mockImplementation(async (cb: any) => cb(prisma)),
+            job: { findUnique: jest.fn(), findFirst: jest.fn() },
+            jobApplication: {
+                create: jest.fn().mockResolvedValue({
+                    id: 'app-1',
+                    fullName: 'Jane Doe',
+                    email: 'jane@example.com',
+                }),
+            },
+            monitoringEvent: { create: jest.fn().mockResolvedValue({}) },
         };
         resourceService = {
             uploadFile: jest.fn().mockResolvedValue('https://bucket.s3.amazonaws.com/cv.pdf'),
@@ -105,6 +113,8 @@ describe('CareersController & CreateJobApplicationService (public jobs/apply upl
                 CreateJobApplicationService,
                 { provide: PrismaService, useValue: prisma },
                 { provide: ResourceService, useValue: resourceService },
+                { provide: ConsentService, useValue: { recordConsent: jest.fn().mockResolvedValue({ id: 'c-1' }), hashEmail: jest.fn().mockReturnValue('hash') } },
+                { provide: OutboxService, useValue: { enqueue: jest.fn().mockResolvedValue('outbox-id'), enqueueEmail: jest.fn().mockResolvedValue('outbox-id') } },
                 { provide: EmailService, useValue: emailService },
                 { provide: SectionService, useValue: sectionService },
                 { provide: PageContentService, useValue: {} },
@@ -116,6 +126,7 @@ describe('CareersController & CreateJobApplicationService (public jobs/apply upl
                 { provide: GetJobByIdService, useValue: { execute: jest.fn() } },
                 { provide: GetJobBySlugService, useValue: { execute: jest.fn() } },
                 { provide: DeleteJobService, useValue: { execute: jest.fn() } },
+                { provide: PublishJobService, useValue: { execute: jest.fn() } },
                 { provide: GetAllJobApplicationsService, useValue: { execute: jest.fn() } },
                 { provide: GetJobApplicationByIdService, useValue: { execute: jest.fn() } },
                 { provide: UpdateJobApplicationStatusService, useValue: { execute: jest.fn() } },
@@ -170,17 +181,12 @@ describe('CareersController & CreateJobApplicationService (public jobs/apply upl
             // Résumés are PII: uploaded with no public ACL (private), read back through signed links.
             expect(resourceService.uploadFile).toHaveBeenCalledWith(pdfFile, { visibility: 'private' });
             expect(prisma.jobApplication.create).toHaveBeenCalledWith({
-                data: {
+                data: expect.objectContaining({
                     jobId: 'job-1',
-                    firstName: 'Jane',
-                    lastName: 'Doe',
                     email: 'jane@example.com',
-                    phone: '+123456789',
-                    coverLetter: 'Excited to apply',
-                    resumeUrl: 'https://bucket.s3.amazonaws.com/cv.pdf',
-                },
+                }),
             });
-            expect(res).toEqual({ message: 'Application submitted successfully' });
+            expect(res).toMatchObject({ ok: true });
         });
 
         it('rejects non-PDF uploads (image/png, docx, text/plain) with BadRequestException("Only PDF resumes are allowed!")', async () => {

@@ -76,7 +76,7 @@ export class PagesService {
     private async getPublicEstimator(lang: string) {
         const data = await this.getSectionData('estimator-config');
         if (!data || Object.keys(data).length === 0) return null;
-        const allowDraft = customEnv.ESTIMATOR_ALLOW_DRAFT === 'true';
+        const allowDraft = Boolean(customEnv.ESTIMATOR_ALLOW_DRAFT);
         if (data.status !== 'approved' && !allowDraft) {
             return null;
         }

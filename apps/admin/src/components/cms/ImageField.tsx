@@ -4,8 +4,8 @@ import { BilingualField, type MultiLangValue } from './BilingualField'
 
 export interface ImageFieldValue {
   url: string
-  width: number
-  height: number
+  width?: number
+  height?: number
   alt: MultiLangValue
 }
 

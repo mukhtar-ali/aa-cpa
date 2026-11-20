@@ -15,12 +15,16 @@ export interface BilingualFieldProps {
   value?: MultiLangValue | null
   onChange: (next: MultiLangValue) => void
   multiline?: boolean
+  type?: 'text' | 'textarea' | string
+  rows?: number
   required?: boolean
   requiredAr?: boolean
   placeholderAr?: string
   placeholderEn?: string
+  error?: string
   errorAr?: string
   errorEn?: string
+  activeLanguage?: 'ar' | 'en'
 }
 
 export function BilingualField({
@@ -30,16 +34,22 @@ export function BilingualField({
   value,
   onChange,
   multiline = false,
+  type,
+  rows,
   required = false,
   requiredAr = false,
   placeholderAr = 'أدخل النص بالعربية...',
   placeholderEn = 'Enter English text (optional)...',
+  error,
   errorAr,
   errorEn,
+  activeLanguage,
 }: BilingualFieldProps) {
   const prefix = namePrefix || name || 'bilingual'
   const isArRequired = required || requiredAr
-  const [activeTab, setActiveTab] = useState<'ar' | 'en'>('ar')
+  const [internalTab, setInternalTab] = useState<'ar' | 'en'>('ar')
+  const activeTab = activeLanguage ?? internalTab
+  const setActiveTab = setInternalTab
   const current: MultiLangValue = {
     ar: value?.ar ?? '',
     en: value?.en ?? '',
@@ -52,7 +62,8 @@ export function BilingualField({
     })
   }
 
-  const FieldComponent = multiline ? Textarea : Input
+  const isMultiline = multiline || type === 'textarea'
+  const FieldComponent = isMultiline ? Textarea : Input
 
   return (
     <div className='space-y-2' data-testid={`bilingual-field-${prefix}`}>
@@ -100,13 +111,14 @@ export function BilingualField({
           data-testid={`${prefix}-input-ar`}
           value={current.ar}
           placeholder={placeholderAr}
+          rows={isMultiline ? rows : undefined}
           onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
             handleTextChange('ar', e.target.value)
           }
         />
-        {errorAr && (
+        {(errorAr || error) && (
           <p className='text-xs text-destructive' role='alert'>
-            {errorAr}
+            {errorAr || error}
           </p>
         )}
       </div>
@@ -118,13 +130,14 @@ export function BilingualField({
           data-testid={`${prefix}-input-en`}
           value={current.en}
           placeholder={placeholderEn}
+          rows={isMultiline ? rows : undefined}
           onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
             handleTextChange('en', e.target.value)
           }
         />
-        {errorEn && (
+        {(errorEn || error) && (
           <p className='text-xs text-destructive' role='alert'>
-            {errorEn}
+            {errorEn || error}
           </p>
         )}
       </div>

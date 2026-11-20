@@ -17,6 +17,9 @@ export class GetJobApplicationByIdService {
         });
         if (!application) throw new NotFoundException('Job application not found');
         const model = jobApplicationMapEntityToModel(application);
-        return model.resumeUrl ? { ...model, resumeUrl: await this.resources.signedReadUrlOrOriginal(model.resumeUrl) } : model;
+        const resumeUrl = application.resumeKey
+            ? await this.resources.signedReadUrlOrOriginal(application.resumeKey)
+            : undefined;
+        return { ...model, resumeUrl };
     }
 }

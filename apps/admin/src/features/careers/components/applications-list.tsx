@@ -55,33 +55,36 @@ export function ApplicationsList({ items, isLoading }: ApplicationsListProps) {
 
   const pendingDelete = items.find((i) => i.id === pendingDeleteId) ?? null
   const getApplicantName = (app: JobApplicationModel) => {
-    const anyApp = app as any
-    if (anyApp.fullName) return anyApp.fullName
-    return [app.firstName, app.lastName].filter(Boolean).join(' ')
+    return app.fullName || 'Applicant'
   }
 
   return (
     <div className='space-y-2'>
-      {items.map((application) => (
-        <Card key={application.id} className='flex flex-wrap items-center justify-between gap-3 p-4'>
-          <div>
-            <p className='font-medium'>{getApplicantName(application)}</p>
-            <p className='text-xs text-muted-foreground'>
-              {application.email} · applying for{' '}
-              {application.job?.title?.ar || application.job?.title?.en || 'a job posting'}
-            </p>
-          </div>
-          <div className='flex items-center gap-2'>
-            <Badge variant={STATUS_BADGE_VARIANT[application.status] ?? 'outline'} className='capitalize'>
-              {application.status}
-            </Badge>
-            {application.resumeUrl && (
-              <Button variant='ghost' size='icon' asChild>
-                <a href={application.resumeUrl} target='_blank' rel='noopener noreferrer' title='View resume'>
-                  <FileText className='h-4 w-4' />
-                </a>
-              </Button>
-            )}
+      {items.map((application) => {
+        const resumeUrl =
+          (application as any).resumeUrl ||
+          (application.resumeKey ? `/api/jobs/applications/${application.id}/resume` : null)
+
+        return (
+          <Card key={application.id} className='flex flex-wrap items-center justify-between gap-3 p-4'>
+            <div>
+              <p className='font-medium'>{getApplicantName(application)}</p>
+              <p className='text-xs text-muted-foreground'>
+                {application.email} · applying for{' '}
+                {application.job?.title?.ar || application.job?.title?.en || 'a job posting'}
+              </p>
+            </div>
+            <div className='flex items-center gap-2'>
+              <Badge variant={STATUS_BADGE_VARIANT[application.status] ?? 'outline'} className='capitalize'>
+                {application.status}
+              </Badge>
+              {resumeUrl && (
+                <Button variant='ghost' size='icon' asChild>
+                  <a href={resumeUrl} target='_blank' rel='noopener noreferrer' title='View resume'>
+                    <FileText className='h-4 w-4' />
+                  </a>
+                </Button>
+              )}
             <Select
               value={application.status}
               onValueChange={(status) =>
@@ -104,7 +107,7 @@ export function ApplicationsList({ items, isLoading }: ApplicationsListProps) {
             </Button>
           </div>
         </Card>
-      ))}
+      )})}
 
       {pendingDelete && (
         <ConfirmDialog

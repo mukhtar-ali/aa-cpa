@@ -27,10 +27,13 @@ export type EmploymentType = z.infer<typeof EmploymentTypeSchema>;
 export type JobDepartmentFormModel = z.infer<typeof JobDepartmentFormSchema>;
 export type JobDepartmentAdminModel = z.infer<typeof JobDepartmentAdminSchema>;
 export type JobDepartmentWeb = z.infer<typeof JobDepartmentWebSchema>;
+export type JobDepartmentAdmin = JobDepartmentAdminModel;
+export type JobDepartmentForm = JobDepartmentFormModel;
 
 export type JobTranslationModel = z.infer<typeof JobTranslationSchema>;
 export type JobFormModel = z.infer<typeof JobFormSchema>;
 export type JobAdminModel = z.infer<typeof JobAdminSchema>;
+export type JobAdmin = JobAdminModel;
 export type JobQueryModel = z.infer<typeof JobQuerySchema>;
 
 export type JobSummaryWeb = z.infer<typeof JobSummaryWebSchema>;
@@ -43,6 +46,7 @@ export type JobApplicationAdminModel = z.infer<typeof JobApplicationAdminSchema>
 export type JobApplicationStatusModel = z.infer<typeof JobApplicationStatusSchema>;
 export type JobApplicationNote = z.infer<typeof JobApplicationNoteSchema>;
 export type JobApplicationQueryModel = z.infer<typeof JobApplicationQuerySchema>;
+export type JobApplicationModel = JobApplicationAdminModel;
 
 export interface JobModel extends JobFormModel {
     id: string;

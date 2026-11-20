@@ -77,6 +77,11 @@ export const endpoint = {
         create: '/api/contact',
         updateStatus: '/api/contact',
         delete: '/api/contact',
+        hero: '/api/contact/hero',
+        form: '/api/contact/form',
+        heroWeb: '/api/contact/hero/web',
+        pageWeb: '/api/contact/page/web',
+        formWeb: '/api/contact/form/web',
     },
     preview: {
         token: '/api/preview/token',

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { PermissionEnum, ServiceForm, ServiceFormSchema } from '@repo/shared';
 import { ProtectedWithPermissions } from '@/auth/decorators/auth.decorator';
 import { CustomZodValidationPipe } from '@/common/pipes/zod-validation.pipe';
@@ -56,6 +56,15 @@ export class AdminServiceController {
     ) {
         const service = await this.publishServiceAction.publish(id, body?.isPublished ?? false);
         return { service };
+    }
+
+    @ProtectedWithPermissions(PermissionEnum.AdminPortalServicesUpdate)
+    @Patch(':id/publish')
+    async publishPatch(
+        @Param('id') id: string,
+        @Body() body: { isPublished: boolean },
+    ) {
+        return this.publish(id, body);
     }
 
     @ProtectedWithPermissions(PermissionEnum.AdminPortalServicesUpdate)

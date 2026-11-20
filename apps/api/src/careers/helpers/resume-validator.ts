@@ -12,7 +12,7 @@ const DOCX_MARKER = Buffer.from('word/document.xml');
 
 export function validateResumeFile(file?: Express.Multer.File | null): void {
     if (!file || !file.buffer) {
-        throw new BadRequestException('A resume file (PDF or DOCX) is required');
+        throw new BadRequestException('A resume file is required');
     }
 
     const size = typeof file.size === 'number' ? file.size : file.buffer.length;

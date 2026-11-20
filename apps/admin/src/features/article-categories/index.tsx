@@ -73,3 +73,5 @@ export function ArticleCategories({
     </div>
   )
 }
+
+export { ArticleCategories as ArticleCategoriesFeature }

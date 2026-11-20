@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { PermissionEnum } from '@repo/shared'
-import { requirePermission } from '@/lib/route-guards'
+import { requirePermission } from '@/lib/require-permission'
 import { Sectors } from '@/features/sectors'
 
 export const Route = createFileRoute('/_authenticated/sectors/')({

@@ -40,10 +40,10 @@ describe('list services apply the facet filters to the page AND the total', () =
         return { prisma, where: () => (prisma[model].findMany as jest.Mock).mock.calls[0][0].where, count: prisma[model].count as jest.Mock };
     };
 
-    it('news: tag list and draft filter', async () => {
+    it('news: category and draft filter', async () => {
         const { prisma, where, count } = make('news');
-        await new GetAllNewsService(prisma as never).execute({ pageNumber: 1, pageSize: 10, tag: ['news', 'event'], isPublished: false } as never, false);
-        expect(where()).toMatchObject({ isDeleted: false, isPublished: false, tag: { in: ['news', 'event'] } });
+        await new GetAllNewsService(prisma as never).execute({ pageNumber: 1, pageSize: 10, categoryId: 'cat-1', isPublished: false } as never, false);
+        expect(where()).toMatchObject({ isDeleted: false, isPublished: false, categoryId: 'cat-1' });
         expect(count).toHaveBeenCalledWith({ where: where() });
     });
 

@@ -46,7 +46,7 @@ describe('PrivacyService (PDPL Export, Erase & Retention Job)', () => {
         };
 
         resourceService = {
-            deleteFile: jest.fn().mockResolvedValue(undefined),
+            deleteObject: jest.fn().mockResolvedValue(undefined),
         };
 
         consentService = new ConsentService(prisma);
@@ -64,7 +64,7 @@ describe('PrivacyService (PDPL Export, Erase & Retention Job)', () => {
     it('erases all records and resume files for an email and writes an anonymized ErasureLog without raw email', async () => {
         const res = await service.eraseForEmail('subject@example.com', true, 'admin-1');
 
-        expect(resourceService.deleteFile).toHaveBeenCalledWith('private/resumes/cv-1.pdf');
+        expect(resourceService.deleteObject).toHaveBeenCalledWith('private/resumes/cv-1.pdf');
         expect(prisma.contact.deleteMany).toHaveBeenCalledWith({
             where: { email: 'subject@example.com' },
         });
@@ -98,7 +98,7 @@ describe('PrivacyService (PDPL Export, Erase & Retention Job)', () => {
     it('purges expired job applications older than retentionMonths in daily cron job', async () => {
         const count = await service.purgeExpiredApplications();
         expect(count).toBe(1);
-        expect(resourceService.deleteFile).toHaveBeenCalledWith('private/resumes/cv-1.pdf');
+        expect(resourceService.deleteObject).toHaveBeenCalledWith('private/resumes/cv-1.pdf');
         expect(prisma.jobApplication.deleteMany).toHaveBeenCalled();
     });
 });

@@ -86,4 +86,8 @@ export class CreateServiceService {
 
         return ServiceMapper.toAdmin(service);
     }
+
+    async execute(body: ServiceFormModel) {
+        return this.create(body);
+    }
 }

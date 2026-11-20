@@ -22,11 +22,11 @@ export class GetAllNewsService {
         if (webOnly) {
             where.isPublished = true;
         } else if (query.isPublished !== undefined) {
-            where.isPublished = query.isPublished === true || query.isPublished === 'true';
+            where.isPublished = (query.isPublished as any) === true || (query.isPublished as any) === 'true';
         }
 
         if (query.isFeatured !== undefined) {
-            where.isFeatured = query.isFeatured === true || query.isFeatured === 'true';
+            where.isFeatured = (query.isFeatured as any) === true || (query.isFeatured as any) === 'true';
         }
 
         if (query.categoryId) {
@@ -66,6 +66,6 @@ export class GetAllNewsService {
             ? items.map((item) => NewsMapper.toSummaryWeb(item, lang))
             : items.map((item) => NewsMapper.toAdmin(item));
 
-        return buildPaginationResult(mapped, total, pageNumber, pageSize);
+        return buildPaginationResult(mapped as any, total, pageNumber, pageSize);
     }
 }
