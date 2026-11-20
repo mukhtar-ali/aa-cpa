@@ -106,7 +106,7 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - [x] T037 [P] [US2] Write `IconButton.test.tsx` (requires `label`, variants, link mode, axe) in `DS/src/primitives/IconButton/`
 - [x] T038 [P] [US2] Write tests for `Link`, `Heading` (levels vs visual size, accent line only for h1–h3 sizes, gradient class), `Text`, `Eyebrow` in their folders under `DS/src/primitives/`
 - [x] T039 [P] [US2] Write tests for `Chip`, `FilterChipGroup` (radio-like keyboard, `aria-pressed`, RTL arrow order), `MetaPill`, `CategoryBadge`, `Divider`, `Avatar` (initials fallback), `Rating` (accessible label "4 of 5") under `DS/src/primitives/`
-- [ ] T040 [P] [US2] Write tests for `Breadcrumbs` (`nav` + `aria-current`), `Pagination` (links, current page, prev/next labels, mirroring), `SlideCounter` (progressbar values), `Logo`, `LanguageToggle` (`hreflang`, `lang` on label) under `DS/src/primitives/`
+- [x] T040 [P] [US2] Write tests for `Breadcrumbs` (`nav` + `aria-current`), `Pagination` (links, current page, prev/next labels, mirroring), `SlideCounter` (progressbar values), `Logo`, `LanguageToggle` (`hreflang`, `lang` on label) under `DS/src/primitives/`
 - [x] T041 [P] [US2] Write tests for `Field`, `TextInput`, `Textarea`, `Select` (label association, required marker, `aria-invalid`, `aria-describedby` → help + error, dark theme) under `DS/src/forms/`
 - [x] T042 [P] [US2] Write tests for `Checkbox` (label with link, error) and `FileUpload` (picker, drop, rejects >5 MB and wrong type with announced error via `role="alert"`, remove returns to empty, keyboard activation) and `FormErrorSummary` (focus on mount, links to fields) under `DS/src/forms/`
 
@@ -116,7 +116,7 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - [x] T044 [US2] Implement `IconButton` + stories; Figma `505:3864`, `529:4427`
 - [x] T045 [P] [US2] Implement `Link`, `Heading`, `Text`, `Eyebrow` + stories; Figma text styles on `411:169`, eyebrow `411:3722`
 - [x] T046 [P] [US2] Implement `Chip`, `FilterChipGroup` (client), `MetaPill`, `CategoryBadge`, `Divider`, `Avatar`, `Rating` + stories; Figma `499:1149`, `529:4333`, `423:1145`, `411:3785`, `411:3878`, `411:3871`
-- [ ] T047 [P] [US2] Implement `Breadcrumbs`, `Pagination`, `SlideCounter`, `Logo` (SVGs from Figma `65:56` on-dark, `78:197` on-light into `DS/assets/brand/`), `LanguageToggle` + stories; Figma `530:4416`, `64:28`
+- [x] T047 [P] [US2] Implement `Breadcrumbs`, `Pagination`, `SlideCounter`, `Logo` (SVGs from Figma `65:56` on-dark, `78:197` on-light into `DS/assets/brand/`), `LanguageToggle` + stories; Figma `530:4416`, `64:28`
 - [x] T048 [US2] Implement `Field`, `TextInput`, `Textarea`, `Select` (native, custom chevron mirrored) with light/dark themes + stories; Figma `522:1185`, dark `411:3863`, select on `524:3651`
 - [x] T049 [US2] Implement `Checkbox`, `FileUpload` (client), `FormErrorSummary` + stories; Figma `522:1194`, `522:1214`
 - [x] T050 [US2] Add `DS/src/__guards__/tailwind-scan.test.ts` or documented manual check (quickstart V2.6) proving package-only classes are emitted in `WEB` CSS

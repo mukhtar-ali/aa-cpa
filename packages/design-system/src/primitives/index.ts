@@ -10,8 +10,10 @@ export { Heading, type HeadingProps, type HeadingLevel, type HeadingSize } from 
 export { IconButton, type IconButtonProps } from './IconButton';
 export { LanguageToggle, type LanguageToggleProps } from './LanguageToggle';
 export { Link, type LinkProps } from './Link';
+export { Logo, type LogoProps } from './Logo';
 export { MetaPill, type MetaPillProps } from './MetaPill';
 export { Pagination, pageItems, type PaginationProps, type PaginationLabels } from './Pagination';
 export { Rating, type RatingProps } from './Rating';
+export { SlideCounter, type SlideCounterProps } from './SlideCounter';
 export { Text, type TextProps } from './Text';
 export { VisuallyHidden } from './VisuallyHidden';
