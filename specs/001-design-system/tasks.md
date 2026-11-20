@@ -164,17 +164,17 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - [ ] T063 [P] [US4] Write tests for `ServiceTabs` (tablist semantics, arrow keys respect RTL/LTR, panel content swaps), `PillarCard`, `ReasonsSection`, `StatTile`/`StatsStrip` (list semantics, locale formatting) under `DS/src/sections/`
 - [ ] T064 [P] [US4] Write tests for `ProcessSteps`, `PhotoQuoteBand`, `NewsCard`, `NewsGrid`, `Testimonial` under `DS/src/sections/`
 - [ ] T065 [P] [US4] Write tests for `Estimator` (state machine from data-model: next/back/validation error announced/result/restart, optional quote form → submit success/error, progress text and `progressbar` values, currency formatting) and `EstimatorSection` under `DS/src/sections/Estimator/`
-- [ ] T066 [US4] Implement `SectionHeading` (light/dark, eyebrow, accent gradient line, description, action, `split` layout) + stories; Figma `530:4339`, `411:3827`
-- [ ] T067 [US4] Implement `Statement` + stories; Figma `411:3796`
+- [x] T066 [US4] Implement `SectionHeading` (light/dark, eyebrow, accent gradient line, description, action, `split` layout) + stories; Figma `530:4339`, `411:3827`
+- [x] T067 [US4] Implement `Statement` + stories; Figma `411:3796`
 - [x] T068 [US4] Implement `HomeHero` (hero tone + flow-lines + dots grid, masked portrait image, two actions) + stories; Figma `411:3700`–`411:3711`, `411:3702`
 - [x] T069 [US4] Implement `GapSection` (statement + two masked images + eyebrow/body) + stories; Figma `411:3788`
 - [ ] T070 [US4] Implement `LogoMarquee` (client; CSS keyframes, two rows opposite directions, edge fade, pause control) + stories; Figma `569:5848`
-- [ ] T071 [US4] Implement `CredentialsGrid` (dark, logo cells, placeholder cells) + stories; Figma `585:6030`, `561:1235`
+- [x] T071 [US4] Implement `CredentialsGrid` (dark, logo cells, placeholder cells) + stories; Figma `585:6030`, `561:1235`
 - [ ] T072 [US4] Implement `ServiceTabs` (client, Radix Tabs vertical, large tab labels, image with floating stat card, link CTA) + stories; Figma `411:3712`, `425:2`
-- [ ] T073 [P] [US4] Implement `PillarCard` (dark/light, sm/wide) + stories; Figma `411:3745`, `411:3759`, `411:3738`
+- [x] T073 [P] [US4] Implement `PillarCard` (dark/light, sm/wide) + stories; Figma `411:3745`, `411:3759`, `411:3738`
 - [x] T074 [P] [US4] Implement `StatTile` and `StatsStrip` (dividers, light/dark) + stories; Figma `411:3772`, `530:4369`
-- [ ] T075 [US4] Implement `ReasonsSection` composing SectionHeading, PillarCard, image, StatsStrip + stories; Figma `411:3728`
-- [ ] T076 [P] [US4] Implement `ProcessSteps` (4 bordered cards, index numerals) + stories; Figma `411:3825`, `530:4391`
+- [x] T075 [US4] Implement `ReasonsSection` composing SectionHeading, PillarCard, image, StatsStrip + stories; Figma `411:3728`
+- [x] T076 [P] [US4] Implement `ProcessSteps` (4 bordered cards, index numerals) + stories; Figma `411:3825`, `530:4391`
 - [ ] T077 [P] [US4] Implement `PhotoQuoteBand` (image half + inverse panel with logo-mark pattern) + stories; Figma `411:3846`
 - [x] T078 [P] [US4] Implement `NewsCard` and `NewsGrid` (with optional FilterChipGroup and Pagination slots) + stories; Figma `423:1145`, `426:29895`
 - [x] T079 [P] [US4] Implement `Testimonial` + stories; Figma `411:3871`–`411:3880`

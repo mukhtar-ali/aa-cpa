@@ -1,5 +1,11 @@
+export { CredentialsGrid, type CredentialsGridProps } from './CredentialsGrid';
 export { GapSection, type GapSectionProps } from './GapSection';
 export { HomeHero, type HomeHeroProps } from './HomeHero';
 export { NewsCard, NewsGrid, type NewsCardProps, type NewsGridProps } from './NewsCard';
+export { PillarCard, type PillarCardProps } from './PillarCard';
+export { ProcessSteps, type ProcessStepsProps } from './ProcessSteps';
+export { ReasonsSection, type ReasonsSectionProps } from './ReasonsSection';
+export { SectionHeading, type SectionHeadingProps } from './SectionHeading';
+export { Statement, type StatementProps } from './Statement';
 export { StatsStrip, StatTile, formatStat, type StatsStripProps, type StatTileProps } from './StatsStrip';
 export { Testimonial, type TestimonialProps } from './Testimonial';
