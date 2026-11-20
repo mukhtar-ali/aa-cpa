@@ -1,19 +1,13 @@
 /**
- * Base styles for AA-CPA Design System
- * Sets body typography, default color, focus-visible outlines,
- * prefers-reduced-motion resets, and article prose placeholder.
+ * Base styles for AA-CPA Design System.
+ * Body typography, default colour, focus-visible ring, prefers-reduced-motion resets, article prose placeholder.
+ * All values come from tokens.css (generated from Figma); no literals here.
  */
 
-:root {
-  --container-max-width: 1140px;
-  --container-wide-max-width: 1320px;
-  --radius-32: 32px;
-}
-
 body {
-  font-family: var(--font-family-base, var(--font-almarai, 'Almarai', system-ui, sans-serif));
-  color: var(--color-text-body, var(--color-text-heading, currentColor));
-  background-color: var(--color-bg-page, #ffffff);
+  font-family: var(--font-almarai, 'Almarai'), system-ui, sans-serif;
+  color: var(--color-text-body);
+  background-color: var(--color-bg-page);
 }
 
 :focus-visible {
@@ -34,5 +28,5 @@ body {
 
 /* .ds-prose placeholder for article styles (expanded in T093) */
 .ds-prose {
-  color: var(--color-text-body, inherit);
+  color: var(--color-text-body);
 }

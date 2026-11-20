@@ -25,7 +25,7 @@ type Story = StoryObj<typeof Container>;
 
 export const Default: Story = {
   render: () => (
-    <Container className="bg-bg-ice py-4 text-center border border-border-subtle rounded-md">
+    <Container className="bg-bg-surface-ice py-4 text-center border border-border-subtle rounded-md">
       <p className="text-text-heading font-medium">Default 1140px Container</p>
     </Container>
   ),
@@ -33,7 +33,7 @@ export const Default: Story = {
 
 export const Wide: Story = {
   render: () => (
-    <Container size="wide" className="bg-bg-ice py-4 text-center border border-border-subtle rounded-md">
+    <Container size="wide" className="bg-bg-surface-ice py-4 text-center border border-border-subtle rounded-md">
       <p className="text-text-heading font-medium">Wide 1320px Container</p>
     </Container>
   ),
@@ -41,7 +41,7 @@ export const Wide: Story = {
 
 export const Full: Story = {
   render: () => (
-    <Container size="full" className="bg-bg-ice py-4 text-center border border-border-subtle rounded-md">
+    <Container size="full" className="bg-bg-surface-ice py-4 text-center border border-border-subtle rounded-md">
       <p className="text-text-heading font-medium">Full Width Container</p>
     </Container>
   ),
@@ -53,7 +53,7 @@ export const Arabic: Story = {
   },
   render: () => (
     <div dir="rtl">
-      <Container className="bg-bg-ice py-4 text-start border border-border-subtle rounded-md">
+      <Container className="bg-bg-surface-ice py-4 text-start border border-border-subtle rounded-md">
         <h2 className="text-h3 font-bold text-text-heading">حاوية المحتوى الأساسية</h2>
         <p className="text-body-md text-text-muted mt-2">
           تضمن الحاوية توافق المحتوى مع شبكة التصميم المعتمدة في فيجما بعرض 1140 بكسل وهوامش متجاوبة.
@@ -69,7 +69,7 @@ export const English: Story = {
   },
   render: () => (
     <div dir="ltr">
-      <Container className="bg-bg-ice py-4 text-start border border-border-subtle rounded-md">
+      <Container className="bg-bg-surface-ice py-4 text-start border border-border-subtle rounded-md">
         <h2 className="text-h3 font-bold text-text-heading">Primary Content Container</h2>
         <p className="text-body-md text-text-muted mt-2">
           Enforces the 1140px content width with 16/24/32px responsive gutters aligned with Figma specifications.

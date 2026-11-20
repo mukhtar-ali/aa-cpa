@@ -1,0 +1,55 @@
+/*
+ * Tailwind theme extensions that are not 1:1 Figma variables.
+ * Figma tokens themselves (colours, radii, shadows, sizes) live in tokens.css as an `@theme static` block,
+ * so `--color-bg-page` yields `bg-bg-page`, `--radius-section` yields `rounded-section`, etc. (research R3).
+ */
+
+@theme inline {
+  /* Vertical rhythm (Figma space scale 48/64/80/96) */
+  --spacing-section-sm: var(--space-48);
+  --spacing-section-md: var(--space-64);
+  --spacing-section-lg: var(--space-80);
+  --spacing-section-xl: var(--space-96);
+
+  /* Breakpoints (research R12) */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1512px;
+
+  /* Font family: next/font (--font-almarai) in the web app, almarai.css in Storybook */
+  --font-sans: var(--font-almarai), 'Almarai', system-ui, sans-serif;
+
+  /* Fluid type: Figma size at >= lg, stepping down towards small screens (research R12) */
+  --text-h1: clamp(1.875rem, 4.6875vw, var(--font-size-h1));
+  --text-h1--line-height: 1.396;
+  --text-h2: clamp(1.75rem, 0.5rem + 3.125vw, var(--font-size-h2));
+  --text-h2--line-height: 1.4;
+  --text-h3: clamp(1.5rem, 0.5625rem + 2.34375vw, var(--font-size-h3));
+  --text-h3--line-height: 1.394;
+  --text-h4: var(--font-size-h4);
+  --text-h4--line-height: 1.393;
+  --text-h5: var(--font-size-h5);
+  --text-h5--line-height: 1.391;
+  --text-h6: var(--font-size-h6);
+  --text-h6--line-height: 1.421;
+  --text-body-lg: clamp(1.0625rem, 0.854rem + 0.5208vw, var(--font-size-body-lg));
+  --text-body-lg--line-height: 1.579;
+  --text-body-md: var(--font-size-body-md);
+  --text-body-md--line-height: 1.625;
+  --text-body-sm: var(--font-size-body-sm);
+  --text-body-sm--line-height: 1.615;
+  --text-body-xs: var(--font-size-body-xs);
+  --text-body-xs--line-height: 1.636;
+
+  /* Motion (research R10) */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+:root {
+  --motion-duration-fast: 150ms;
+  --motion-duration-base: 250ms;
+  --motion-duration-slow: 400ms;
+  --motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}

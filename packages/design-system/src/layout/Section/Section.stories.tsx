@@ -14,7 +14,7 @@ const meta: Meta<typeof Section> = {
     docs: {
       description: {
         component:
-          'Section component creates full-width thematic bands with tone backgrounds (page/ice/surface/inverse/hero), 32px token radii, and pattern slots.',
+          'Section component creates full-width thematic bands with tone backgrounds (page/ice/surface/inverse/hero), 30px token radii, and pattern slots.',
       },
     },
   },
@@ -94,9 +94,9 @@ export const RoundedBoth: Story = {
     <div className="bg-bg-page p-6">
       <Section tone="ice" rounded="both" spacing="md">
         <Container>
-          <h3 className="text-h3 font-bold text-text-heading">Both Ends Rounded (32px)</h3>
+          <h3 className="text-h3 font-bold text-text-heading">Both Ends Rounded (30px)</h3>
           <p className="text-body-md text-text-muted mt-1">
-            Section with 32px corner radius on top and bottom edges.
+            Section with 30px corner radius on top and bottom edges.
           </p>
         </Container>
       </Section>

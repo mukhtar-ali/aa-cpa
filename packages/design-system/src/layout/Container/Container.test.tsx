@@ -39,7 +39,7 @@ describe('Container component', () => {
     expect(el).toHaveClass('px-4');
     expect(el).toHaveClass('sm:px-6');
     expect(el).toHaveClass('lg:px-8');
-    expect(el).toHaveClass('max-w-(--container-max-width)');
+    expect(el).toHaveClass('max-w-(--layout-content-width)');
   });
 
   it('supports "size" variants (default, wide, full)', () => {
@@ -47,14 +47,14 @@ describe('Container component', () => {
       <Container size="default">Default</Container>,
     );
     expect(defaultContainer.firstElementChild).toHaveClass(
-      'max-w-(--container-max-width)',
+      'max-w-(--layout-content-width)',
     );
 
     const { container: wideContainer } = render(
       <Container size="wide">Wide</Container>,
     );
     expect(wideContainer.firstElementChild).toHaveClass(
-      'max-w-(--container-wide-max-width)',
+      'max-w-(--layout-content-width-wide)',
     );
 
     const { container: fullContainer } = render(

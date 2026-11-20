@@ -36,11 +36,11 @@ describe('Section component', () => {
         </Section>,
       );
 
-      expect(container.firstElementChild).toHaveClass(`bg-bg-${tone}`);
+      expect(container.firstElementChild).toHaveClass(tone === 'ice' ? 'bg-bg-surface-ice' : `bg-bg-${tone}`);
     }
   });
 
-  it('applies rounded variants using 32px radius token (none, top, bottom, both)', () => {
+  it('applies rounded variants using section radius token (30px) (none, top, bottom, both)', () => {
     const { container: noneContainer } = render(
       <Section rounded="none">None</Section>,
     );
@@ -49,19 +49,19 @@ describe('Section component', () => {
     const { container: topContainer } = render(
       <Section rounded="top">Top</Section>,
     );
-    expect(topContainer.firstElementChild).toHaveClass('rounded-t-(--radius-32)');
+    expect(topContainer.firstElementChild).toHaveClass('rounded-t-section');
 
     const { container: bottomContainer } = render(
       <Section rounded="bottom">Bottom</Section>,
     );
     expect(bottomContainer.firstElementChild).toHaveClass(
-      'rounded-b-(--radius-32)',
+      'rounded-b-section',
     );
 
     const { container: bothContainer } = render(
       <Section rounded="both">Both</Section>,
     );
-    expect(bothContainer.firstElementChild).toHaveClass('rounded-(--radius-32)');
+    expect(bothContainer.firstElementChild).toHaveClass('rounded-section');
   });
 
   it('applies spacing variants (none, sm, md, lg, xl)', () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Preview } from '@storybook/react-vite';
-import '../src/styles/index.css';
+import './storybook.css';
 import '../assets/fonts/almarai.css';
 import { DesignSystemProvider } from '../src/layout/DesignSystemProvider/DesignSystemProvider';
 

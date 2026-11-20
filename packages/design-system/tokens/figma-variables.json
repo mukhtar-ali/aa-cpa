@@ -1,0 +1,545 @@
+{
+  "_source": {
+    "figmaFile": "1jzfujyx2OJ6EKDRD2X6Xm",
+    "page": "Page 1",
+    "frame": "411:169",
+    "nodes": [
+      "411:3706",
+      "411:3739",
+      "411:3772",
+      "411:3713",
+      "411:3729",
+      "423:1145",
+      "522:1185"
+    ],
+    "capturedAt": "2026-11-20",
+    "note": "Snapshot of get_variable_defs(411:169) plus component-frame values. value = shipped value; figmaValue = original when a11yOverride."
+  },
+  "variables": [
+    {
+      "name": "bg/page",
+      "type": "COLOR",
+      "value": "#efecdf",
+      "description": "Page background (beige)"
+    },
+    {
+      "name": "bg/surface",
+      "type": "COLOR",
+      "value": "#ffffff",
+      "description": "Card / form surface"
+    },
+    {
+      "name": "bg/surface-ice",
+      "type": "COLOR",
+      "value": "#ecf5f9",
+      "description": "Ice-blue band"
+    },
+    {
+      "name": "bg/inverse",
+      "type": "COLOR",
+      "value": "#132015",
+      "description": "Dark band"
+    },
+    {
+      "name": "bg/inverse-raised",
+      "type": "COLOR",
+      "value": "#253227",
+      "description": "Raised surface on dark"
+    },
+    {
+      "name": "bg/hero",
+      "type": "COLOR",
+      "value": "#030d1a",
+      "description": "Hero background"
+    },
+    {
+      "name": "text/heading",
+      "type": "COLOR",
+      "value": "#164c62",
+      "description": "Headings"
+    },
+    {
+      "name": "text/body",
+      "type": "COLOR",
+      "value": "#164c62",
+      "description": "Body copy"
+    },
+    {
+      "name": "text/strong",
+      "type": "COLOR",
+      "value": "#132015",
+      "description": "Strong text"
+    },
+    {
+      "name": "text/inverse",
+      "type": "COLOR",
+      "value": "#efecdf",
+      "description": "Text on dark"
+    },
+    {
+      "name": "text/inverse-muted",
+      "type": "COLOR",
+      "value": "#a9b0aa",
+      "description": "Muted text on dark"
+    },
+    {
+      "name": "text/on-action",
+      "type": "COLOR",
+      "value": "#ffffff",
+      "description": "Label on primary action"
+    },
+    {
+      "name": "text/muted",
+      "type": "COLOR",
+      "value": "#686b68",
+      "description": "Muted text",
+      "figmaValue": "#737673",
+      "a11yOverride": true,
+      "reason": "R4: 4.56:1 on page, 4.88 on ice (was 3.88/4.16)"
+    },
+    {
+      "name": "text/link",
+      "type": "COLOR",
+      "value": "#1e785a",
+      "description": "Inline link text",
+      "figmaValue": "#238b68",
+      "a11yOverride": true,
+      "reason": "R4: 4.56:1 on page, 4.88 on ice (was 3.57/3.83)"
+    },
+    {
+      "name": "action/primary",
+      "type": "COLOR",
+      "value": "#228664",
+      "description": "Primary action fill",
+      "figmaValue": "#238b68",
+      "a11yOverride": true,
+      "reason": "R4: white label 4.50:1 (was 4.23)"
+    },
+    {
+      "name": "action/secondary",
+      "type": "COLOR",
+      "value": "#efecdf",
+      "description": "Secondary action fill"
+    },
+    {
+      "name": "accent/progress",
+      "type": "COLOR",
+      "value": "#51a584",
+      "description": "Progress accent on dark"
+    },
+    {
+      "name": "icon/accent",
+      "type": "COLOR",
+      "value": "#9ddbf4",
+      "description": "Icon accent on dark"
+    },
+    {
+      "name": "border/subtle",
+      "type": "COLOR",
+      "value": "#dcdedc",
+      "description": "Decorative card border only (1.35:1; never for controls)"
+    },
+    {
+      "name": "border/decor",
+      "type": "COLOR",
+      "value": "#e1ded2",
+      "description": "Decorative divider on page tone"
+    },
+    {
+      "name": "border/strong",
+      "type": "COLOR",
+      "value": "#164c62",
+      "description": "Form control border / strong rules"
+    },
+    {
+      "name": "border/inverse",
+      "type": "COLOR",
+      "value": "#2a4b2f",
+      "description": "Border on dark"
+    },
+    {
+      "name": "border/inverse-strong",
+      "type": "COLOR",
+      "value": "#a9b0aa",
+      "description": "Strong border on dark"
+    },
+    {
+      "name": "pine/200",
+      "type": "COLOR",
+      "value": "#dbdfdb",
+      "description": "Neutral green-grey 200"
+    },
+    {
+      "name": "pine/700",
+      "type": "COLOR",
+      "value": "#566157",
+      "description": "Neutral green-grey 700 (dividers on dark)"
+    },
+    {
+      "name": "pine/900",
+      "type": "COLOR",
+      "value": "#253227",
+      "description": "Neutral green-grey 900 (proof box)"
+    },
+    {
+      "name": "color/primary",
+      "type": "COLOR",
+      "value": "#164c62",
+      "description": "Legacy Figma variable 'Color/Primery' (typo in Figma); same value as text/heading"
+    },
+    {
+      "name": "gradient/start",
+      "type": "COLOR",
+      "value": "#238b68",
+      "description": "Accent gradient start (decorative, non-text)"
+    },
+    {
+      "name": "gradient/end",
+      "type": "COLOR",
+      "value": "#2d9bc8",
+      "description": "Accent gradient end (decorative, non-text)"
+    },
+    {
+      "name": "gradient/end-text-large",
+      "type": "COLOR",
+      "value": "#2a91bc",
+      "description": "Gradient end for large accent text",
+      "figmaValue": "#2d9bc8",
+      "a11yOverride": true,
+      "reason": "R4: 3.02-3.57:1 on page for H1-H3 / >=24px accent text (was 2.67)"
+    },
+    {
+      "name": "gradient/end-text",
+      "type": "COLOR",
+      "value": "#217294",
+      "description": "Gradient end as solid for small accent text",
+      "figmaValue": "#2d9bc8",
+      "a11yOverride": true,
+      "reason": "R4: >=4.55:1 for accent text below large size (was 2.67)"
+    },
+    {
+      "name": "text/accent",
+      "type": "COLOR",
+      "value": "#7a5c24",
+      "description": "Tag / eyebrow accent text on light tones",
+      "figmaValue": "#c5a880",
+      "a11yOverride": true,
+      "reason": "Gold tag text was 1.91-2.26:1 on light tones; 5.24:1 on page (R4 extension, designer sign-off)"
+    },
+    {
+      "name": "text/accent-inverse",
+      "type": "COLOR",
+      "value": "#c5a880",
+      "description": "Gold accent text on dark tones (7.46:1 on bg/inverse)"
+    },
+    {
+      "name": "neutral/0",
+      "type": "COLOR",
+      "value": "#ffffff",
+      "description": "Input default fill"
+    },
+    {
+      "name": "neutral/50",
+      "type": "COLOR",
+      "value": "#f6f7f6",
+      "description": "Input filled / error fill"
+    },
+    {
+      "name": "neutral/200",
+      "type": "COLOR",
+      "value": "#dcdedc",
+      "description": "Input default border"
+    },
+    {
+      "name": "neutral/500",
+      "type": "COLOR",
+      "value": "#686b68",
+      "description": "Placeholder and helper text",
+      "figmaValue": "#8e918e",
+      "a11yOverride": true,
+      "reason": "Placeholder/helper text was 2.69-3.19:1; 4.56:1 on page, 5.40 on surface (R4 extension, designer sign-off)"
+    },
+    {
+      "name": "emerald/600",
+      "type": "COLOR",
+      "value": "#238b68",
+      "description": "Input focus border (non-text, 4.23:1 on white)"
+    },
+    {
+      "name": "status/error",
+      "type": "COLOR",
+      "value": "#c7332e",
+      "description": "Error border and helper text (hard-coded in Figma, no variable; 4.50:1 on page)"
+    },
+    {
+      "name": "ring/error",
+      "type": "COLOR",
+      "value": "#fce3e0",
+      "description": "Error focus ring"
+    },
+    {
+      "name": "ring/focus",
+      "type": "COLOR",
+      "value": "#d3efe2",
+      "description": "Input focus ring"
+    },
+    {
+      "name": "font/family",
+      "type": "STRING",
+      "value": "Almarai",
+      "description": "Brand font family"
+    },
+    {
+      "name": "font/weight/regular",
+      "type": "FLOAT",
+      "value": "400",
+      "description": "Regular"
+    },
+    {
+      "name": "font/weight/bold",
+      "type": "FLOAT",
+      "value": "700",
+      "description": "Bold"
+    },
+    {
+      "name": "font/weight/extra-bold",
+      "type": "FLOAT",
+      "value": "800",
+      "description": "ExtraBold"
+    },
+    {
+      "name": "font/size/h1",
+      "type": "FLOAT",
+      "value": "48px",
+      "description": "h1 font size"
+    },
+    {
+      "name": "font/line-height/h1",
+      "type": "FLOAT",
+      "value": "67px",
+      "description": "h1 line height"
+    },
+    {
+      "name": "font/size/h2",
+      "type": "FLOAT",
+      "value": "40px",
+      "description": "h2 font size"
+    },
+    {
+      "name": "font/line-height/h2",
+      "type": "FLOAT",
+      "value": "56px",
+      "description": "h2 line height"
+    },
+    {
+      "name": "font/size/h3",
+      "type": "FLOAT",
+      "value": "33px",
+      "description": "h3 font size"
+    },
+    {
+      "name": "font/line-height/h3",
+      "type": "FLOAT",
+      "value": "46px",
+      "description": "h3 line height"
+    },
+    {
+      "name": "font/size/h4",
+      "type": "FLOAT",
+      "value": "28px",
+      "description": "h4 font size"
+    },
+    {
+      "name": "font/line-height/h4",
+      "type": "FLOAT",
+      "value": "39px",
+      "description": "h4 line height"
+    },
+    {
+      "name": "font/size/h5",
+      "type": "FLOAT",
+      "value": "23px",
+      "description": "h5 font size"
+    },
+    {
+      "name": "font/line-height/h5",
+      "type": "FLOAT",
+      "value": "32px",
+      "description": "h5 line height"
+    },
+    {
+      "name": "font/size/h6",
+      "type": "FLOAT",
+      "value": "19px",
+      "description": "h6 font size"
+    },
+    {
+      "name": "font/line-height/h6",
+      "type": "FLOAT",
+      "value": "27px",
+      "description": "h6 line height"
+    },
+    {
+      "name": "font/size/body-lg",
+      "type": "FLOAT",
+      "value": "19px",
+      "description": "body-lg font size"
+    },
+    {
+      "name": "font/line-height/body-lg",
+      "type": "FLOAT",
+      "value": "30px",
+      "description": "body-lg line height"
+    },
+    {
+      "name": "font/size/body-md",
+      "type": "FLOAT",
+      "value": "16px",
+      "description": "body-md font size"
+    },
+    {
+      "name": "font/line-height/body-md",
+      "type": "FLOAT",
+      "value": "26px",
+      "description": "body-md line height"
+    },
+    {
+      "name": "font/size/body-sm",
+      "type": "FLOAT",
+      "value": "13px",
+      "description": "body-sm font size"
+    },
+    {
+      "name": "font/line-height/body-sm",
+      "type": "FLOAT",
+      "value": "21px",
+      "description": "body-sm line height"
+    },
+    {
+      "name": "font/size/body-xs",
+      "type": "FLOAT",
+      "value": "11px",
+      "description": "body-xs font size"
+    },
+    {
+      "name": "font/line-height/body-xs",
+      "type": "FLOAT",
+      "value": "18px",
+      "description": "body-xs line height"
+    },
+    {
+      "name": "space/0",
+      "type": "FLOAT",
+      "value": "0px",
+      "description": "Spacing scale (Figma var --space-0)"
+    },
+    {
+      "name": "space/8",
+      "type": "FLOAT",
+      "value": "8px",
+      "description": "Spacing scale (Figma var --space-8)"
+    },
+    {
+      "name": "space/16",
+      "type": "FLOAT",
+      "value": "16px",
+      "description": "Spacing scale (Figma var --space-16)"
+    },
+    {
+      "name": "space/24",
+      "type": "FLOAT",
+      "value": "24px",
+      "description": "Spacing scale (Figma var --space-24)"
+    },
+    {
+      "name": "space/48",
+      "type": "FLOAT",
+      "value": "48px",
+      "description": "Spacing scale (Figma var --space-48)"
+    },
+    {
+      "name": "space/64",
+      "type": "FLOAT",
+      "value": "64px",
+      "description": "Spacing scale (Figma var --space-64)"
+    },
+    {
+      "name": "space/80",
+      "type": "FLOAT",
+      "value": "80px",
+      "description": "Spacing scale (Figma var --space-80)"
+    },
+    {
+      "name": "space/96",
+      "type": "FLOAT",
+      "value": "96px",
+      "description": "Spacing scale (Figma var --space-96)"
+    },
+    {
+      "name": "radius/button",
+      "type": "FLOAT",
+      "value": "2px",
+      "description": "Button 411:3706"
+    },
+    {
+      "name": "radius/card",
+      "type": "FLOAT",
+      "value": "20px",
+      "description": "Card 411:3739 and proof box 411:3772"
+    },
+    {
+      "name": "radius/section",
+      "type": "FLOAT",
+      "value": "30px",
+      "description": "Section bands 411:3713 / 411:3729 (task text said 32px; Figma is 30px)"
+    },
+    {
+      "name": "radius/field",
+      "type": "FLOAT",
+      "value": "12px",
+      "description": "Input 522:1185"
+    },
+    {
+      "name": "radius/image",
+      "type": "FLOAT",
+      "value": "12px",
+      "description": "News card image 423:1145"
+    },
+    {
+      "name": "radius/pill",
+      "type": "FLOAT",
+      "value": "100px",
+      "description": "Tag pill 423:1148"
+    },
+    {
+      "name": "border-width/default",
+      "type": "FLOAT",
+      "value": "1px",
+      "description": "Default border (button, input, card)"
+    },
+    {
+      "name": "border-width/focus",
+      "type": "FLOAT",
+      "value": "1.5px",
+      "description": "Input focus / error border"
+    },
+    {
+      "name": "shadow/button-primary",
+      "type": "STRING",
+      "value": "0 2px 0 0 rgba(0, 0, 0, 0.043)",
+      "description": "Figma drop-shadow/button-primary (#0000000B)"
+    },
+    {
+      "name": "layout/content-width",
+      "type": "FLOAT",
+      "value": "1140px",
+      "description": "Content column (proof box frame width 1140)"
+    },
+    {
+      "name": "layout/content-width-wide",
+      "type": "FLOAT",
+      "value": "1320px",
+      "description": "ASSUMED: contract requires a 'wide' Container; not measured in Figma"
+    }
+  ]
+}

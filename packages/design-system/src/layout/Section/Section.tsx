@@ -6,16 +6,16 @@ const sectionVariants = cva('w-full', {
   variants: {
     tone: {
       page: 'bg-bg-page text-text-heading',
-      ice: 'bg-bg-ice text-text-heading',
+      ice: 'bg-bg-surface-ice text-text-heading',
       surface: 'bg-bg-surface text-text-heading',
       inverse: 'bg-bg-inverse text-text-inverse',
       hero: 'bg-bg-hero text-text-inverse',
     },
     rounded: {
       none: 'rounded-none',
-      top: 'rounded-t-(--radius-32)',
-      bottom: 'rounded-b-(--radius-32)',
-      both: 'rounded-(--radius-32)',
+      top: 'rounded-t-section',
+      bottom: 'rounded-b-section',
+      both: 'rounded-section',
     },
     spacing: {
       none: 'py-0',
@@ -45,7 +45,7 @@ export interface SectionProps
 }
 
 /**
- * Section container for page bands with tone backgrounds, 32px corner radii,
+ * Section container for page bands with tone backgrounds, 30px corner radii (Figma radius/section),
  * vertical rhythm spacing tokens, and background pattern slots.
  *
  * @figma 411:3713, 411:3729
