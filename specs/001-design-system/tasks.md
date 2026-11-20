@@ -219,7 +219,7 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - [ ] T104 [P] [US5] Create mock content `WEB/src/reference/home.ar.ts` (copy from Figma `411:169`) and `WEB/src/reference/home.en.ts` (provisional English) typed with `@repo/design-system/types`; delete `WEB/src/reference/.keep.ts`
 - [ ] T105 [P] [US5] Add neutral, licence-free placeholder photos sized as in Figma to `WEB/public/reference/` with `README.md` noting sources/licences (no Figma watermarked images)
 - [ ] T106 [US5] Implement `WEB/app/[lang]/reference/home/page.tsx` composing Header, HomeHero, GapSection, LogoMarquee, ServiceTabs, ReasonsSection, CredentialsGrid, ProcessSteps, PhotoQuoteBand, NewsGrid, EstimatorSection, Footer in Figma order; `notFound()` unless `process.env.ENABLE_REFERENCE_PAGES === 'true'`; `metadata.robots = { index: false, follow: false }`; excluded from `WEB/app/sitemap.ts`
-- [ ] T107 [US5] Implement `e2e/visual/figma-diff.mjs` (reads Figma export PNG of `411:169` at 1512 saved to `e2e/visual/figma/home-1512.png`, captures the page, masks photo regions, writes diff + stats to `e2e/visual/out/`) and document in quickstart
+- [x] T107 [US5] Implement `e2e/visual/figma-diff.mjs` (reads Figma export PNG of `411:169` at 1512 saved to `e2e/visual/figma/home-1512.png`, captures the page, masks photo regions, writes diff + stats to `e2e/visual/out/`) and document in quickstart
 - [ ] T108 [US5] Fix parity deltas until V5 passes; record remaining intentional deviations in `specs/001-design-system/reviews/home-parity.md`
 - [ ] T109 [US5] Run Lighthouse mobile on `pnpm --filter @repo/web build && start` for both locales; record scores in `specs/001-design-system/reviews/performance.md`; fix until SC-005 targets are met
 
