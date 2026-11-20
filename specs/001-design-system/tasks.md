@@ -199,11 +199,11 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 - [x] T095 [P] [US4] Implement `ShareBox` (client copy; dark sidebar and light inline variants) + stories; Figma `506:2706`, `514:3194`
 - [x] T096 [P] [US4] Implement `JobRow` and `JobSummaryCard` + stories; Figma `512:1159`, job summary on `514:3194`
 - [x] T097 [P] [US4] Implement `PerkTile` and `TimelineStepper` (horizontal ≥ md, vertical < md) + stories; Figma `529:4296`, hiring steps on `519:38941`
-- [ ] T098 [P] [US4] Implement `ApplicationFormLayout` and `ContactFormLayout` (compose forms) + stories; Figma apply form on `514:3194`, form on `524:3651`
+- [x] T098 [P] [US4] Implement `ApplicationFormLayout` and `ContactFormLayout` (compose forms) + stories; Figma apply form on `514:3194`, form on `524:3651`
 - [x] T099 [P] [US4] Implement `ContactItem`, `OfficeCard`, `OfficeMap` (static SVG map illustration exported from `524:3651`, pins positioned by `coordinates`) + stories; Figma `527:5423`, `529:4280`, `578:1293`
-- [ ] T100 [P] [US4] Implement `SectorIndex` + stories; Figma "دليل القطاعات" block on `547:4555`
-- [ ] T101 [P] [US4] Implement `CaseStoryCard` and `CaseStories` + stories; Figma case stories on `547:4555`
-- [ ] T102 [US4] Implement `LegalDocument` (TOC sidebar, "have a question" dark card with PDF download, updated-at pill, summary box, numbered sections) + stories; Figma `525:3854`, `525:4136`
+- [x] T100 [P] [US4] Implement `SectorIndex` + stories; Figma "دليل القطاعات" block on `547:4555`
+- [x] T101 [P] [US4] Implement `CaseStoryCard` and `CaseStories` + stories; Figma case stories on `547:4555`
+- [x] T102 [US4] Implement `LegalDocument` (TOC sidebar, "have a question" dark card with PDF download, updated-at pill, summary box, numbered sections) + stories; Figma `525:3854`, `525:4136`
 
 **Checkpoint**: V4 passes.
 

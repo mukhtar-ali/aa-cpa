@@ -18,7 +18,7 @@ export interface LogoMarqueeProps extends Omit<React.HTMLAttributes<HTMLElement>
 
 function LogoCell({ logo, decorative }: { logo: LogoItem; decorative: boolean }) {
   return (
-    <li className="flex h-33 w-60 shrink-0 items-center justify-center rounded-sm border border-solid border-border-decor bg-bg-surface p-4">
+    <li className="flex h-33 w-60 shrink-0 items-center justify-center rounded-sm border border-solid border-border-decor bg-bg-surface px-8 py-6.5">
       {logo.image ? (
         <img src={logo.image.src} alt={decorative || logo.image.decorative ? '' : logo.image.alt || logo.name} width={logo.image.width} height={logo.image.height} className="max-h-full max-w-full object-contain" />
       ) : (
