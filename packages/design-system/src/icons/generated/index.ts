@@ -15,6 +15,7 @@ import { LinkIcon } from './LinkIcon';
 import { LinkedinIcon } from './LinkedinIcon';
 import { LocationIcon } from './LocationIcon';
 import { MailIcon } from './MailIcon';
+import { MenuIcon } from './MenuIcon';
 import { MessageIcon } from './MessageIcon';
 import { PhoneIcon } from './PhoneIcon';
 import { ScanIcon } from './ScanIcon';
@@ -24,7 +25,7 @@ import { StarIcon } from './StarIcon';
 import { UploadIcon } from './UploadIcon';
 import { WhatsappIcon } from './WhatsappIcon';
 
-export const iconNames = ['arrow', 'award', 'briefcase', 'calendar', 'check', 'chevron', 'clock', 'close', 'file', 'globe-check', 'hexagon-dot', 'link', 'linkedin', 'location', 'mail', 'message', 'phone', 'scan', 'search', 'settings', 'star', 'upload', 'whatsapp'] as const;
+export const iconNames = ['arrow', 'award', 'briefcase', 'calendar', 'check', 'chevron', 'clock', 'close', 'file', 'globe-check', 'hexagon-dot', 'link', 'linkedin', 'location', 'mail', 'menu', 'message', 'phone', 'scan', 'search', 'settings', 'star', 'upload', 'whatsapp'] as const;
 export type IconName = (typeof iconNames)[number];
 
 export const iconRegistry: Record<IconName, IconComponent> = {
@@ -43,6 +44,7 @@ export const iconRegistry: Record<IconName, IconComponent> = {
   'linkedin': LinkedinIcon,
   'location': LocationIcon,
   'mail': MailIcon,
+  'menu': MenuIcon,
   'message': MessageIcon,
   'phone': PhoneIcon,
   'scan': ScanIcon,
@@ -69,6 +71,7 @@ export const iconMeta: Record<IconName, { size: number; directional: boolean }> 
   'linkedin': { size: 20, directional: false },
   'location': { size: 18, directional: false },
   'mail': { size: 22, directional: false },
+  'menu': { size: 24, directional: false },
   'message': { size: 22, directional: false },
   'phone': { size: 22, directional: false },
   'scan': { size: 48, directional: false },
@@ -79,4 +82,4 @@ export const iconMeta: Record<IconName, { size: number; directional: boolean }> 
   'whatsapp': { size: 20, directional: false },
 };
 
-export { ArrowIcon, AwardIcon, BriefcaseIcon, CalendarIcon, CheckIcon, ChevronIcon, ClockIcon, CloseIcon, FileIcon, GlobeCheckIcon, HexagonDotIcon, LinkIcon, LinkedinIcon, LocationIcon, MailIcon, MessageIcon, PhoneIcon, ScanIcon, SearchIcon, SettingsIcon, StarIcon, UploadIcon, WhatsappIcon };
+export { ArrowIcon, AwardIcon, BriefcaseIcon, CalendarIcon, CheckIcon, ChevronIcon, ClockIcon, CloseIcon, FileIcon, GlobeCheckIcon, HexagonDotIcon, LinkIcon, LinkedinIcon, LocationIcon, MailIcon, MenuIcon, MessageIcon, PhoneIcon, ScanIcon, SearchIcon, SettingsIcon, StarIcon, UploadIcon, WhatsappIcon };

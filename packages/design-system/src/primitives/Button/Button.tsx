@@ -6,7 +6,7 @@ import { Slot } from '../../lib/slot';
 /**
  * Values from the approved homepage instances: primary 411:3706, secondary 411:3709, paper-on-dark 411:3735, link 411:3714.
  * The homepage button is 48 px tall (26 px line + 10 px padding + 1 px border, each side); `lg` follows the library set 64:20
- * proportions (52 px). The old library set 64:20 itself (IBM Plex, other colours) is NOT used as a visual reference.
+, ` * proportions (52 px); `sm` is the header call-to-action (411:3807: 13 px label, 43 px high). The old library set 64:20 itself (IBM Plex, other colours) is NOT used as a visual reference.
  */
 const buttonVariants = cva(
   [
@@ -25,7 +25,7 @@ const buttonVariants = cva(
           'border-action-secondary bg-bg-page font-extrabold text-text-strong shadow-button-primary hover:bg-bg-surface',
         link: 'border-transparent bg-transparent font-bold text-body-lg hover:opacity-80',
       },
-      size: { md: 'min-h-12 px-6 py-2.5', lg: 'min-h-13 px-8 py-3' },
+      size: { sm: 'min-h-11 px-5 py-2.5 text-body-sm', md: 'min-h-12 px-6 py-2.5', lg: 'min-h-13 px-8 py-3' },
     },
     compoundVariants: [{ variant: 'link', className: 'min-h-0 px-0 py-2' }],
     defaultVariants: { variant: 'primary', size: 'md' },
@@ -37,7 +37,7 @@ const LINK_LABEL = 'bg-linear-to-b from-gradient-start to-gradient-end-text-larg
 export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
   /** `paper` is the beige button for dark sections (Figma 411:3735). `link` renders a gradient label. */
   variant?: 'primary' | 'secondary' | 'paper' | 'link';
-  size?: 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg';
   /** Renders an `<a>` when set. */
   href?: string;
   loading?: boolean;

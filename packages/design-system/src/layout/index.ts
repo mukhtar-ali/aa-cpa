@@ -23,3 +23,6 @@ export {
   LogoLines,
   type LogoLinesProps,
 } from './Pattern';
+export { Header, type HeaderProps } from './Header';
+export { MobileNav, type MobileNavProps } from './MobileNav';
+export { WhatsAppFloat, type WhatsAppFloatProps } from './WhatsAppFloat';

@@ -5,7 +5,7 @@ import { axe } from 'vitest-axe';
 import { Button } from './Button';
 
 const variants = ['primary', 'secondary', 'paper', 'link'] as const;
-const sizes = ['md', 'lg'] as const;
+const sizes = ['sm', 'md', 'lg'] as const;
 
 describe('Button', () => {
   it('renders a native button of type button by default', () => {
@@ -24,7 +24,7 @@ describe('Button', () => {
       );
       const el = screen.getByRole('button');
       expect(el).toHaveClass('rounded-button');
-      if (variant !== 'link') expect(el).toHaveClass(size === 'md' ? 'min-h-12' : 'min-h-13');
+      if (variant !== 'link') expect(el).toHaveClass({ sm: 'min-h-11', md: 'min-h-12', lg: 'min-h-13' }[size]);
     });
   });
 
@@ -33,6 +33,12 @@ describe('Button', () => {
     expect(screen.getByRole('button')).toHaveClass('min-h-12', 'px-6', 'py-2.5');
     rerender(<Button size="lg">Go</Button>);
     expect(screen.getByRole('button')).toHaveClass('min-h-13', 'px-8', 'py-3');
+  });
+
+  it('sm is the header call-to-action: 13 px label, 43-44 px high', () => {
+    render(<Button size="sm">Quote</Button>);
+    expect(screen.getByRole('button')).toHaveClass('min-h-11', 'px-5', 'text-body-sm');
+    expect(screen.getByRole('button')).not.toHaveClass('text-body-md');
   });
 
   it('secondary and paper match the beige Figma buttons (411:3709, 411:3735)', () => {
