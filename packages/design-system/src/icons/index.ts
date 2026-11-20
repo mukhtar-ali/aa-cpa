@@ -1,2 +1,3 @@
-// Icons barrel export (populated in US2)
-export {};
+export { Icon, type IconProps } from './Icon';
+export { iconNames, iconMeta, type IconName } from './generated';
+export type { IconComponent, IconComponentProps } from './types';

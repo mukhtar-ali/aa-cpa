@@ -21,7 +21,7 @@
     "check-types": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "tokens": "node scripts/build-tokens.mjs",
+    "tokens": "node scripts/build-tokens.mjs && node scripts/build-icons.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
