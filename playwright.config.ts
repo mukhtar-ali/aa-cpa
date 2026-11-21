@@ -20,9 +20,20 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      testIgnore: /design-system\//,
       use: { 
         ...devices['Desktop Chrome'],
         channel: 'chrome', // Use the user's installed Google Chrome
+      },
+    },
+    {
+      // Feature 001 reference pages (needs the web app started with ENABLE_REFERENCE_PAGES=true on port 3100).
+      name: 'design-system',
+      testMatch: /design-system\/.*\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        channel: 'chrome',
+        baseURL: process.env.DS_BASE_URL ?? 'http://localhost:3100',
       },
     },
   ],
