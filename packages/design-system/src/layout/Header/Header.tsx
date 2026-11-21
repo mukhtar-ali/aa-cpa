@@ -40,10 +40,10 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(
         {...props}
       >
         {utility}
-        <Container className="flex min-h-24 items-center justify-between gap-6">
-          <div className="shrink-0">{logo}</div>
+        <Container className="flex min-h-24 items-center justify-between gap-3 sm:gap-6">
+          <div className="min-w-0 shrink [&_img]:h-auto [&_img]:max-w-full">{logo}</div>
           <nav aria-label={navLabel} className="hidden lg:block">
-            <ul className="flex items-center gap-10">
+            <ul className="flex items-center gap-6 xl:gap-10">
               {nav.map((item) => (
                 <li key={`${item.href}-${item.label}`}>
                   <a
@@ -60,7 +60,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(
               ))}
             </ul>
           </nav>
-          <div className="hidden items-center gap-6 lg:flex">
+          <div className="hidden items-center gap-4 lg:flex xl:gap-6">
             <Button href={cta.href} size="sm" variant={cta.variant ?? 'primary'}>
               {cta.label}
             </Button>
