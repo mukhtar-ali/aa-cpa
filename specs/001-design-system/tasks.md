@@ -246,7 +246,7 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 ## Phase 9: Polish & Cross-Cutting Concerns
 
 - [x] T115 Raise coverage to ≥ 90% lines for `DS/src` (`pnpm --filter @repo/design-system test -- --coverage`)
-- [ ] T116 [P] Verify client JS budget: build `WEB`, inspect reference page bundles, keep library client JS ≤ 35 kB gzip; record in `reviews/performance.md`
+- [x] T116 [P] Verify client JS budget: build `WEB`, inspect reference page bundles, keep library client JS ≤ 35 kB gzip; record in `reviews/performance.md`
 - [ ] T117 [P] Collect client/designer sign-offs listed in plan.md (contrast overrides, mobile nav, estimator result, imagery) in `specs/001-design-system/reviews/signoffs.md`
 - [ ] T118 Run full quickstart V1–V7, `pnpm lint`, `pnpm check-types`, `pnpm test`, `pnpm build`; open PR `001-design-system` → `main` with screenshots, axe results, figma-diff output, and shared-file changes called out
 

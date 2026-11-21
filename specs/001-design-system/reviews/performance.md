@@ -33,3 +33,20 @@ SEO 92: the reference page has no meta description (it is `noindex` by design).
 
 Next steps before closing T109: cut JS (above), preload the primary font, re-measure in a quiet environment (and in CI), then decide whether
 SC-005 is judged on lab or field data.
+
+## Update after lazy-loading the mobile nav sheet (same day)
+
+Radix Dialog moved into `MobileNavSheet` (loaded on the first click of the menu button).
+
+| Page | Files | gzip total |
+| --- | --- | --- |
+| `/en/reference/home` and `/ar/reference/home` | 15 | 322.4 kB |
+| `/en/about` (baseline) | 13 | 294.5 kB |
+
+Chunks only on the reference page: 15.2 kB + 17.9 kB + 0.2 kB = **33.3 kB** gross (net of the baseline's own 5.4 kB chunk: 27.9 kB).
+**T116: met** (limit 35 kB). The sheet chunk loads only after the first click and is not counted.
+
+Lighthouse re-run on the new build: en 42 (LCP 5.7 s, TBT 6.7 s), ar 61 (LCP 5.8 s, TBT 560 ms); accessibility 100, best practices 100,
+SEO 92, CLS 0 in both. These runs are **not reliable**: the machine was under load (TBT of 6.7 s in English against 120 ms earlier), so scores
+swing between 27 and 82 for the same page. **T109 stays open**: re-measure on a quiet machine or in CI, then check LCP against SC-005
+(2.5 s). The LCP element is a text paragraph, so preloading the primary font is the first thing to try.
