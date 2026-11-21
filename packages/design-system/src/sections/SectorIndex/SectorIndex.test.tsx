@@ -19,11 +19,11 @@ describe('SectorIndex', () => {
     expect(items[0]).toHaveClass('border-b', 'border-border-subtle');
   });
 
-  it('rows with an href are links containing an H3 (H5 size), the summary and a mirrored arrow; others are plain', () => {
+  it('rows with an href are links containing an H3 (H4 size), the summary and a mirrored arrow; others are plain', () => {
     const { container } = render(<SectorIndex sectors={sectors} label="x" />);
     const link = screen.getByRole('link', { name: /Contracting and construction/ });
     expect(link).toHaveAttribute('href', '/sectors/construction');
-    expect(within(link).getByRole('heading', { level: 3 })).toHaveClass('text-h5', 'font-bold');
+    expect(within(link).getByRole('heading', { level: 3 })).toHaveClass('text-h4', 'font-bold');
     expect(link.querySelector('svg')).toHaveClass('rtl:-scale-x-100');
     expect(screen.getAllByRole('link')).toHaveLength(2);
     expect(container.querySelectorAll('li')[1]!.querySelector('a')).toBeNull();
@@ -32,6 +32,7 @@ describe('SectorIndex', () => {
   it('rows use 24 px vertical padding and a 48 px gap from md', () => {
     const { container } = render(<SectorIndex sectors={sectors} label="x" />);
     expect(container.querySelector('li > a')).toHaveClass('py-6', 'md:gap-12');
+    expect(screen.getByText('Project accounting and audit for contractors.')).toHaveClass('text-body-lg', 'md:w-130');
   });
 
   it.each(['ar', 'en'])('has no axe violations in %s', async (lang) => {

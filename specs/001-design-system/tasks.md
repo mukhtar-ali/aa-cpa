@@ -96,7 +96,7 @@ keyboard where interactive, `axe` no violations) written **before** its implemen
 
 ### Icons
 
-- [ ] T033 [US2] Export icon SVGs from Figma (homepage `411:3741`, `411:3748`, `411:3763`, button icon wrapper `411:3707`, sector icons on `547:4555`, contact/share/meta icons from `527:5423`, `505:3864`, `529:4333`, upload from `522:1214`) to `DS/assets/icons/`, normalised to 24×24 `currentColor`
+- [x] T033 [US2] Export icon SVGs from Figma (homepage `411:3741`, `411:3748`, `411:3763`, button icon wrapper `411:3707`, sector icons on `547:4555`, contact/share/meta icons from `527:5423`, `505:3864`, `529:4333`, upload from `522:1214`) to `DS/assets/icons/`, normalised to 24×24 `currentColor`
 - [x] T034 [US2] Add `DS/scripts/build-icons.mjs` generating typed React components into `DS/src/icons/generated/` and the `IconName` union; wire into `tokens` script chain
 - [x] T035 [US2] Write `DS/src/icons/Icon.test.tsx` (decorative by default, named with `title`, mirror class only for directional icons in RTL) then implement `DS/src/icons/Icon.tsx` + gallery story
 

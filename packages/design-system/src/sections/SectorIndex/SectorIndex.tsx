@@ -11,7 +11,7 @@ export interface SectorIndexProps extends Omit<React.HTMLAttributes<HTMLElement>
 
 /**
  * Sector guide (Figma 547:4555, "Sector index"): a hairline-bordered list; each row has 24 px vertical padding, 48 px between the name and the
- * description, and a 1 px divider. A row links to the sector page when it has an `href`. Row typography is inferred (to verify).
+ * description, and a 1 px divider. A row links to the sector page when it has an `href`. Figma: description 18 px in a 520 px column, title 30 px; mapped to the nearest scale steps (body-lg 19 px, h4 28 px).
  *
  * @figma 547:4555
  */
@@ -20,8 +20,8 @@ export const SectorIndex = React.forwardRef<HTMLUListElement, SectorIndexProps &
     {sectors.map((sector) => {
       const body = (
         <>
-          <h3 className="text-h5 font-bold text-text-heading md:w-72 md:shrink-0">{sector.title}</h3>
-          <p className="flex-1 text-body-md text-text-body">{sector.summary}</p>
+          <h3 className="text-h4 font-bold text-text-heading md:flex-1">{sector.title}</h3>
+          <p className="text-body-lg text-text-body md:w-130 md:shrink-0">{sector.summary}</p>
           {sector.href ? <Icon name="arrow" size={20} className="shrink-0 text-text-heading" /> : null}
         </>
       );
