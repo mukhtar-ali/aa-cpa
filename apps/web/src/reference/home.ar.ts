@@ -129,6 +129,7 @@ export const homeAr: HomeContent = {
     eyebrow: 'الأخبار',
     title: 'أخبار ومقالات تهمّ منشأتك',
     readMore: 'اقرأ المزيد',
+    allLabel: 'عرض كل الأخبار',
     articles: [1, 2, 3, 4].map((n) => ({ id: `n${n}`, title: 'كيف يغيّر الذكاء الاصطناعي عمل مراجع الحسابات؟', category: 'مقالات', date: '2026-10-12', image: img(`news-${n}`, 267, 250), href: '#' })),
   },
   estimator: {

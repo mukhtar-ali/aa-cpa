@@ -26,7 +26,8 @@ export default async function ReferenceHomePage({ params }: { params: Promise<{ 
 
     return (
         <DesignSystemProvider locale={lang}>
-            <div className="relative bg-bg-hero">
+            {/* Parity harness: heights below mirror the Figma frame (411:169) section heights at 1512 px. */}
+            <div className="relative bg-bg-hero lg:min-h-[787px]">
                 <UtilityBar {...chrome.utility} localeSwitch={toggle} />
                 <Header
                     className="absolute inset-x-0 top-11"
@@ -41,21 +42,21 @@ export default async function ReferenceHomePage({ params }: { params: Promise<{ 
                 />
                 <HomeHero {...c.hero} />
             </div>
-            <GapSection {...c.gap} className="relative z-10 -mt-8 rounded-t-section" />
-            <LogoMarquee label={c.marquee.label} rows={c.marquee.rows} pauseLabel={c.marquee.pauseLabel} />
-            <ServiceTabs eyebrow={c.services.eyebrow} title={c.services.title} services={c.services.items} tabsLabel={c.labels.services} />
-            <ReasonsSection {...c.reasons} locale={lang} />
-            <CredentialsGrid {...c.credentials} showPlaceholders />
-            <section className="bg-bg-page py-section-lg">
+            <GapSection {...c.gap} className="relative z-10 -mt-8 rounded-t-section lg:min-h-[795px]" />
+            <LogoMarquee className="py-9" label={c.marquee.label} rows={c.marquee.rows} pauseLabel={c.marquee.pauseLabel} />
+            <ServiceTabs className="lg:min-h-[1033px]" eyebrow={c.services.eyebrow} title={c.services.title} services={c.services.items} tabsLabel={c.labels.services} />
+            <ReasonsSection {...c.reasons} locale={lang} className="pb-0 lg:min-h-[983px]" />
+            <CredentialsGrid {...c.credentials} showPlaceholders className="lg:min-h-[339px]" />
+            <section className="bg-bg-page py-section-lg lg:min-h-[676px]">
                 <Container className="flex flex-col gap-12">
                     <SectionHeading eyebrow={c.process.eyebrow} title={c.process.title} description={c.process.description} />
                     <ProcessSteps steps={c.process.steps} locale={lang} />
                 </Container>
             </section>
             <PhotoQuoteBand {...c.quote} />
-            <section className="bg-bg-page py-section-lg">
+            <section className="bg-bg-surface-ice py-section-lg lg:pt-15">
                 <Container className="flex flex-col gap-12">
-                    <SectionHeading eyebrow={c.news.eyebrow} title={c.news.title} />
+                    <SectionHeading eyebrow={c.news.eyebrow} title={c.news.title} split action={{ label: c.news.allLabel, href: '#' }} />
                     <NewsGrid articles={c.news.articles} readMoreLabel={c.news.readMore} locale={lang} />
                 </Container>
             </section>

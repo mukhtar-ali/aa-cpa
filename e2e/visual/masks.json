@@ -1,1 +1,93 @@
-[]
+[
+  {
+    "name": "hero photo",
+    "x": 442,
+    "y": 258,
+    "width": 630,
+    "height": 498
+  },
+  {
+    "name": "gap photo small",
+    "x": 185,
+    "y": 836,
+    "width": 220,
+    "height": 181
+  },
+  {
+    "name": "gap photo large",
+    "x": 428,
+    "y": 836,
+    "width": 315,
+    "height": 415
+  },
+  {
+    "name": "logo marquee (placeholder logos)",
+    "x": 0,
+    "y": 1602,
+    "width": 1512,
+    "height": 284
+  },
+  {
+    "name": "services photo",
+    "x": 189,
+    "y": 2224,
+    "width": 557,
+    "height": 470
+  },
+  {
+    "name": "reasons photo",
+    "x": 186,
+    "y": 3274,
+    "width": 461,
+    "height": 542
+  },
+  {
+    "name": "reasons side image",
+    "x": 992,
+    "y": 3294,
+    "width": 300,
+    "height": 300
+  },
+  {
+    "name": "accreditation logos (placeholder)",
+    "x": 0,
+    "y": 3984,
+    "width": 1512,
+    "height": 339
+  },
+  {
+    "name": "quote photo",
+    "x": 0,
+    "y": 4999,
+    "width": 720,
+    "height": 640
+  },
+  {
+    "name": "news image 1",
+    "x": 1059,
+    "y": 5842,
+    "width": 267,
+    "height": 250
+  },
+  {
+    "name": "news image 2",
+    "x": 769,
+    "y": 5842,
+    "width": 267,
+    "height": 250
+  },
+  {
+    "name": "news image 3",
+    "x": 479,
+    "y": 5842,
+    "width": 267,
+    "height": 250
+  },
+  {
+    "name": "news image 4",
+    "x": 186,
+    "y": 5842,
+    "width": 267,
+    "height": 250
+  }
+]

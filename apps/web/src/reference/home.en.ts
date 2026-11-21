@@ -129,6 +129,7 @@ export const homeEn: HomeContent = {
     eyebrow: 'News',
     title: 'News and articles that matter to your business',
     readMore: 'Read more',
+    allLabel: 'View all news',
     articles: [1, 2, 3, 4].map((n) => ({ id: `n${n}`, title: 'How AI is changing the work of an auditor', category: 'Articles', date: '2026-10-12', image: img(`news-${n}`, 267, 250), href: '#' })),
   },
   estimator: {

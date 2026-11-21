@@ -18,6 +18,11 @@ describe('PhotoQuoteBand', () => {
     expect(screen.getByText(props.body)).toHaveClass('text-body-lg');
   });
 
+  it('gives the photo the Figma 720 px column (last, so on the inline end side) from lg', () => {
+    const { container } = render(<PhotoQuoteBand {...props} />);
+    expect(container.firstElementChild).toHaveClass('lg:grid-cols-[1fr_45rem]');
+  });
+
   it('keeps line breaks of the headline', () => {
     render(<PhotoQuoteBand {...props} />);
     expect(screen.getByRole('heading', { level: 2 }).textContent).toContain('\n');

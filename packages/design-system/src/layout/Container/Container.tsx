@@ -5,8 +5,8 @@ import { cn } from '../../lib/cn';
 const containerVariants = cva('w-full mx-auto px-4 sm:px-6 lg:px-8', {
   variants: {
     size: {
-      default: 'max-w-(--layout-content-width)',
-      wide: 'max-w-(--layout-content-width-wide)',
+      default: 'max-w-[calc(var(--layout-content-width)+4rem)]',
+      wide: 'max-w-[calc(var(--layout-content-width-wide)+4rem)]',
       full: 'max-w-full',
     },
   },

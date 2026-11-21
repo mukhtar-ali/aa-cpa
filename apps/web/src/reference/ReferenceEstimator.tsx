@@ -11,6 +11,7 @@ export function ReferenceEstimator({ content, locale }: { content: HomeContent['
     const { quote } = content;
     return (
         <EstimatorSection
+            className="lg:min-h-[728px]"
             heading={content.heading}
             intro={content.intro}
             testimonial={content.testimonial}

@@ -23,7 +23,7 @@ export const CredentialsGrid = React.forwardRef<HTMLElement, CredentialsGridProp
     const visible = logos.filter((logo) => showPlaceholders || !logo.placeholder);
     return (
       <section ref={ref} className={cn('bg-bg-inverse py-section-md text-text-on-action', className)} {...props}>
-        <div className="mx-auto flex max-w-285 flex-col gap-10 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-301 flex-col gap-10 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
             <h2 className="text-h4 font-bold">{title}</h2>
             {description ? <p className="max-w-130 text-body-md">{description}</p> : null}

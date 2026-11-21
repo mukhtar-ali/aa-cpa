@@ -19,8 +19,8 @@ export interface PhotoQuoteBandProps extends Omit<React.HTMLAttributes<HTMLEleme
  * @figma 411:3846, 411:3848
  */
 export const PhotoQuoteBand = React.forwardRef<HTMLElement, PhotoQuoteBandProps>(({ title, body, action, image, className, ...props }, ref) => (
-  <section ref={ref} className={cn('grid bg-bg-inverse text-text-inverse lg:grid-cols-2', className)} {...props}>
-    <div className="relative isolate flex flex-col items-start justify-center gap-6 overflow-hidden px-4 py-16 sm:px-6 lg:px-16 lg:py-24">
+  <section ref={ref} className={cn('grid bg-bg-inverse text-text-inverse lg:grid-cols-[1fr_45rem]', className)} {...props}>
+    <div className="relative isolate flex flex-col items-start justify-center gap-6 overflow-hidden px-4 py-16 sm:px-6 lg:px-16 lg:py-16">
       <Pattern name="logo-lines" tone="dark" className="-z-10 opacity-50" />
       <h2 className="text-h1 font-bold whitespace-pre-line">{title}</h2>
       <p className="text-body-lg">{body}</p>

@@ -173,7 +173,7 @@ async function main() {
     const res = await page.goto(url, { waitUntil: 'networkidle' });
     if (!res || !res.ok()) throw new Error(`Could not load ${url} (status ${res?.status()}). Is the web app running with ENABLE_REFERENCE_PAGES=true?`);
     await page.evaluate(() => document.fonts.ready);
-    shot = await page.screenshot({ fullPage: true, animations: 'disabled' });
+    shot = await page.screenshot({ timeout: 180000, fullPage: true, animations: 'disabled' });
   } finally {
     await browser.close();
   }

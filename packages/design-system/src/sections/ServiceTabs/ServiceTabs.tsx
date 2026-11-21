@@ -30,7 +30,7 @@ export function ServiceTabs({ eyebrow, title, services, defaultServiceId, tabsLa
   return (
     <section className={cn('relative isolate overflow-hidden rounded-t-section bg-bg-surface-ice py-section-lg', className)} {...props}>
       <Pattern name="flow-lines" tone="light" className="-z-10 opacity-40" />
-      <Tabs.Root defaultValue={defaultServiceId ?? first.id} orientation="vertical" className="mx-auto grid max-w-285 gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-x-6 lg:px-8">
+      <Tabs.Root defaultValue={defaultServiceId ?? first.id} orientation="vertical" className="mx-auto grid max-w-301 gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-x-6 lg:px-8">
         <div className="flex flex-col gap-8 lg:col-span-5 lg:col-start-1">
           <div className="flex flex-col gap-1.5">
             {eyebrow ? <p className="text-body-lg font-bold text-text-heading">{eyebrow}</p> : null}

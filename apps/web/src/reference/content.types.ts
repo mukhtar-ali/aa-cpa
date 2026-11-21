@@ -27,7 +27,7 @@ export interface HomeContent {
   credentials: { title: string; description: string; logos: LogoItem[]; placeholderLabel: string };
   process: { eyebrow: string; title: string; description: string; steps: ProcessStep[] };
   quote: { title: string; body: string; action: ActionRef; image: ImageRef };
-  news: { eyebrow: string; title: string; readMore: string; articles: ArticleSummary[] };
+  news: { eyebrow: string; title: string; readMore: string; allLabel: string; articles: ArticleSummary[] };
   estimator: {
     heading: string;
     intro: string;
