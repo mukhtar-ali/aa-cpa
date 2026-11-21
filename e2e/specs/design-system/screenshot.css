@@ -1,0 +1,3 @@
+/* Next dev overlay and the Playwright caret must not appear in baselines. */
+nextjs-portal { display: none !important; }
+* { caret-color: transparent !important; }
