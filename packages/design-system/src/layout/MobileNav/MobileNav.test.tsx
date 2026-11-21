@@ -1,8 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { MobileNav } from './MobileNav';
+
+// The sheet is a lazy chunk; load it once up front so the first click does not wait for the module transform.
+beforeAll(async () => {
+  await import('./MobileNavSheet');
+}, 60_000);
 
 const nav = [
   { label: 'Home', href: '#home', active: true },

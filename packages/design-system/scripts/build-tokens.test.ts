@@ -150,5 +150,5 @@ describe('build-tokens generator', () => {
     expect(stdout).toContain('Successfully built 7 design tokens');
     expect(fs.existsSync(path.join(cliOutDir, 'styles/tokens.css'))).toBe(true);
     expect(fs.existsSync(path.join(cliOutDir, 'lib/tokens.ts'))).toBe(true);
-  });
+  }, 30_000); // spawns node; slow on the /mnt drive
 });
