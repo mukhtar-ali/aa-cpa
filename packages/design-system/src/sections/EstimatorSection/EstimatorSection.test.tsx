@@ -25,7 +25,7 @@ const props = {
 describe('EstimatorSection', () => {
   it('has the H1-sized H2, the intro, the testimonial and the estimator card', () => {
     render(<EstimatorSection {...props} />);
-    expect(screen.getByRole('heading', { level: 2, name: props.heading })).toHaveClass('text-h1');
+    expect(screen.getByRole('heading', { level: 2, name: props.heading })).toHaveClass('text-h1', 'text-text-strong');
     expect(screen.getByText(props.intro)).toBeInTheDocument();
     expect(screen.getByRole('figure')).toBeInTheDocument();
     expect(screen.getByText('Question 1 of 1')).toBeInTheDocument();

@@ -47,8 +47,9 @@ export const HomeHero = React.forwardRef<HTMLElement, HomeHeroProps>(({ title, b
         <Text size="lg" tone="inverse-muted" className="lg:col-span-4 lg:col-start-9 lg:row-start-2">
           {body}
         </Text>
-        <div className="lg:col-span-6 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:self-end">
-          <img src={image.src} alt={image.decorative ? '' : image.alt} width={image.width} height={image.height} className="aspect-[630/498] w-full object-cover" />
+        <div className="lg:col-span-12 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:self-end">
+          {/* Figma 411:3702: 630 x 498 portrait, 254 px from the inline start, sitting on the bottom edge under the title. */}
+          <img src={image.src} alt={image.decorative ? '' : image.alt} width={image.width} height={image.height} className="aspect-[630/498] w-full object-cover lg:ms-63.5 lg:w-157.5" />
         </div>
       </Container>
     </section>

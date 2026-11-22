@@ -14,6 +14,8 @@ export interface HeaderProps extends Omit<React.HTMLAttributes<HTMLElement>, 'ch
   utility?: React.ReactNode;
   /** Language switch element shown after the CTA (and inside the mobile panel). */
   localeSwitch?: React.ReactNode;
+  /** Show the language switch in the desktop bar too. Off when the utility bar already carries it (Figma 411:169). The mobile menu always has it. */
+  desktopLocaleSwitch?: boolean;
   menuLabel: string;
   closeLabel: string;
   /** Accessible name of the main navigation landmark. */
@@ -30,7 +32,7 @@ export interface HeaderProps extends Omit<React.HTMLAttributes<HTMLElement>, 'ch
  * @figma 2:3, 411:3807
  */
 export const Header = React.forwardRef<HTMLElement, HeaderProps>(
-  ({ logo, nav, cta, utility, localeSwitch, menuLabel, closeLabel, navLabel, theme = 'solid', className, ...props }, ref) => {
+  ({ logo, nav, cta, utility, localeSwitch, desktopLocaleSwitch = true, menuLabel, closeLabel, navLabel, theme = 'solid', className, ...props }, ref) => {
     const hero = theme === 'hero';
     return (
       <header
@@ -64,7 +66,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(
             <Button href={cta.href} size="sm" variant={cta.variant ?? 'primary'}>
               {cta.label}
             </Button>
-            {localeSwitch}
+            {desktopLocaleSwitch ? localeSwitch : null}
           </div>
           <MobileNav className="lg:hidden" nav={nav} cta={cta} localeSwitch={localeSwitch} menuLabel={menuLabel} closeLabel={closeLabel} navLabel={navLabel} theme={theme} />
         </Container>

@@ -20,6 +20,8 @@ const inter = localFont({
     weight: '100 900',
     variable: '--font-inter',
     display: 'swap',
+    // Legacy fonts: not used by the design-system pages, so do not preload them (about 110 kB less on the critical path).
+    preload: false,
 });
 // Inter has no Arabic glyphs, so Arabic pages would fall back to an arbitrary system font. Cairo covers Arabic and
 // Latin, shipped as two single-script files; each is its own family, and tailwind.css chains them
@@ -29,12 +31,16 @@ const cairoLatin = localFont({
     weight: '200 1000',
     variable: '--font-cairo-latin',
     display: 'swap',
+    // Legacy fonts: not used by the design-system pages, so do not preload them (about 110 kB less on the critical path).
+    preload: false,
 });
 const cairoArabic = localFont({
     src: '../../src/assets/fonts/cairo-arabic-wght-normal.woff2',
     weight: '200 1000',
     variable: '--font-cairo-arabic',
     display: 'swap',
+    // Legacy fonts: not used by the design-system pages, so do not preload them (about 110 kB less on the critical path).
+    preload: false,
 });
 const almaraiLatin = localFont({
     src: [

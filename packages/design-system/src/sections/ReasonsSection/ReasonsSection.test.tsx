@@ -38,6 +38,12 @@ describe('ReasonsSection', () => {
     expect(cards[0]).not.toHaveClass('sm:col-span-2');
   });
 
+  it('puts the 461 px photo in the inline-end column below the heading row, with rounded corners', () => {
+    const { container } = render(<ReasonsSection {...props} />);
+    expect(container.querySelector('.lg\\:grid-cols-\\[1fr_28\\.8125rem\\]')).not.toBeNull();
+    expect(screen.getByRole('img', { name: 'Partner meeting' })).toHaveClass('rounded-card', 'aspect-[461/542]');
+  });
+
   it('shows the photo, the paper action and the statistics list', () => {
     render(<ReasonsSection {...props} />);
     expect(screen.getByRole('img', { name: 'Partner meeting' })).toHaveClass('object-cover');

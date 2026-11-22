@@ -32,6 +32,7 @@ export default async function ReferenceHomePage({ params }: { params: Promise<{ 
                 <Header
                     className="absolute inset-x-0 top-11"
                     theme="hero"
+                    desktopLocaleSwitch={false}
                     logo={logo}
                     nav={chrome.nav}
                     cta={chrome.cta}

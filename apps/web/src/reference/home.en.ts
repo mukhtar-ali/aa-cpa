@@ -85,9 +85,9 @@ export const homeEn: HomeContent = {
     title: 'Why do companies move to us?',
     description: 'The person who reviews your work is the same person who answers your questions. No layers in between.',
     pillars: [
+      { icon: 'globe-check', title: 'Licensed, and globally connected.', body: 'SOCPA licence no. 522, backed by the 3E Accounting network when your business goes beyond the Kingdom.' },
       { icon: 'scan', title: 'Technology that shortens the work, not the judgement.', body: 'Our analytics find deviations faster than manual sampling, so partner time goes to thinking, not counting.' },
-      { icon: 'hexagon-dot', title: 'Licensed partners who sign by name', body: 'Every file is supervised by a SOCPA-licensed partner who stays in touch with you until handover.' },
-      { icon: 'globe-check', title: 'Part of a global network', body: 'Independent member of 3E Accounting in more than 80 countries, for clients whose business crosses borders.' },
+      { icon: 'location', title: 'Rare depth in local content.', body: 'We are one of the few SOCPA-licensed firms with specialist experience in local content certification.' },
     ],
     image: img('reasons', 461, 542),
     action: { label: 'Request a quote', href: '#' },

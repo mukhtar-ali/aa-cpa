@@ -1,7 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { Header } from './Header';
+
+// The mobile sheet is a lazy chunk; load it once so the first click does not wait for the module transform.
+beforeAll(async () => {
+  await import('../MobileNav/MobileNavSheet');
+}, 60_000);
 
 const nav = [
   { label: 'Home', href: '/', active: true },
@@ -45,6 +51,13 @@ describe('Header', () => {
     expect(screen.getByRole('navigation', { name: 'Main navigation' })).toHaveClass('hidden', 'lg:block');
     expect(screen.getByRole('link', { name: 'Request a quote' }).parentElement).toHaveClass('hidden', 'lg:flex');
     expect(screen.getByRole('button', { name: 'Menu' })).toHaveClass('lg:hidden');
+  });
+
+  it('can leave the language switch to the utility bar on desktop and keep it in the mobile menu', async () => {
+    render(<Header {...props} desktopLocaleSwitch={false} localeSwitch={<a href="/en">EN</a>} />);
+    expect(screen.queryByRole('link', { name: 'EN' })).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: 'Menu' }));
+    expect(await screen.findByRole('link', { name: 'EN' })).toBeInTheDocument();
   });
 
   it('renders the logo, the utility bar slot and the language switch', () => {
