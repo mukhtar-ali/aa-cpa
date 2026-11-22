@@ -29,9 +29,9 @@ export const CredentialsGrid = React.forwardRef<HTMLElement, CredentialsGridProp
             {description ? <p className="max-w-130 text-body-md">{description}</p> : null}
           </div>
           <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
-            {visible.map((logo) => (
+            {visible.map((logo, logoIndex) => (
               <li
-                key={logo.name}
+                key={`${logo.name}-${logoIndex}`}
                 className={cn(
                   'flex h-30 items-center justify-center overflow-hidden rounded-sm border border-solid p-4',
                   logo.placeholder ? 'border-dashed border-border-subtle text-body-sm text-text-inverse-muted' : 'border-border-decor bg-bg-surface',

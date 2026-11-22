@@ -29,7 +29,9 @@ describe('Testimonial', () => {
 
   it('falls back to initials without an avatar and omits the company separator when there is no company', () => {
     render(<Testimonial testimonial={{ ...data, company: undefined }} />);
-    expect(screen.getByRole('img', { name: 'Omar Al-Salem' })).toHaveTextContent('OA');
+    expect(screen.queryByRole('img', { name: 'Omar Al-Salem' })).toBeNull();
+    expect(screen.getAllByText('Omar Al-Salem')).toHaveLength(1);
+    expect(screen.getByText('OA')).toHaveAttribute('aria-hidden', 'true');
     expect(screen.getByText('Chief Financial Officer')).toBeInTheDocument();
   });
 

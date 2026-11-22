@@ -179,10 +179,17 @@ export interface LogoItem {
   placeholder?: boolean;
 }
 
+/**
+ * HTML that has been sanitised on the server (the API stores sanitised HTML). The brand makes a caller say so explicitly: a plain string
+ * does not type-check, so unsanitised content cannot reach `dangerouslySetInnerHTML` by accident. Create one with `markSanitizedHtml`.
+ */
+export type SanitizedHtml = string & { readonly __sanitizedHtml: unique symbol };
+
 export interface LegalSection {
+  /** Anchor id of the section. Prefixed inside the page so content ids cannot clash with other ids such as "main". */
   id: string;
   title: string;
-  html: string;
+  html: SanitizedHtml;
 }
 
 export interface LegalDocument {
@@ -240,6 +247,8 @@ export interface EstimatorConfig {
   currency: 'SAR';
   estimate: (answers: Record<string, string | number>) => Promise<{ min: number; max: number }>;
   quote?: EstimatorQuoteConfig;
+  /** Give up on `estimate` and the quote submit after this many milliseconds (default 30 000) and show the failure message. */
+  timeoutMs?: number;
 }
 
 export interface FormFieldModel {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useMemo } from 'react';
 import { DirectionProvider } from '@radix-ui/react-direction';
 
 export type DesignSystemLocale = 'ar' | 'en';
@@ -33,6 +33,14 @@ export function DesignSystemProvider({
     }),
     [locale, resolvedDir],
   );
+
+  useEffect(() => {
+    // Radix keyboard direction and the logical CSS follow different sources: they must agree.
+    const documentDir = document.documentElement.dir;
+    if (process.env.NODE_ENV !== 'production' && documentDir && documentDir !== resolvedDir) {
+      console.warn(`DesignSystemProvider: dir="${resolvedDir}" differs from <html dir="${documentDir}">. Set both from the same locale.`);
+    }
+  }, [resolvedDir]);
 
   return (
     <DesignSystemContext.Provider value={contextValue}>

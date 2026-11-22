@@ -73,4 +73,13 @@ describe('ShareBox review fixes', () => {
     expect(screen.getByRole('link', { name: 'Share on WhatsApp' }).getAttribute('href')).toContain('Annual%20audit');
     expect(screen.getByRole('link', { name: 'Share on WhatsApp' }).getAttribute('href')).not.toContain('Enjoyed');
   });
+
+  it('names the section by its heading, names the link field, and reports a copy failure', async () => {
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockRejectedValue(new Error('denied')) }, configurable: true });
+    render(<ShareBox {...props} variant="card" labels={{ ...labels, copyFailed: 'Could not copy', linkField: 'Page link' }} />);
+    expect(screen.getByRole('region', { name: props.title })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Page link' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Copy' }));
+    expect(await screen.findByRole('status')).toHaveTextContent('Could not copy');
+  });
 });

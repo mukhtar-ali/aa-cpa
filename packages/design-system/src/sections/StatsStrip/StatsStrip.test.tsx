@@ -49,7 +49,7 @@ describe('StatsStrip', () => {
 
   it('values use the gradient accent at the H2 size', () => {
     render(<StatTile stat={stats[0]!} />);
-    expect(screen.getByText('522')).toHaveClass('text-h2', 'font-bold', 'text-transparent', 'bg-clip-text', 'to-gradient-end-text-large');
+    expect(screen.getByText('522').closest('p')).toHaveClass('text-h2', 'font-bold', 'text-transparent', 'bg-clip-text', 'to-gradient-end-text-large');
   });
 
   it.each(['ar', 'en'] as const)('has no axe violations in %s (dark and light)', async (lang) => {
@@ -60,5 +60,13 @@ describe('StatsStrip', () => {
       </div>,
     );
     expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+describe('StatsStrip bidi', () => {
+  it('isolates the value so a prefix or unit cannot jump sides in right-to-left text', () => {
+    const { container } = render(<StatTile stat={{ value: 120, prefix: '+', label: 'clients' }} locale="ar" />);
+    expect(container.querySelector('bdi')).toHaveAttribute('dir', 'ltr');
+    expect(container.querySelector('bdi')).toHaveTextContent('+120');
   });
 });

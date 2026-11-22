@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 import { PageHero } from './PageHero';
@@ -63,5 +63,13 @@ describe('PageHero', () => {
       </div>,
     );
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('warns in development when breadcrumbs are given without a label, and still renders the page', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    render(<PageHero title="T" subtitle="S" image={image} breadcrumbs={[{ label: 'Home', href: '/' }]} />);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('breadcrumbsLabel'));
+    expect(screen.queryByRole('navigation')).toBeNull();
+    warn.mockRestore();
   });
 });

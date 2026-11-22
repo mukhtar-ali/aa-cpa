@@ -24,7 +24,7 @@ export interface FeaturedNewsProps extends Omit<React.HTMLAttributes<HTMLElement
  */
 export const FeaturedNews = React.forwardRef<HTMLElement, FeaturedNewsProps>(({ featured, latest, latestTitle, readMoreLabel, locale = 'ar', className, ...props }, ref) => (
   <section ref={ref} className={cn('grid gap-8 lg:grid-cols-[1fr_20.375rem]', className)} {...props}>
-    <article className="group relative flex flex-col gap-5">
+    <article className="group relative flex flex-col gap-5 has-[a:focus-visible]:outline-3 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-solid has-[a:focus-visible]:outline-ring-focus">
       <img src={featured.image.src} alt={featured.image.decorative ? '' : featured.image.alt} width={featured.image.width} height={featured.image.height} className="aspect-[16/9] w-full rounded-card object-cover" />
       <div className="flex flex-col items-start gap-3">
         <CategoryBadge>{featured.category}</CategoryBadge>

@@ -9,6 +9,8 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** Person name; used for the initials fallback. */
   name: string;
   size?: keyof typeof sizes;
+  /** Expose the name to assistive technology. Off by default: an avatar usually sits next to the visible name, which would be read twice. */
+  labelled?: boolean;
 }
 
 function initials(name: string): string {
@@ -24,7 +26,7 @@ function initials(name: string): string {
  *
  * @figma 411:3878
  */
-export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(({ image, name, size = 'md', className, ...props }, ref) => (
+export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(({ image, name, size = 'md', labelled = false, className, ...props }, ref) => (
   <span
     ref={ref}
     className={cn('relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-pine-200 font-bold text-text-heading', sizes[size], className)}
@@ -32,11 +34,9 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(({ image, n
   >
     {image ? (
       /* plain <img>: the library is framework-agnostic; apps decide on next/image */
-      <img src={image.src} alt={image.decorative ? "" : image.alt || name} width={image.width} height={image.height} className="size-full object-cover" />
+      <img src={image.src} alt={image.decorative || !labelled ? "" : image.alt || name} width={image.width} height={image.height} className="size-full object-cover" />
     ) : (
-      <span role="img" aria-label={name}>
-        {initials(name)}
-      </span>
+      <span {...(labelled ? { role: 'img', 'aria-label': name } : { 'aria-hidden': true })}>{initials(name)}</span>
     )}
   </span>
 ));

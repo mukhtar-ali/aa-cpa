@@ -5,22 +5,22 @@ import { Avatar } from './Avatar';
 
 describe('Avatar', () => {
   it('renders the photo when an image is given', () => {
-    render(<Avatar name="Ali Hassan" image={{ src: '/a.jpg', alt: 'Ali Hassan photo', width: 56, height: 56 }} />);
+    render(<Avatar labelled name="Ali Hassan" image={{ src: '/a.jpg', alt: 'Ali Hassan photo', width: 56, height: 56 }} />);
     const img = screen.getByRole('img', { name: 'Ali Hassan photo' });
     expect(img).toHaveAttribute('src', '/a.jpg');
     expect(img).toHaveClass('object-cover');
   });
 
   it('falls back to initials named by the person', () => {
-    render(<Avatar name="Ali Hassan" />);
+    render(<Avatar labelled name="Ali Hassan" />);
     const el = screen.getByRole('img', { name: 'Ali Hassan' });
     expect(el).toHaveTextContent('AH');
   });
 
   it('uses one initial for a single name and handles Arabic names', () => {
-    const { rerender } = render(<Avatar name="Ali" />);
+    const { rerender } = render(<Avatar labelled name="Ali" />);
     expect(screen.getByRole('img', { name: 'Ali' })).toHaveTextContent('A');
-    rerender(<Avatar name="محمد العتيبي" />);
+    rerender(<Avatar labelled name="محمد العتيبي" />);
     expect(screen.getByRole('img', { name: 'محمد العتيبي' })).toHaveTextContent('ما');
   });
 
@@ -39,5 +39,13 @@ describe('Avatar', () => {
       </div>,
     );
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('is decorative by default so the name beside it is not read twice', () => {
+    const { container, rerender } = render(<Avatar name="Ali Hassan" />);
+    expect(screen.queryByRole('img')).toBeNull();
+    expect(container.querySelector('[aria-hidden="true"]')).toHaveTextContent('AH');
+    rerender(<Avatar name="Ali Hassan" image={{ src: '/a.jpg', alt: 'Ali Hassan photo', width: 56, height: 56 }} />);
+    expect(container.querySelector('img')).toHaveAttribute('alt', '');
   });
 });

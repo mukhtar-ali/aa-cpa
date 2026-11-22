@@ -1,3 +1,4 @@
+import { HeadingTag, type HeadingLevel } from '../../lib/heading-tag';
 import * as React from 'react';
 import { cn } from '../../lib/cn';
 import { formatDate } from '../../lib/format';
@@ -8,6 +9,8 @@ import type { ArticleSummary } from '../../types';
 type Locale = 'ar' | 'en';
 
 export interface NewsCardProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
+  /** Heading level of the card title (default 3), so the card fits the page's heading outline. */
+  headingLevel?: HeadingLevel;
   article: ArticleSummary;
   /** Label of the read-more link, for example "Read more". */
   readMoreLabel: string;
@@ -22,8 +25,8 @@ export interface NewsCardProps extends Omit<React.HTMLAttributes<HTMLElement>, '
  *
  * @figma 423:1145
  */
-export const NewsCard = React.forwardRef<HTMLElement, NewsCardProps>(({ article, readMoreLabel, locale = 'ar', badgeTone = 'gold', className, ...props }, ref) => (
-  <article ref={ref} className={cn('group relative flex flex-col gap-3.5', className)} {...props}>
+export const NewsCard = React.forwardRef<HTMLElement, NewsCardProps>(({ article, readMoreLabel, locale = 'ar', badgeTone = 'gold', headingLevel = 3, className, ...props }, ref) => (
+  <article ref={ref} className={cn('group relative flex flex-col gap-3.5 has-[a:focus-visible]:outline-3 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-solid has-[a:focus-visible]:outline-ring-focus', className)} {...props}>
     <img
       src={article.image.src}
       alt={article.image.decorative ? '' : article.image.alt}
@@ -33,11 +36,11 @@ export const NewsCard = React.forwardRef<HTMLElement, NewsCardProps>(({ article,
     />
     <div className="flex flex-col items-start gap-3">
       <CategoryBadge tone={badgeTone}>{article.category}</CategoryBadge>
-      <h3 className="text-h6 font-bold text-text-heading">
+      <HeadingTag level={headingLevel} className="text-h6 font-bold text-text-heading">
         <a href={article.href} className="after:absolute after:inset-0">
           {article.title}
         </a>
-      </h3>
+      </HeadingTag>
       <time dateTime={article.date} className="text-body-xs text-text-muted">
         {formatDate(article.date, locale, { day: 'numeric', month: 'long', year: 'numeric' })}
       </time>
@@ -58,16 +61,18 @@ export interface NewsGridProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   filters?: React.ReactNode;
   /** Optional pagination rendered below the grid. */
   pagination?: React.ReactNode;
+  /** Heading level of the card titles (default 3). */
+  headingLevel?: HeadingLevel;
 }
 
 /** Grid of news cards, four across on large screens, with optional filter and pagination slots. */
-export const NewsGrid = React.forwardRef<HTMLDivElement, NewsGridProps>(({ articles, readMoreLabel, locale = 'ar', filters, pagination, className, ...props }, ref) => (
+export const NewsGrid = React.forwardRef<HTMLDivElement, NewsGridProps>(({ articles, readMoreLabel, locale = 'ar', filters, pagination, headingLevel = 3, className, ...props }, ref) => (
   <div ref={ref} className={cn('flex flex-col gap-10', className)} {...props}>
     {filters}
     <ul className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
       {articles.map((article) => (
         <li key={article.id}>
-          <NewsCard article={article} readMoreLabel={readMoreLabel} locale={locale} />
+          <NewsCard article={article} readMoreLabel={readMoreLabel} locale={locale} headingLevel={headingLevel} />
         </li>
       ))}
     </ul>

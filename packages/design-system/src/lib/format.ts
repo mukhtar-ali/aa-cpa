@@ -12,6 +12,8 @@ export function formatNumber(
   options?: Intl.NumberFormatOptions,
 ): string {
   const tag = LOCALE_TAGS[locale] ?? LOCALE_TAGS.ar;
+  // NaN and Infinity would print as "NaN" or "∞" on the page.
+  if (!Number.isFinite(value)) return '–';
   return new Intl.NumberFormat(tag, options).format(value);
 }
 
@@ -22,11 +24,17 @@ export function formatCurrency(
   options?: Intl.NumberFormatOptions,
 ): string {
   const tag = LOCALE_TAGS[locale] ?? LOCALE_TAGS.ar;
-  return new Intl.NumberFormat(tag, {
-    style: 'currency',
-    currency,
-    ...options,
-  }).format(value);
+  if (!Number.isFinite(value)) return '–';
+  try {
+    return new Intl.NumberFormat(tag, {
+      style: 'currency',
+      currency,
+      ...options,
+    }).format(value);
+  } catch {
+    // An invalid currency code throws a RangeError; show the number with the code instead of crashing the page.
+    return `${new Intl.NumberFormat(tag, options).format(value)} ${currency}`;
+  }
 }
 
 export function formatDate(

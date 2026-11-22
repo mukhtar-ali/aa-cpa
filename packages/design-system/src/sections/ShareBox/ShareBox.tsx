@@ -14,6 +14,10 @@ export interface ShareBoxLabels {
   copy: string;
   /** Shown after copying, announced politely, for example "Link copied". */
   copied: string;
+  /** Shown when the browser refuses to copy, for example "Could not copy, select the link instead". */
+  copyFailed?: string;
+  /** Name of the read-only link field (dark card), for example "Page link". Defaults to `copyLink`. */
+  linkField?: string;
 }
 
 export interface ShareBoxProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
@@ -45,26 +49,28 @@ export function shareLinks(url: string, text: string) {
  * @figma 506:3982, 506:4011, 505:3864
  */
 export function ShareBox({ url, title, shareText, description, labels, variant = 'bar', className, ...props }: ShareBoxProps) {
-  const [copied, setCopied] = React.useState(false);
+  const [copyState, setCopyState] = React.useState<'idle' | 'copied' | 'failed'>('idle');
+  const headingId = React.useId();
   const links = shareLinks(url, shareText ?? title);
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(url);
-      setCopied(true);
+      setCopyState('copied');
       // Reset so a second copy is announced again.
-      window.setTimeout(() => setCopied(false), 2500);
+      window.setTimeout(() => setCopyState('idle'), 2500);
     } catch {
-      setCopied(false);
+      setCopyState('failed');
+      window.setTimeout(() => setCopyState('idle'), 4000);
     }
   };
   const dark = variant === 'card';
   const buttonClass = 'size-11';
   const variantProp = dark ? 'ghost-light' : 'outline';
   return (
-    <section className={cn('flex flex-col gap-5 rounded-cta p-6', dark ? 'bg-bg-inverse text-text-inverse' : 'bg-bg-surface-ice text-text-heading', className)} {...props}>
+    <section aria-labelledby={headingId} className={cn('flex flex-col gap-5 rounded-cta p-6', dark ? 'bg-bg-inverse text-text-inverse' : 'bg-bg-surface-ice text-text-heading', className)} {...props}>
       <div className={cn('flex flex-col gap-1', !dark && 'sm:flex-row sm:items-center sm:justify-between sm:gap-6')}>
         <div className="flex flex-col gap-1">
-          <h2 className={cn(dark ? 'text-h5' : 'text-h6', 'font-bold')}>{title}</h2>
+          <h2 id={headingId} className={cn(dark ? 'text-h5' : 'text-h6', 'font-bold')}>{title}</h2>
           {description ? <p className={cn('text-body-sm', dark ? 'text-text-inverse-muted' : 'text-text-body')}>{description}</p> : null}
         </div>
         <div className="flex gap-2.5">
@@ -79,11 +85,11 @@ export function ShareBox({ url, title, shareText, description, labels, variant =
           <button type="button" onClick={copy} className="h-10 shrink-0 rounded-sm bg-bg-page px-5 text-body-sm font-bold text-text-strong">
             {labels.copy}
           </button>
-          <input readOnly value={url} dir="ltr" aria-label={labels.copyLink} className="min-w-0 flex-1 bg-transparent px-2 text-body-sm text-text-inverse outline-none" />
+          <input readOnly value={url} dir="ltr" aria-label={labels.linkField ?? labels.copyLink} className="min-w-0 flex-1 bg-transparent px-2 text-body-sm text-text-inverse outline-none" />
         </div>
       ) : null}
       <p role="status" className="sr-only">
-        {copied ? labels.copied : ''}
+        {copyState === 'copied' ? labels.copied : copyState === 'failed' ? (labels.copyFailed ?? '') : ''}
       </p>
     </section>
   );

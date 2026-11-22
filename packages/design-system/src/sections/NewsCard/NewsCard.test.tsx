@@ -70,3 +70,12 @@ describe('NewsGrid', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('NewsGrid heading level', () => {
+  it('renders the card titles at the requested level', () => {
+    const a = { id: 'a1', title: 'First', category: 'News', date: '2026-10-12', image: { src: '/a.jpg', alt: 'a', width: 267, height: 250 }, href: '/n/1' };
+    render(<NewsGrid articles={[a, { ...a, id: 'a2', title: 'Second' }]} readMoreLabel="Read more" headingLevel={2} />);
+    expect(screen.getAllByRole('heading', { level: 2 })).toHaveLength(2);
+    expect(screen.queryByRole('heading', { level: 3 })).toBeNull();
+  });
+});

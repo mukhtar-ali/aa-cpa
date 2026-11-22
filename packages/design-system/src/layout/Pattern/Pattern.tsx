@@ -79,7 +79,8 @@ function getPatternColorClass(name: PatternName, tone: PatternTone): string {
     case 'logo-lines':
       return tone === 'dark' ? 'text-border-inverse' : 'text-border-decor';
     case 'flow-lines':
-      return 'text-border-inverse';
+      // The light version of the flow lines (on the ice and page tones) is a pale grey line, not the dark-green one.
+      return tone === 'dark' ? 'text-border-inverse' : 'text-border-subtle';
     case 'dots-grid':
       return 'text-text-strong';
   }

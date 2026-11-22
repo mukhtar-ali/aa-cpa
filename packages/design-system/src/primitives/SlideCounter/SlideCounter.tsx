@@ -18,7 +18,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
  * @figma 448:41066 (unverified)
  */
 export const SlideCounter = React.forwardRef<HTMLDivElement, SlideCounterProps>(({ current, total, label, className, ...props }, ref) => {
-  const value = Math.min(Math.max(current, 1), Math.max(total, 1));
+  if (total < 1) return null;
+  const value = Math.min(Math.max(current, 1), total);
   return (
     <div ref={ref} className={cn('flex flex-col gap-3', className)} {...props}>
       <p className="text-body-md font-bold text-text-heading">

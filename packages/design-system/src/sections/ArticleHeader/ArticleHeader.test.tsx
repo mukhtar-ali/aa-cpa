@@ -29,7 +29,9 @@ describe('ArticleHeader', () => {
     expect(screen.getByText('Al-Shabibshiri team')).toHaveClass('font-bold', 'text-body-md');
     expect(screen.getByText(props.meta).tagName).toBe('TIME');
     expect(screen.getByText(props.meta)).toHaveAttribute('datetime', '2026-10-12');
-    expect(screen.getByRole('img', { name: 'Al-Shabibshiri team' }).parentElement).toHaveClass('size-13');
+    // The avatar is decorative: the name is already written next to it.
+    expect(screen.queryByRole('img', { name: 'Al-Shabibshiri team' })).toBeNull();
+    expect(screen.getByText('Al-Shabibshiri team').closest('div')?.parentElement?.querySelector('.size-13')).not.toBeNull();
   });
 
   it('renders the share slot at the end of the author row', () => {

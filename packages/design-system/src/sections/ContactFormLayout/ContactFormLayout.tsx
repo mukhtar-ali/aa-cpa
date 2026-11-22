@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { cn } from '../../lib/cn';
 import { isEmail, isSaudiMobile } from '../../lib/validators';
+import { withTimeout } from '../../lib/with-timeout';
 import { Checkbox } from '../../forms/Checkbox';
 import { Field } from '../../forms/Field';
 import { FormErrorSummary } from '../../forms/FormErrorSummary';
@@ -49,6 +50,8 @@ export interface ContactFormLayoutProps extends Omit<React.HTMLAttributes<HTMLEl
   onSubmit: (values: ContactFormValues) => Promise<void>;
   /** Side content (contact items, office cards) shown next to the form from `lg`. */
   aside?: React.ReactNode;
+  /** Give up on `onSubmit` after this many milliseconds (default 30 000) and show the failure message. */
+  submitTimeoutMs?: number;
 }
 
 type Errors = Partial<Record<'name' | 'mobile' | 'email' | 'message' | 'consent', string>>;
@@ -60,7 +63,7 @@ type Errors = Partial<Record<'name' | 'mobile' | 'email' | 'message' | 'consent'
  *
  * @figma 524:3651 (unverified)
  */
-export function ContactFormLayout({ title, description, labels, services, onSubmit, aside, className, ...props }: ContactFormLayoutProps) {
+export function ContactFormLayout({ title, description, labels, services, onSubmit, aside, submitTimeoutMs = 30_000, className, ...props }: ContactFormLayoutProps) {
   const startedAt = React.useRef(Date.now());
   const [values, setValues] = React.useState({ name: '', mobile: '', email: '', service: '', message: '', consent: false, website: '' });
   const [errors, setErrors] = React.useState<Errors>({});
@@ -88,7 +91,7 @@ export function ContactFormLayout({ title, description, labels, services, onSubm
     if (Object.keys(found).length > 0) return;
     setStatus('submitting');
     try {
-      await onSubmit({ ...values, name: values.name.trim(), email: values.email.trim(), startedAt: startedAt.current });
+      await withTimeout(onSubmit({ ...values, name: values.name.trim(), email: values.email.trim(), startedAt: startedAt.current }), submitTimeoutMs);
       setStatus('sent');
     } catch {
       setStatus('failed');
@@ -112,14 +115,14 @@ export function ContactFormLayout({ title, description, labels, services, onSubm
           <form onSubmit={submit} noValidate className="flex flex-col gap-6">
             <FormErrorSummary title={labels.summaryTitle} errors={summaryItems} focusKey={attempt} />
             <div className="grid gap-6 sm:grid-cols-2">
-              <Field id="contact-name" label={labels.name} required error={errors.name}>
+              <Field id="contact-name" label={labels.name} required announce={false} error={errors.name}>
                 <TextInput autoComplete="name" value={values.name} onChange={(e) => set('name', e.target.value)} />
               </Field>
-              <Field id="contact-mobile" label={labels.mobile} required error={errors.mobile}>
+              <Field id="contact-mobile" label={labels.mobile} required announce={false} error={errors.mobile}>
                 <TextInput type="tel" autoComplete="tel" dir="ltr" value={values.mobile} onChange={(e) => set('mobile', e.target.value)} />
               </Field>
             </div>
-            <Field id="contact-email" label={labels.email} required error={errors.email}>
+            <Field id="contact-email" label={labels.email} required announce={false} error={errors.email}>
               <TextInput type="email" autoComplete="email" dir="ltr" value={values.email} onChange={(e) => set('email', e.target.value)} />
             </Field>
             <Field id="contact-service" label={labels.service}>
@@ -132,10 +135,10 @@ export function ContactFormLayout({ title, description, labels, services, onSubm
                 ))}
               </Select>
             </Field>
-            <Field id="contact-message" label={labels.message} required error={errors.message}>
+            <Field id="contact-message" label={labels.message} required announce={false} error={errors.message}>
               <Textarea value={values.message} onChange={(e) => set('message', e.target.value)} />
             </Field>
-            <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" value={values.website} onChange={(e) => set('website', e.target.value)} className="absolute h-0 w-0 overflow-hidden opacity-0" />
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" data-1p-ignore data-lpignore="true" data-form-type="other" aria-hidden="true" value={values.website} onChange={(e) => set('website', e.target.value)} className="absolute h-0 w-0 overflow-hidden opacity-0" />
             <Checkbox id="contact-consent" label={labels.consent} checked={values.consent} error={errors.consent} onChange={(e) => set('consent', e.target.checked)} />
             {status === 'failed' ? (
               <p role="alert" className="text-body-sm text-status-error">

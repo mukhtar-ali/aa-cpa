@@ -73,8 +73,8 @@ export const JobSummaryCard = React.forwardRef<HTMLElement, JobSummaryCardProps>
     <aside ref={ref} className={cn('rounded-cta border border-solid border-border-subtle bg-bg-surface p-6', className)} {...props}>
       <h2 className="mb-4 text-h6 font-bold text-text-heading">{job.title}</h2>
       <dl className="flex flex-col">
-        {rows.map(([term, value]) => (
-          <div key={term} className="flex items-baseline justify-between gap-4 border-b border-solid border-border-subtle py-3 last:border-b-0">
+        {rows.map(([term, value], index) => (
+          <div key={`${term}-${index}`} className="flex items-baseline justify-between gap-4 border-b border-solid border-border-subtle py-3 last:border-b-0">
             <dt className="text-body-sm text-text-muted">{term}</dt>
             <dd className="text-body-sm font-bold text-text-heading">{value}</dd>
           </div>

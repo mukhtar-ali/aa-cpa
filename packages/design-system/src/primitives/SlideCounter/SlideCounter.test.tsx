@@ -41,4 +41,9 @@ describe('SlideCounter', () => {
     );
     expect(await axe(container)).toHaveNoViolations();
   });
+
+  it('renders nothing for an empty set', () => {
+    const { container } = render(<SlideCounter current={1} total={0} label="Slide" />);
+    expect(container).toBeEmptyDOMElement();
+  });
 });

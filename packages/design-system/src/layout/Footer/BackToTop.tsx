@@ -18,6 +18,12 @@ export function BackToTop({ label, className, onClick, ...props }: BackToTopProp
       onClick={(event) => {
         onClick?.(event);
         window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+        // Scrolling does not move keyboard focus: put it on the page's main landmark so the next Tab starts at the top.
+        const main = document.querySelector<HTMLElement>('main, [role="main"]');
+        if (main) {
+          if (!main.hasAttribute('tabindex')) main.setAttribute('tabindex', '-1');
+          main.focus({ preventScroll: true });
+        }
       }}
       {...props}
     >

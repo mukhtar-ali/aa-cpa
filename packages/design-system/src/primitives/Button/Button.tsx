@@ -111,7 +111,8 @@ export const Button = React.forwardRef<HTMLElement, ButtonProps>(
       const child = React.Children.only(children) as React.ReactElement<{ children?: React.ReactNode }>;
       return (
         <Slot ref={ref} {...(common as React.HTMLAttributes<HTMLElement>)}>
-          {React.cloneElement(child, undefined, <>{loading ? null : startIcon}{child.props.children}{endIcon}</>)}
+          {/* A disabled or loading asChild button must not run the child's own handler or navigate. */}
+          {React.cloneElement(child, inactive ? ({ onClick: undefined, href: undefined } as object) : undefined, <>{loading ? null : startIcon}{child.props.children}{endIcon}</>)}
         </Slot>
       );
     }

@@ -51,11 +51,11 @@ describe('Pattern component', () => {
     );
     expect(logoDark.firstElementChild).toHaveClass('text-border-inverse');
 
-    // flow-lines -> text-border-inverse for both tones
+    // flow-lines: dark tone -> text-border-inverse, light tone -> a pale grey line
     const { container: flowLight } = render(
       <Pattern name="flow-lines" tone="light" />,
     );
-    expect(flowLight.firstElementChild).toHaveClass('text-border-inverse');
+    expect(flowLight.firstElementChild).toHaveClass('text-border-subtle');
 
     const { container: flowDark } = render(
       <Pattern name="flow-lines" tone="dark" />,

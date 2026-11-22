@@ -64,4 +64,22 @@ describe('format utilities', () => {
       expect(result).toContain('2026');
     });
   });
+
+  describe('hardening', () => {
+    it('shows a dash for NaN and Infinity instead of "NaN"', () => {
+      expect(formatNumber(NaN, 'en')).toBe('–');
+      expect(formatNumber(Infinity, 'ar')).toBe('–');
+      expect(formatCurrency(NaN, 'en')).toBe('–');
+    });
+
+    it('does not throw for an invalid currency code', () => {
+      expect(() => formatCurrency(1200, 'en', 'not-a-code')).not.toThrow();
+      expect(formatCurrency(1200, 'en', 'not-a-code')).toContain('1,200');
+    });
+
+    it('uses the Gregorian calendar (no Hijri years)', () => {
+      expect(formatDate('2026-10-12T00:00:00Z', 'ar', { year: 'numeric' })).toBe('2026');
+      expect(formatDate('2026-10-12T00:00:00Z', 'en', { year: 'numeric' })).toBe('2026');
+    });
+  });
 });

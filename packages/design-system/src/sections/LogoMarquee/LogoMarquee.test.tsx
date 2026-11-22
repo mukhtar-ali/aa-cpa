@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
@@ -77,5 +77,14 @@ describe('LogoMarquee', () => {
       </div>,
     );
     expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+describe('LogoMarquee duplicate names', () => {
+  it('renders two logos with the same name without duplicate-key warnings', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    render(<LogoMarquee label="Our clients" rows={[[logo('Shell'), logo('Shell')]]} pauseLabel="Pause" />);
+    expect(spy.mock.calls.some((c) => String(c[0]).includes('same key'))).toBe(false);
+    spy.mockRestore();
   });
 });

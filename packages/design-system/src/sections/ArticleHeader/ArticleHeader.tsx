@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../lib/cn';
+import { warnMissingBreadcrumbLabel } from '../../lib/dev-warn';
 import { Avatar } from '../../primitives/Avatar';
 import { Breadcrumbs } from '../../primitives/Breadcrumbs';
 import { Chip } from '../../primitives/Chip';
@@ -30,6 +31,7 @@ export interface ArticleHeaderProps extends Omit<React.HTMLAttributes<HTMLElemen
 export const ArticleHeader = React.forwardRef<HTMLElement, ArticleHeaderProps>(
   ({ breadcrumbs, breadcrumbsLabel, category, title, author, meta, dateISO, share, cover, className, ...props }, ref) => (
     <header ref={ref} className={cn('flex flex-col gap-6', className)} {...props}>
+      {warnMissingBreadcrumbLabel(breadcrumbs, breadcrumbsLabel, 'ArticleHeader')}
       {breadcrumbs && breadcrumbs.length > 0 && breadcrumbsLabel ? <Breadcrumbs items={breadcrumbs} label={breadcrumbsLabel} /> : null}
       <Chip className="self-start">{category}</Chip>
       <Heading level={1} className="max-w-225">

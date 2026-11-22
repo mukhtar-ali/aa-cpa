@@ -140,7 +140,7 @@ describe('Estimator', () => {
     await answerAll();
     await screen.findByText('Your estimated range');
     expect(config.estimate).toHaveBeenCalledWith({ revenue: 12000000, staff: 85, sector: 'retail', deadline: 'soon' });
-    expect(screen.getByText(/100,000/)).toHaveTextContent(/SAR\s?100,000.*SAR\s?150,000/);
+    expect(screen.getByText(/100,000/).closest('p')).toHaveTextContent(/SAR\s?100,000.*SAR\s?150,000/);
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '100');
     expect(screen.getByText(labels.disclaimer)).toBeInTheDocument();
   });
@@ -289,5 +289,32 @@ describe('Estimator', () => {
     expect(await axe(container)).toHaveNoViolations();
     await userEvent.click(screen.getByRole('button', { name: 'Request a formal quote' }));
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('an estimate that never settles ends in the failure message', async () => {
+    setup(makeConfig({ timeoutMs: 50, estimate: () => new Promise(() => {}) }));
+    await answerAll();
+    expect(await screen.findByText(labels.error)).toBeInTheDocument();
+    expect(screen.getByText('Question 4 of 4')).toBeInTheDocument();
+  });
+
+  it('Enter in the numeric input moves to the next question', async () => {
+    setup();
+    await userEvent.type(screen.getByLabelText('Approximate annual revenue (SAR)'), '12000000');
+    await userEvent.click(screen.getByRole('button', { name: 'Start estimate' }));
+    await userEvent.type(screen.getByLabelText('Number of employees'), '85{Enter}');
+    expect(screen.getByText('Question 3 of 4')).toBeInTheDocument();
+  });
+
+  it('renders nothing without questions', () => {
+    const { container } = setup(makeConfig({ questions: [] }));
+    expect(container.querySelector('[role="group"]')).toBeNull();
+  });
+
+  it('isolates each amount of the result range as left-to-right text', async () => {
+    const { container } = setup();
+    await answerAll();
+    await screen.findByText('Your estimated range');
+    expect(container.querySelectorAll('p bdi[dir="ltr"]').length).toBe(2);
   });
 });

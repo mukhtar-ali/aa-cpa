@@ -4,6 +4,7 @@ import * as React from 'react';
 import { cn } from '../../lib/cn';
 import { formatCurrency, formatNumber } from '../../lib/format';
 import { isEmail, isSaudiMobile } from '../../lib/validators';
+import { withTimeout } from '../../lib/with-timeout';
 import { Checkbox } from '../../forms/Checkbox';
 import { Field } from '../../forms/Field';
 import { TextInput } from '../../forms/TextInput';
@@ -67,7 +68,7 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
   const index = step.kind === 'question' || step.kind === 'estimating' ? step.index : total - 1;
   const question = questions[index];
   const progressText = labels.progress.replace('{n}', formatNumber(Math.min(index + 1, total), locale)).replace('{total}', formatNumber(total, locale));
-  const progressPct = step.kind === 'result' || step.kind === 'quote' || step.kind === 'sent' ? 100 : ((index + 1) / total) * 100;
+  const progressPct = step.kind === 'result' || step.kind === 'quote' || step.kind === 'sent' ? 100 : total > 0 ? ((index + 1) / total) * 100 : 0;
 
   const next = async () => {
     if (!question || step.kind !== 'question') return;
@@ -82,7 +83,7 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
     }
     setStep({ kind: 'estimating', index });
     try {
-      setRange(await config.estimate(answers));
+      setRange(await withTimeout(config.estimate(answers), config.timeoutMs ?? 30_000));
       setStep({ kind: 'result' });
     } catch {
       setError(labels.error);
@@ -116,7 +117,7 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
     setSubmitting(true);
     setError('');
     try {
-      await quote.onSubmit({ ...form, name: form.name.trim(), email: form.email.trim() }, answers, range);
+      await withTimeout(quote.onSubmit({ ...form, name: form.name.trim(), email: form.email.trim() }, answers, range), config.timeoutMs ?? 30_000);
       setStep({ kind: 'sent' });
     } catch {
       setError(labels.error);
@@ -141,6 +142,8 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
 
   const inputId = question ? `${uid}-${question.id}` : uid;
   const answered = question ? answers[question.id] : undefined;
+
+  if (total === 0) return null;
 
   return (
     <div className={cn('flex flex-col gap-6 rounded-thumb bg-bg-inverse p-12 text-text-inverse', className)} {...props}>
@@ -181,6 +184,13 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
                     disabled={step.kind === 'estimating'}
                     value={typeof answered === 'number' ? formatNumber(answered, locale) : ''}
                     onChange={(e) => setAnswer(question, e.target.value)}
+                    onKeyDown={(e) => {
+                      // Enter moves on, as in a form (the question is not inside a <form>).
+                      if (e.key === 'Enter' && step.kind === 'question') {
+                        e.preventDefault();
+                        void next();
+                      }
+                    }}
                   />
                 </Field>
               )}
@@ -210,7 +220,7 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
           <>
             <p className="text-body-lg">{labels.result}</p>
             <p className="bg-linear-to-b from-gradient-start to-gradient-end-text-large bg-clip-text text-h3 font-bold text-transparent" dir="ltr">
-              {formatCurrency(range.min, locale, config.currency, { maximumFractionDigits: 0 })} – {formatCurrency(range.max, locale, config.currency, { maximumFractionDigits: 0 })}
+              <bdi dir="ltr">{formatCurrency(range.min, locale, config.currency, { maximumFractionDigits: 0 })}</bdi> – <bdi dir="ltr">{formatCurrency(range.max, locale, config.currency, { maximumFractionDigits: 0 })}</bdi>
             </p>
             <div className="flex items-center gap-4">
               {quote ? (
