@@ -77,7 +77,6 @@
 }
 
 .ds-marquee-track[data-paused='true'],
-.ds-marquee-group:hover .ds-marquee-track,
-.ds-marquee-group:focus-within .ds-marquee-track {
+.ds-marquee-track:hover {
   animation-play-state: paused;
 }

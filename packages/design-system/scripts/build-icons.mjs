@@ -104,6 +104,12 @@ export function buildIcons(options = {}) {
   const inputDir = path.resolve(process.cwd(), options.inputDir ?? path.join(pkg, 'assets/icons'));
   const outDir = path.resolve(process.cwd(), options.outDir ?? path.join(pkg, 'src/icons/generated'));
   if (!fs.existsSync(inputDir)) throw new Error(`Icon directory not found: ${inputDir}`);
+  // The output directory is deleted and recreated: never allow the filesystem root, the working directory, the package or any parent of them
+  // (for example `--out-dir .` or `--out-dir ..`).
+  const protectedDirs = [process.cwd(), pkg].map((dir) => path.resolve(dir));
+  if (outDir === path.parse(outDir).root || protectedDirs.some((dir) => dir === outDir || dir.startsWith(outDir + path.sep))) {
+    throw new Error(`Refusing to use ${outDir} as the output directory: it would be deleted and it contains the working directory or the package.`);
+  }
 
   const files = fs.readdirSync(inputDir).filter((f) => f.endsWith('.svg')).sort();
   if (files.length === 0) throw new Error(`No .svg files in ${inputDir}`);

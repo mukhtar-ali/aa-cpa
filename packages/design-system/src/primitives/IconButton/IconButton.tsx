@@ -50,11 +50,24 @@ export const IconButton = React.forwardRef<HTMLElement, IconButtonProps>(
         <a
           ref={ref as React.Ref<HTMLAnchorElement>}
           href={disabled ? undefined : href}
+          // A link without href has no role: say "link" so the label of a disabled pagination arrow is still announced.
+          role={disabled ? 'link' : undefined}
           aria-label={label}
           aria-disabled={disabled || undefined}
           target={external ? '_blank' : undefined}
           rel={external ? 'noopener noreferrer' : undefined}
           className={classes}
+          onClick={
+            disabled || onClick
+              ? (e) => {
+                  if (disabled) {
+                    e.preventDefault();
+                    return;
+                  }
+                  (onClick as React.MouseEventHandler<HTMLAnchorElement> | undefined)?.(e);
+                }
+              : undefined
+          }
           {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
         >
           {content}

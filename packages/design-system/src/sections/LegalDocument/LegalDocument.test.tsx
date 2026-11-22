@@ -62,3 +62,10 @@ describe('LegalDocument', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('LegalDocument review fixes', () => {
+  it('renders no download link for a script URL', () => {
+    render(<LegalDocument document={{ ...doc, downloadHref: 'javascript:alert(1)' }} labels={labels} locale="en" />);
+    expect(screen.queryByRole('link', { name: 'Download PDF' })).toBeNull();
+  });
+});

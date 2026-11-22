@@ -27,10 +27,10 @@ export const JobRow = React.forwardRef<HTMLElement, JobRowProps>(({ job, details
         'hover:border-(length:--border-width-focus) hover:border-emerald-500 hover:bg-bg-surface-ice focus-visible:ring-3 focus-visible:ring-ring-focus',
       )}
     >
-      <span className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1">
         <h3 className="text-h5 font-bold text-text-heading">{job.title}</h3>
-        <span className="text-body-sm text-text-muted">{[job.department, job.city, job.contract].join('  ·  ')}</span>
-      </span>
+        <span className="text-body-sm text-text-muted">{[job.department, job.city, job.contract].filter(Boolean).join('  ·  ')}</span>
+      </div>
       <span
         aria-hidden="true"
         className="inline-flex h-12 shrink-0 items-center gap-2.5 rounded-cta border border-solid border-border-subtle ps-6 pe-5 text-body-sm font-bold text-text-heading transition-colors duration-(--motion-duration-fast) group-hover:border-bg-inverse group-hover:bg-bg-inverse group-hover:text-text-inverse"
@@ -62,9 +62,9 @@ export interface JobSummaryCardProps extends Omit<React.HTMLAttributes<HTMLEleme
 export const JobSummaryCard = React.forwardRef<HTMLElement, JobSummaryCardProps>(({ job, labels, locale = 'ar', className, ...props }, ref) => {
   const fmt = (iso: string) => formatDate(iso, locale, { day: 'numeric', month: 'long', year: 'numeric' });
   const rows: Array<[string, React.ReactNode]> = [
-    [labels.department, job.department],
-    [labels.city, job.city],
-    [labels.contract, job.contract],
+    ...(job.department ? ([[labels.department, job.department]] as Array<[string, React.ReactNode]>) : []),
+    ...(job.city ? ([[labels.city, job.city]] as Array<[string, React.ReactNode]>) : []),
+    ...(job.contract ? ([[labels.contract, job.contract]] as Array<[string, React.ReactNode]>) : []),
     ...(job.experience ? ([[labels.experience, job.experience]] as Array<[string, React.ReactNode]>) : []),
     ...(job.postedAt ? ([[labels.postedAt, <time key="p" dateTime={job.postedAt}>{fmt(job.postedAt)}</time>]] as Array<[string, React.ReactNode]>) : []),
     ...(job.closesAt ? ([[labels.closesAt, <time key="c" dateTime={job.closesAt}>{fmt(job.closesAt)}</time>]] as Array<[string, React.ReactNode]>) : []),

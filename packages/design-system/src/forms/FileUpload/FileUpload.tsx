@@ -30,6 +30,8 @@ export interface FileUploadProps {
   /** Default 5 MB. */
   maxSizeBytes?: number;
   messages: FileUploadMessages;
+  /** Error from the surrounding form (for example "required"); shown in the same place as the file errors. */
+  error?: string;
   className?: string;
 }
 
@@ -51,17 +53,25 @@ export function isAccepted(file: File, accept: string[]): boolean {
  *
  * @figma 522:1214
  */
-export function FileUpload({ id, label, file, onFileChange, accept, maxSizeBytes = 5 * MB, messages, className }: FileUploadProps) {
+export function FileUpload({ id, label, file, onFileChange, accept, maxSizeBytes = 5 * MB, messages, error: externalError, className }: FileUploadProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const zoneRef = React.useRef<HTMLButtonElement>(null);
   const focusZoneNext = React.useRef(false);
-  const [error, setError] = React.useState('');
+  const focusRemoveNext = React.useRef(false);
+  const removeRef = React.useRef<HTMLButtonElement>(null);
+  const [fileError, setError] = React.useState('');
+  const error = fileError || externalError || '';
   const [dragging, setDragging] = React.useState(false);
 
   React.useEffect(() => {
     if (!file && focusZoneNext.current) {
       focusZoneNext.current = false;
       zoneRef.current?.focus();
+    }
+    // The zone button unmounts when a file is chosen: keep keyboard focus inside the control.
+    if (file && focusRemoveNext.current) {
+      focusRemoveNext.current = false;
+      removeRef.current?.focus();
     }
   }, [file]);
 
@@ -77,6 +87,7 @@ export function FileUpload({ id, label, file, onFileChange, accept, maxSizeBytes
       return;
     }
     setError('');
+    focusRemoveNext.current = true;
     onFileChange(picked);
   };
 
@@ -87,7 +98,7 @@ export function FileUpload({ id, label, file, onFileChange, accept, maxSizeBytes
     <div className={cn('flex flex-col gap-2', className)}>
       <input
         ref={inputRef}
-        id={id}
+        id={`${id}-input`}
         type="file"
         accept={accept.join(',')}
         tabIndex={-1}
@@ -112,6 +123,7 @@ export function FileUpload({ id, label, file, onFileChange, accept, maxSizeBytes
             </p>
           </div>
           <button
+            ref={removeRef}
             type="button"
             aria-label={messages.remove}
             className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-text-muted hover:bg-bg-page"
@@ -127,8 +139,9 @@ export function FileUpload({ id, label, file, onFileChange, accept, maxSizeBytes
       ) : (
         <button
           ref={zoneRef}
+          id={id}
           type="button"
-          aria-label={label}
+          aria-invalid={error ? true : undefined}
           aria-describedby={cn(hintId, error && errorId)}
           data-dragging={dragging || undefined}
           className={cn(
@@ -153,6 +166,7 @@ export function FileUpload({ id, label, file, onFileChange, accept, maxSizeBytes
             <Icon name="upload" />
           </span>
           <span className="text-body-md font-bold text-text-heading">
+            <span className="sr-only">{label}: </span>
             {messages.prompt} <span className="text-text-link underline">{messages.promptAction}</span>
           </span>
           <span id={hintId} className="text-body-xs text-neutral-500">

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../lib/cn';
+import { safeHref } from '../../lib/safe-href';
 import { Icon } from '../../icons';
 import type { ImageRef, Office } from '../../types';
 
@@ -24,14 +25,26 @@ export const OfficeMap = React.forwardRef<HTMLElement, OfficeMapProps>(({ office
     <ul aria-label={label} className="absolute inset-0 list-none">
       {offices
         .filter((office) => office.coordinates)
-        .map((office) => (
-          <li key={office.city} className="absolute -translate-y-full" style={{ insetInlineStart: `${office.coordinates!.x}%`, top: `${office.coordinates!.y}%` }}>
-            <a href={office.mapHref ?? '#'} className="flex flex-col items-center gap-1 text-text-heading">
+        .map((office, index) => {
+          const href = safeHref(office.mapHref);
+          const pin = (
+            <>
               <Icon name="location" size={28} className={office.isHeadquarters ? 'text-emerald-600' : 'text-text-link'} />
               <span className="rounded-full bg-bg-surface px-3 py-0.5 text-body-xs font-bold shadow-card-float">{office.city}</span>
-            </a>
-          </li>
-        ))}
+            </>
+          );
+          return (
+            <li key={`${office.city}-${index}`} className="absolute -translate-y-full" style={{ insetInlineStart: `${office.coordinates!.x}%`, top: `${office.coordinates!.y}%` }}>
+              {href ? (
+                <a href={href} className="flex flex-col items-center gap-1 text-text-heading">
+                  {pin}
+                </a>
+              ) : (
+                <span className="flex flex-col items-center gap-1 text-text-heading">{pin}</span>
+              )}
+            </li>
+          );
+        })}
     </ul>
   </figure>
 ));

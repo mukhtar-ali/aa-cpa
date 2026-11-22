@@ -45,7 +45,8 @@ describe('ContactFormLayout', () => {
     await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Thank you'));
     const sent = onSubmit.mock.calls[0]![0];
     expect(sent).toMatchObject({ name: 'Sara', mobile: '0555346560', email: 'sara@example.com', consent: true, website: '' });
-    expect(typeof sent.elapsedMs).toBe('number');
+    expect(typeof sent.startedAt).toBe('number');
+    expect(Date.now() - sent.startedAt).toBeGreaterThanOrEqual(0);
   });
 
   it('announces a failure and keeps the form', async () => {

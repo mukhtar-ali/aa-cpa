@@ -25,8 +25,11 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
 export function pageItems(page: number, pageCount: number): Array<number | 'gap-start' | 'gap-end'> {
   if (pageCount <= 7) return Array.from({ length: pageCount }, (_, i) => i + 1);
   const items: Array<number | 'gap-start' | 'gap-end'> = [1];
-  const from = Math.max(2, page - 1);
-  const to = Math.min(pageCount - 1, page + 1);
+  let from = Math.max(2, page - 1);
+  let to = Math.min(pageCount - 1, page + 1);
+  // An ellipsis that would hide a single page is replaced by that page.
+  if (from === 3) from = 2;
+  if (to === pageCount - 2) to = pageCount - 1;
   if (from > 2) items.push('gap-start');
   for (let n = from; n <= to; n++) items.push(n);
   if (to < pageCount - 1) items.push('gap-end');
@@ -47,7 +50,9 @@ const pageClasses = (current: boolean) =>
  * @figma 530:4416
  */
 export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
-  ({ page, pageCount, hrefFor, onPageChange, labels, className, ...props }, ref) => {
+  ({ page: rawPage, pageCount, hrefFor, onPageChange, labels, className, ...props }, ref) => {
+    // Out-of-range pages must not produce a Previous or Next link to a page that does not exist.
+    const page = Math.min(Math.max(rawPage, 1), Math.max(pageCount, 1));
     if (pageCount <= 1) return null;
     const go = (n: number) => (onPageChange ? () => onPageChange(n) : undefined);
     const prevDisabled = page <= 1;

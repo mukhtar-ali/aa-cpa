@@ -34,7 +34,7 @@ export function ServiceTabs({ eyebrow, title, headline, headlineAccent, services
   return (
     <section className={cn('relative isolate overflow-hidden rounded-t-section bg-bg-surface-ice py-section-lg', className)} {...props}>
       <Pattern name="flow-lines" tone="light" className="-z-10 opacity-40" />
-      <Tabs.Root defaultValue={defaultServiceId ?? first.id} orientation="vertical" className="mx-auto grid max-w-301 gap-12 px-4 sm:px-6 lg:grid-cols-[24.125rem_34.75rem] lg:justify-between lg:px-8">
+      <Tabs.Root defaultValue={services.some((s) => s.id === defaultServiceId) ? defaultServiceId : first.id} orientation="vertical" className="mx-auto grid max-w-301 gap-12 px-4 sm:px-6 lg:grid-cols-[24.125rem_34.75rem] lg:justify-between lg:px-8">
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-6">
             <h2 className="text-h5 font-bold text-text-heading">{title}</h2>
@@ -63,7 +63,7 @@ export function ServiceTabs({ eyebrow, title, headline, headlineAccent, services
             </p>
           ) : null}
         {services.map((service) => (
-          <Tabs.Content key={service.id} value={service.id} className="flex flex-col gap-6 outline-none">
+          <Tabs.Content key={service.id} value={service.id} className="flex flex-col gap-6 outline-none focus-visible:ring-3 focus-visible:ring-ring-focus">
             {service.image ? (
               <div className="relative">
                 <img

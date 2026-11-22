@@ -20,8 +20,8 @@ export interface ContactFormValues {
   consent: boolean;
   /** Honeypot: must stay empty; bots fill it. */
   website: string;
-  /** Milliseconds between the form being shown and submitted (too-fast submissions are bot-like). */
-  elapsedMs: number;
+  /** Epoch milliseconds when the form was shown: the API's public-form guard (`startedAt`) rejects submissions faster than 3 seconds. */
+  startedAt: number;
 }
 
 export interface ContactFormLabels {
@@ -64,6 +64,7 @@ export function ContactFormLayout({ title, description, labels, services, onSubm
   const startedAt = React.useRef(Date.now());
   const [values, setValues] = React.useState({ name: '', mobile: '', email: '', service: '', message: '', consent: false, website: '' });
   const [errors, setErrors] = React.useState<Errors>({});
+  const [attempt, setAttempt] = React.useState(0);
   const [status, setStatus] = React.useState<'idle' | 'submitting' | 'sent' | 'failed'>('idle');
   const set = <K extends keyof typeof values>(key: K, value: (typeof values)[K]) => setValues((v) => ({ ...v, [key]: value }));
 
@@ -83,10 +84,11 @@ export function ContactFormLayout({ title, description, labels, services, onSubm
     event.preventDefault();
     const found = validate();
     setErrors(found);
+    if (Object.keys(found).length > 0) setAttempt((n) => n + 1);
     if (Object.keys(found).length > 0) return;
     setStatus('submitting');
     try {
-      await onSubmit({ ...values, name: values.name.trim(), email: values.email.trim(), elapsedMs: Date.now() - startedAt.current });
+      await onSubmit({ ...values, name: values.name.trim(), email: values.email.trim(), startedAt: startedAt.current });
       setStatus('sent');
     } catch {
       setStatus('failed');
@@ -103,12 +105,12 @@ export function ContactFormLayout({ title, description, labels, services, onSubm
           {description ? <p className="text-body-lg text-text-body">{description}</p> : null}
         </div>
         {status === 'sent' ? (
-          <p role="status" className="rounded-cta bg-emerald-50 p-6 text-body-lg font-bold text-text-link">
+          <p role="status" tabIndex={-1} ref={(el) => el?.focus()} className="rounded-cta bg-emerald-50 p-6 text-body-lg font-bold text-text-link outline-none">
             {labels.success}
           </p>
         ) : (
           <form onSubmit={submit} noValidate className="flex flex-col gap-6">
-            <FormErrorSummary title={labels.summaryTitle} errors={summaryItems} />
+            <FormErrorSummary title={labels.summaryTitle} errors={summaryItems} focusKey={attempt} />
             <div className="grid gap-6 sm:grid-cols-2">
               <Field id="contact-name" label={labels.name} required error={errors.name}>
                 <TextInput autoComplete="name" value={values.name} onChange={(e) => set('name', e.target.value)} />

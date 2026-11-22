@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../lib/cn';
+import { safeHref } from '../../lib/safe-href';
 import { formatDate, formatNumber } from '../../lib/format';
 import { Icon } from '../../icons';
 import type { LegalDocument as LegalDocumentData } from '../../types';
@@ -41,8 +42,8 @@ export const LegalDocument = React.forwardRef<HTMLElement, LegalDocumentProps>((
         <aside className="flex flex-col gap-3 rounded-cta bg-bg-inverse p-6 text-text-inverse">
           <h2 className="text-h6 font-bold">{labels.helpTitle}</h2>
           <p className="text-body-sm text-text-inverse-muted">{labels.helpBody}</p>
-          {doc.downloadHref ? (
-            <a href={doc.downloadHref} className="mt-2 inline-flex h-9 items-center justify-center gap-2 rounded-full border border-solid border-border-inverse-strong px-4 text-body-sm font-bold hover:bg-bg-inverse-raised">
+          {safeHref(doc.downloadHref) ? (
+            <a href={safeHref(doc.downloadHref)} className="mt-2 inline-flex h-9 items-center justify-center gap-2 rounded-full border border-solid border-border-inverse-strong px-4 text-body-sm font-bold hover:bg-bg-inverse-raised">
               <Icon name="file" size={16} />
               {labels.download}
             </a>

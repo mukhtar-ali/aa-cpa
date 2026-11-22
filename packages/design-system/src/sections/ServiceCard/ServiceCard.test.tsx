@@ -18,7 +18,7 @@ describe('ServiceCard', () => {
     expect(screen.getByRole('article')).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: service.title })).toHaveClass('text-h2', 'font-bold');
     expect(screen.getByText(service.summary)).toHaveClass('text-body-lg', 'opacity-80');
-    const cta = screen.getByRole('link', { name: 'Learn about the service' });
+    const cta = screen.getByRole('link', { name: /^Learn about the service/ });
     expect(cta).toHaveAttribute('href', '/services/local-content');
     expect(cta).toHaveClass('bg-action-primary');
   });

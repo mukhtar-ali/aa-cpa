@@ -44,3 +44,20 @@ describe('OfficeMap', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('OfficeMap review fixes', () => {
+  it('two offices in one city render without duplicate keys, and a pin without a link is plain text', () => {
+    render(
+      <OfficeMap
+        label="Our offices"
+        map={{ src: '/map.svg', alt: '', width: 1140, height: 480, decorative: true }}
+        offices={[
+          { city: 'Riyadh', address: 'a', mapHref: '/m/1', coordinates: { x: 10, y: 10 } },
+          { city: 'Riyadh', address: 'b', coordinates: { x: 20, y: 20 } },
+        ]}
+      />,
+    );
+    expect(screen.getAllByText('Riyadh')).toHaveLength(2);
+    expect(screen.getAllByRole('link')).toHaveLength(1);
+  });
+});

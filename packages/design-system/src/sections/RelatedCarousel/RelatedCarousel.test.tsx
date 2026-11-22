@@ -40,7 +40,8 @@ describe('RelatedCarousel', () => {
   });
 
   it('at the start previous is disabled; the counter and progress show 1 of 6', () => {
-    render(<RelatedCarousel {...props} />);
+    const { container } = render(<RelatedCarousel {...props} />);
+    setMetrics(container.querySelector('ul') as HTMLElement, { scrollLeft: 0, scrollWidth: 1746, clientWidth: 1140 });
     expect(screen.getByRole('button', { name: 'Previous' })).toHaveAttribute('aria-disabled', 'true');
     expect(screen.getByRole('button', { name: 'Next' })).not.toHaveAttribute('aria-disabled');
     expect(screen.getByText('1/6')).toHaveAttribute('dir', 'ltr');
@@ -68,6 +69,7 @@ describe('RelatedCarousel', () => {
     const scrollBy = vi.fn();
     track.scrollBy = scrollBy as unknown as typeof track.scrollBy;
     track.style.direction = 'rtl';
+    setMetrics(track, { scrollLeft: 0, scrollWidth: 1746, clientWidth: 1140 });
     await userEvent.click(screen.getByRole('button', { name: 'Next' }));
     expect(scrollBy).toHaveBeenCalledWith({ left: -291, behavior: 'smooth' });
   });
@@ -91,6 +93,7 @@ describe('RelatedCarousel', () => {
     Object.defineProperty(track.firstElementChild, 'offsetWidth', { value: 267, configurable: true });
     const scrollBy = vi.fn();
     track.scrollBy = scrollBy as unknown as typeof track.scrollBy;
+    setMetrics(track, { scrollLeft: 0, scrollWidth: 1746, clientWidth: 1140 });
     await userEvent.click(screen.getByRole('button', { name: 'Next' }));
     expect(scrollBy).toHaveBeenCalledWith({ left: 291, behavior: 'auto' });
     window.matchMedia = original;
@@ -103,5 +106,16 @@ describe('RelatedCarousel', () => {
       </div>,
     );
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('when every card fits, Next is disabled and the counter shows the last card', () => {
+    const { container } = render(<RelatedCarousel {...props} />);
+    setMetrics(container.querySelector('ul') as HTMLElement, { scrollLeft: 0, scrollWidth: 1140, clientWidth: 1140 });
+    expect(screen.getByRole('button', { name: 'Next' })).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('renders nothing without articles', () => {
+    const { container } = render(<RelatedCarousel {...props} articles={[]} />);
+    expect(container).toBeEmptyDOMElement();
   });
 });

@@ -20,6 +20,8 @@ export interface ShareBoxProps extends Omit<React.HTMLAttributes<HTMLElement>, '
   /** Absolute URL of the page to share. */
   url: string;
   title: string;
+  /** Text sent to WhatsApp and X. Defaults to `title`; pass the article title when `title` is a heading such as "Share this article". */
+  shareText?: string;
   description?: string;
   labels: ShareBoxLabels;
   /** `bar` = light ice strip inside the article (506:3982); `card` = dark sidebar card with a link field (506:4011). */
@@ -42,13 +44,15 @@ export function shareLinks(url: string, text: string) {
  *
  * @figma 506:3982, 506:4011, 505:3864
  */
-export function ShareBox({ url, title, description, labels, variant = 'bar', className, ...props }: ShareBoxProps) {
+export function ShareBox({ url, title, shareText, description, labels, variant = 'bar', className, ...props }: ShareBoxProps) {
   const [copied, setCopied] = React.useState(false);
-  const links = shareLinks(url, title);
+  const links = shareLinks(url, shareText ?? title);
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
+      // Reset so a second copy is announced again.
+      window.setTimeout(() => setCopied(false), 2500);
     } catch {
       setCopied(false);
     }

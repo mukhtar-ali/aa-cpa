@@ -191,7 +191,9 @@ describe('Estimator', () => {
     await answerAll();
     await userEvent.click(await screen.findByRole('button', { name: 'Request a formal quote' }));
     await userEvent.click(screen.getByRole('button', { name: 'Send request' }));
-    expect(screen.getByRole('alert')).toHaveTextContent('Enter a valid answer');
+    // Each invalid field carries its own error (name, mobile, email, consent).
+    expect(screen.getAllByRole('alert').filter((el) => el.textContent === 'Enter a valid answer').length).toBeGreaterThanOrEqual(3);
+    expect(screen.getByLabelText(/Mobile/)).toHaveAttribute('aria-invalid', 'true');
     expect(config.quote!.onSubmit).not.toHaveBeenCalled();
 
     await userEvent.type(screen.getByLabelText(/Full name/), 'Omar Al-Salem');
@@ -205,6 +207,56 @@ describe('Estimator', () => {
       { revenue: 12000000, staff: 85, sector: 'retail', deadline: 'soon' },
       { min: 100000, max: 150000 },
     );
+  });
+
+  it('rejects a malformed mobile number and email in the quote form with field errors', async () => {
+    const config = makeConfig();
+    setup(config);
+    await answerAll();
+    await userEvent.click(await screen.findByRole('button', { name: 'Request a formal quote' }));
+    await userEvent.type(screen.getByLabelText(/Full name/), 'Omar');
+    await userEvent.type(screen.getByLabelText(/Mobile/), 'x');
+    await userEvent.type(screen.getByLabelText(/Email/), 'a');
+    await userEvent.click(screen.getByRole('checkbox', { name: 'I agree to be contacted' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Send request' }));
+    expect(screen.getByLabelText(/Mobile/)).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByLabelText(/Email/)).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByLabelText(/Full name/)).not.toHaveAttribute('aria-invalid', 'true');
+    expect(config.quote!.onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('a decimal point or minus sign is rejected instead of being silently dropped', async () => {
+    setup();
+    const input = screen.getByLabelText('Approximate annual revenue (SAR)');
+    await userEvent.type(input, '12');
+    await userEvent.type(input, '.');
+    expect(screen.getByRole('alert')).toHaveTextContent('Enter a valid answer');
+    expect(input).toHaveValue('12');
+    await userEvent.clear(input);
+    await userEvent.type(input, '-');
+    expect(screen.getByRole('alert')).toHaveTextContent('Enter a valid answer');
+    expect(input).toHaveValue('');
+  });
+
+  it('going back clears a stale error from the previous question', async () => {
+    setup();
+    await userEvent.type(screen.getByLabelText('Approximate annual revenue (SAR)'), '12000000');
+    await userEvent.click(screen.getByRole('button', { name: 'Start estimate' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Next' }));
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Back' }));
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('two estimators on one page do not share element ids', () => {
+    const { container } = render(
+      <div>
+        <Estimator title="A" intro="a" config={makeConfig()} />
+        <Estimator title="B" intro="b" config={makeConfig()} />
+      </div>,
+    );
+    const ids = [...container.querySelectorAll('[id]')].map((el) => el.id);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 
   it('a quote submission failure is announced and the form stays', async () => {

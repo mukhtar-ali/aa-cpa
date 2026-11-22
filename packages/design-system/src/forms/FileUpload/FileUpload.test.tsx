@@ -38,7 +38,7 @@ describe('isAccepted', () => {
 describe('FileUpload', () => {
   it('empty state: a button zone with prompt, action and hint', () => {
     render(<Harness />);
-    const zone = screen.getByRole('button', { name: 'CV' });
+    const zone = screen.getByRole('button', { name: /^CV/ });
     expect(zone).toHaveTextContent('Drag your CV here or choose a file');
     expect(zone).toHaveAccessibleDescription('PDF or DOCX, up to 5 MB');
     expect(zone).toHaveClass('border-dashed', 'bg-emerald-50', 'rounded-upload');
@@ -49,7 +49,7 @@ describe('FileUpload', () => {
     const input = container.querySelector('input[type="file"]') as HTMLInputElement;
     const click = vi.spyOn(input, 'click');
     await userEvent.tab();
-    expect(screen.getByRole('button', { name: 'CV' })).toHaveFocus();
+    expect(screen.getByRole('button', { name: /^CV/ })).toHaveFocus();
     await userEvent.keyboard('{Enter}');
     expect(click).toHaveBeenCalledTimes(1);
     expect(input).toHaveAttribute('accept', '.pdf,.docx');
@@ -64,30 +64,46 @@ describe('FileUpload', () => {
     expect(screen.queryByRole('alert')).toBeNull();
   });
 
+  it('moves focus to the remove button when a file is chosen, so keyboard focus is not lost', async () => {
+    render(<Harness />);
+    const zone = screen.getByRole('button', { name: /^CV/ });
+    zone.focus();
+    fireEvent.drop(zone, { dataTransfer: { files: [makeFile('cv.pdf')] } });
+    expect(screen.getByRole('button', { name: 'Remove file' })).toHaveFocus();
+  });
+
+  it('the drop zone carries the field id (summary links land on it) and its name contains the visible text', () => {
+    const { container } = render(<Harness />);
+    const zone = screen.getByRole('button', { name: /^CV/ });
+    expect(zone).toHaveAttribute('id', 'cv');
+    expect(zone).toHaveAccessibleName(/Drag your CV here/);
+    expect(container.querySelector('input[type="file"]')).toHaveAttribute('id', 'cv-input');
+  });
+
   it('accepts a dropped valid file', () => {
     render(<Harness />);
-    const zone = screen.getByRole('button', { name: 'CV' });
+    const zone = screen.getByRole('button', { name: /^CV/ });
     fireEvent.drop(zone, { dataTransfer: { files: [makeFile('cv.docx', 2048, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')] } });
     expect(screen.getByText('cv.docx')).toBeInTheDocument();
   });
 
   it('rejects a file over 5 MB and announces it with role="alert"', () => {
     render(<Harness />);
-    fireEvent.drop(screen.getByRole('button', { name: 'CV' }), { dataTransfer: { files: [makeFile('big.pdf', 6 * 1024 * 1024)] } });
+    fireEvent.drop(screen.getByRole('button', { name: /^CV/ }), { dataTransfer: { files: [makeFile('big.pdf', 6 * 1024 * 1024)] } });
     expect(screen.getByRole('alert')).toHaveTextContent('File is larger than 5 MB');
     expect(screen.queryByText('big.pdf')).toBeNull();
-    expect(screen.getByRole('button', { name: 'CV' })).toHaveAccessibleDescription(/File is larger than 5 MB/);
+    expect(screen.getByRole('button', { name: /^CV/ })).toHaveAccessibleDescription(/File is larger than 5 MB/);
   });
 
   it('rejects a wrong type and announces it', () => {
     render(<Harness />);
-    fireEvent.drop(screen.getByRole('button', { name: 'CV' }), { dataTransfer: { files: [makeFile('virus.exe', 100, 'application/x-msdownload')] } });
+    fireEvent.drop(screen.getByRole('button', { name: /^CV/ }), { dataTransfer: { files: [makeFile('virus.exe', 100, 'application/x-msdownload')] } });
     expect(screen.getByRole('alert')).toHaveTextContent('Only PDF or DOCX files are accepted');
   });
 
   it('a valid file after an error clears the alert', () => {
     render(<Harness />);
-    const zone = screen.getByRole('button', { name: 'CV' });
+    const zone = screen.getByRole('button', { name: /^CV/ });
     fireEvent.drop(zone, { dataTransfer: { files: [makeFile('big.pdf', 6 * 1024 * 1024)] } });
     expect(screen.getByRole('alert')).toBeInTheDocument();
     fireEvent.drop(zone, { dataTransfer: { files: [makeFile('ok.pdf')] } });
@@ -99,12 +115,12 @@ describe('FileUpload', () => {
     render(<Harness initial={makeFile('cv.pdf')} />);
     await userEvent.click(screen.getByRole('button', { name: 'Remove file' }));
     expect(screen.queryByText('cv.pdf')).toBeNull();
-    expect(screen.getByRole('button', { name: 'CV' })).toHaveFocus();
+    expect(screen.getByRole('button', { name: /^CV/ })).toHaveFocus();
   });
 
   it('dragging over highlights the zone', () => {
     render(<Harness />);
-    const zone = screen.getByRole('button', { name: 'CV' });
+    const zone = screen.getByRole('button', { name: /^CV/ });
     fireEvent.dragOver(zone);
     expect(zone).toHaveAttribute('data-dragging', 'true');
     fireEvent.dragLeave(zone);
@@ -118,7 +134,7 @@ describe('FileUpload', () => {
         <Harness initial={makeFile('cv.pdf')} />
       </div>,
     );
-    fireEvent.drop(screen.getAllByRole('button', { name: 'CV' })[0]!, { dataTransfer: { files: [makeFile('big.pdf', 6 * 1024 * 1024)] } });
+    fireEvent.drop(screen.getAllByRole('button', { name: /^CV/ })[0]!, { dataTransfer: { files: [makeFile('big.pdf', 6 * 1024 * 1024)] } });
     expect(await axe(container)).toHaveNoViolations();
   });
 });

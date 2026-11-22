@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { cn } from '../../lib/cn';
+import { useReducedMotion } from '../../lib/use-reduced-motion';
 import { formatNumber } from '../../lib/format';
 import type { TocItem } from '../../types';
 
@@ -23,16 +24,21 @@ export interface TableOfContentsProps extends Omit<React.HTMLAttributes<HTMLElem
  */
 export function TableOfContents({ title, items, label, locale = 'ar', className, ...props }: TableOfContentsProps) {
   const [active, setActive] = React.useState(items[0]?.id ?? '');
+  const reduced = useReducedMotion();
 
   React.useEffect(() => {
     const targets = items.map((item) => document.getElementById(item.id)).filter((el): el is HTMLElement => el !== null);
     if (targets.length === 0 || typeof IntersectionObserver === 'undefined') return;
     const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
-        if (visible) setActive(visible.target.id);
+      () => {
+        // The section being read is the last heading that has passed the reading line (30% from the top). Looking at all headings, not
+        // only the ones in this batch of entries, also gives the right answer when scrolling back up.
+        const line = window.innerHeight * 0.3;
+        let current = targets[0]!;
+        for (const target of targets) if (target.getBoundingClientRect().top <= line) current = target;
+        setActive(current.id);
       },
-      { rootMargin: '-10% 0px -70% 0px' },
+      { rootMargin: '-10% 0px -70% 0px', threshold: [0, 1] },
     );
     targets.forEach((target) => observer.observe(target));
     return () => observer.disconnect();
@@ -44,7 +50,9 @@ export function TableOfContents({ title, items, label, locale = 'ar', className,
     event.preventDefault();
     if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
     target.focus({ preventScroll: true });
-    target.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+    target.scrollIntoView?.({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+    // Keep the URL in step with the section so it can be shared and the back button works.
+    if (typeof history !== 'undefined') history.pushState(null, '', `#${id}`);
     setActive(id);
   };
 

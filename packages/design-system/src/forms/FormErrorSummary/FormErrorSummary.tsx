@@ -13,18 +13,20 @@ export interface FormErrorSummaryProps extends Omit<React.HTMLAttributes<HTMLDiv
   /** Heading text, for example "Please fix the following". */
   title: string;
   errors: FormErrorSummaryItem[];
+  /** Change this value on every failed submit (for example a counter) so the summary takes focus again while the errors stay the same. */
+  focusKey?: number;
 }
 
 /**
  * List of form errors shown after a failed submit. It takes focus when it appears (so screen readers announce it) and each
  * message links to its field. Renders nothing without errors.
  */
-export function FormErrorSummary({ title, errors, className, ...props }: FormErrorSummaryProps) {
+export function FormErrorSummary({ title, errors, focusKey, className, ...props }: FormErrorSummaryProps) {
   const ref = React.useRef<HTMLDivElement>(null);
   const hasErrors = errors.length > 0;
   React.useEffect(() => {
     if (hasErrors) ref.current?.focus();
-  }, [hasErrors]);
+  }, [hasErrors, focusKey]);
   if (!hasErrors) return null;
   return (
     <div

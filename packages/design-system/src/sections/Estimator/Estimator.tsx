@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { cn } from '../../lib/cn';
 import { formatCurrency, formatNumber } from '../../lib/format';
+import { isEmail, isSaudiMobile } from '../../lib/validators';
 import { Checkbox } from '../../forms/Checkbox';
 import { Field } from '../../forms/Field';
 import { TextInput } from '../../forms/TextInput';
@@ -52,12 +53,16 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
   const [form, setForm] = React.useState({ name: '', mobile: '', email: '', consent: false });
   const [submitting, setSubmitting] = React.useState(false);
   const regionRef = React.useRef<HTMLDivElement>(null);
-  const mounted = React.useRef(false);
-
+  const uid = React.useId();
+  const [quoteErrors, setQuoteErrors] = React.useState<{ name?: boolean; mobile?: boolean; email?: boolean; consent?: boolean }>({});
+  // Move focus to the region when the step changes, but not on mount (React StrictMode re-runs effects in development).
+  const stepKey = step.kind === 'question' || step.kind === 'estimating' ? `${step.kind}-${step.index}` : step.kind;
+  const lastStepKey = React.useRef(stepKey);
   React.useEffect(() => {
-    if (mounted.current) regionRef.current?.focus();
-    mounted.current = true;
-  }, [step.kind, step.kind === 'question' || step.kind === 'estimating' ? step.index : -1]);
+    if (lastStepKey.current === stepKey) return;
+    lastStepKey.current = stepKey;
+    if (!stepKey.startsWith('estimating')) regionRef.current?.focus();
+  }, [stepKey]);
 
   const index = step.kind === 'question' || step.kind === 'estimating' ? step.index : total - 1;
   const question = questions[index];
@@ -90,20 +95,28 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
     setRange(null);
     setError('');
     setForm({ name: '', mobile: '', email: '', consent: false });
+    setQuoteErrors({});
     setStep({ kind: 'question', index: 0 });
   };
 
   const submitQuote = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!quote || !range) return;
-    if (!form.name.trim() || !form.mobile.trim() || !form.email.trim() || !form.consent) {
+    if (!quote || !range || submitting) return;
+    const found = {
+      name: !form.name.trim() || undefined,
+      mobile: !isSaudiMobile(form.mobile) || undefined,
+      email: !isEmail(form.email) || undefined,
+      consent: !form.consent || undefined,
+    };
+    setQuoteErrors(found);
+    if (found.name || found.mobile || found.email || found.consent) {
       setError(labels.invalid);
       return;
     }
     setSubmitting(true);
     setError('');
     try {
-      await quote.onSubmit(form, answers, range);
+      await quote.onSubmit({ ...form, name: form.name.trim(), email: form.email.trim() }, answers, range);
       setStep({ kind: 'sent' });
     } catch {
       setError(labels.error);
@@ -115,6 +128,8 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
   const setAnswer = (q: EstimatorQuestion, raw: string) => {
     setError('');
     if (q.kind === 'choice') return setAnswers((a) => ({ ...a, [q.id]: raw }));
+    // Whole numbers only: a decimal point or a minus sign would otherwise be silently dropped ("12.5" -> 125, "-5" -> 5).
+    if (/[.\u066B-]/.test(raw)) return setError(labels.invalid);
     const digits = toDigits(raw);
     setAnswers((a) => {
       const copy = { ...a };
@@ -124,7 +139,7 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
     });
   };
 
-  const inputId = question ? `estimator-${question.id}` : 'estimator';
+  const inputId = question ? `${uid}-${question.id}` : uid;
   const answered = question ? answers[question.id] : undefined;
 
   return (
@@ -140,7 +155,7 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
         </div>
       </div>
 
-      <div ref={regionRef} tabIndex={-1} className="flex flex-col gap-6 outline-none">
+      <div ref={regionRef} role="group" aria-label={title} tabIndex={-1} className="flex flex-col gap-6 outline-none">
         {step.kind === 'question' || step.kind === 'estimating' ? (
           question ? (
             <>
@@ -179,7 +194,10 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
                   {index === 0 ? labels.start : index === total - 1 ? labels.result : labels.next}
                 </Button>
                 {index > 0 ? (
-                  <Button variant="link" disabled={step.kind === 'estimating'} onClick={() => setStep({ kind: 'question', index: index - 1 })}>
+                  <Button variant="link" disabled={step.kind === 'estimating'} onClick={() => {
+                      setError('');
+                      setStep({ kind: 'question', index: index - 1 });
+                    }}>
                     {labels.back}
                   </Button>
                 ) : null}
@@ -210,17 +228,17 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
         {step.kind === 'quote' && quote ? (
           <form onSubmit={submitQuote} noValidate className="flex flex-col gap-5">
             <p className="text-body-lg">{quote.label}</p>
-            <Field id="estimator-name" label={quote.fields.name} theme="dark" required>
+            <Field id={`${uid}-name`} label={quote.fields.name} theme="dark" required error={quoteErrors.name ? labels.invalid : undefined}>
               <TextInput theme="dark" autoComplete="name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
             </Field>
-            <Field id="estimator-mobile" label={quote.fields.mobile} theme="dark" required>
+            <Field id={`${uid}-mobile`} label={quote.fields.mobile} theme="dark" required error={quoteErrors.mobile ? labels.invalid : undefined}>
               <TextInput theme="dark" type="tel" autoComplete="tel" dir="ltr" value={form.mobile} onChange={(e) => setForm((f) => ({ ...f, mobile: e.target.value }))} />
             </Field>
-            <Field id="estimator-email" label={quote.fields.email} theme="dark" required>
+            <Field id={`${uid}-email`} label={quote.fields.email} theme="dark" required error={quoteErrors.email ? labels.invalid : undefined}>
               <TextInput theme="dark" type="email" autoComplete="email" dir="ltr" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} />
             </Field>
-            <Checkbox label={<span className="text-text-inverse">{quote.fields.consent}</span>} checked={form.consent} onChange={(e) => setForm((f) => ({ ...f, consent: e.target.checked }))} />
-            {error ? (
+            <Checkbox id={`${uid}-consent`} error={quoteErrors.consent ? labels.invalid : undefined} label={<span className="text-text-inverse">{quote.fields.consent}</span>} checked={form.consent} onChange={(e) => setForm((f) => ({ ...f, consent: e.target.checked }))} />
+            {error && error !== labels.invalid ? (
               <p role="alert" className="text-body-sm text-status-error-inverse">
                 {error}
               </p>
@@ -229,7 +247,14 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
               <Button type="submit" variant="paper" loading={submitting}>
                 {quote.submitLabel}
               </Button>
-              <Button variant="link" onClick={() => setStep({ kind: 'result' })}>
+              <Button
+                variant="link"
+                onClick={() => {
+                  setError('');
+                  setQuoteErrors({});
+                  setStep({ kind: 'result' });
+                }}
+              >
                 {labels.back}
               </Button>
             </div>

@@ -62,6 +62,14 @@ describe('build-icons', () => {
     expect(fs.readFileSync(path.join(dir, 'out/index.ts'), 'utf8')).toBe(first);
   });
 
+  it('refuses an output directory that would delete the working directory, the package or their parents', () => {
+    write('in/a.svg', svg('<path stroke="#000" d="M1 1"/>'));
+    const inputDir = path.join(dir, 'in');
+    for (const outDir of ['.', '..', path.resolve(process.cwd(), '..', '..'), path.parse(process.cwd()).root]) {
+      expect(() => buildIcons({ inputDir, outDir }), outDir).toThrow(/Refusing/);
+    }
+  });
+
   it('fails clearly for bad input', () => {
     expect(() => buildIcons({ inputDir: path.join(dir, 'missing'), outDir: path.join(dir, 'o') })).toThrow(/not found/);
     write('empty/.keep', '');

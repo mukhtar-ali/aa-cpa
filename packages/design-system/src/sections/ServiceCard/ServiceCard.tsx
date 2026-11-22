@@ -27,6 +27,7 @@ export const ServiceCard = React.forwardRef<HTMLElement, ServiceCardProps>(({ se
         {service.href && service.ctaLabel ? (
           <Button href={service.href} className="self-start">
             {service.ctaLabel}
+            <span className="sr-only">: {service.title}</span>
           </Button>
         ) : null}
       </div>

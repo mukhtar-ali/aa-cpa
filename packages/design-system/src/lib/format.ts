@@ -1,8 +1,9 @@
 export type SupportedLocale = 'ar' | 'en';
 
 const LOCALE_TAGS: Record<SupportedLocale, string> = {
-  ar: 'ar-SA-u-nu-latn',
-  en: 'en-SA',
+  // Gregorian calendar explicitly: the default calendar of the SA region is Umm al-Qura (Hijri years).
+  ar: 'ar-SA-u-ca-gregory-nu-latn',
+  en: 'en-SA-u-ca-gregory',
 };
 
 export function formatNumber(

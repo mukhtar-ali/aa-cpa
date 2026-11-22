@@ -38,11 +38,20 @@ export function RelatedCarousel({ eyebrow, title, articles, readMoreLabel, prevL
     const step = (card?.offsetWidth ?? 0) + 24 || el.clientWidth || 1;
     const pos = Math.abs(el.scrollLeft);
     const max = Math.max(0, el.scrollWidth - el.clientWidth);
-    setState({ index: Math.min(articles.length - 1, Math.round(pos / step)), atStart: pos <= 1, atEnd: max === 0 ? articles.length <= 1 : pos >= max - 1 });
+    // Nothing to scroll (all cards fit) counts as "at the end"; at the end the counter shows the last card.
+    const atEnd = max <= 1 || pos >= max - 1;
+    const next = { index: atEnd ? articles.length - 1 : Math.min(articles.length - 1, Math.round(pos / step)), atStart: pos <= 1, atEnd };
+    setState((prev) => (prev.index === next.index && prev.atStart === next.atStart && prev.atEnd === next.atEnd ? prev : next));
   }, [articles.length]);
 
   React.useEffect(() => {
     measure();
+    const el = track.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    // Re-measure when the track or its cards change size (window resize, font or image load).
+    const observer = new ResizeObserver(() => measure());
+    observer.observe(el);
+    return () => observer.disconnect();
   }, [measure]);
 
   const move = (direction: 1 | -1) => {
@@ -56,6 +65,8 @@ export function RelatedCarousel({ eyebrow, title, articles, readMoreLabel, prevL
 
   const total = articles.length;
   const current = state.index + 1;
+  if (articles.length === 0) return null;
+
   return (
     <section className={cn('flex flex-col gap-10', className)} {...props}>
       <SectionHeading eyebrow={eyebrow} title={title} />

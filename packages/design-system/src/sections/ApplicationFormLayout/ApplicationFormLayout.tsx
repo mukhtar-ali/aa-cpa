@@ -20,7 +20,8 @@ export interface ApplicationValues {
   cv: File;
   consent: boolean;
   website: string;
-  elapsedMs: number;
+  /** Epoch milliseconds when the form was shown: the API's public-form guard (`startedAt`) rejects submissions faster than 3 seconds. */
+  startedAt: number;
 }
 
 export interface ApplicationFormLabels {
@@ -62,6 +63,7 @@ export function ApplicationFormLayout({ title, labels, uploadMessages, onSubmit,
   const [values, setValues] = React.useState({ name: '', mobile: '', email: '', coverLetter: '', consent: false, website: '' });
   const [cv, setCv] = React.useState<File | null>(null);
   const [errors, setErrors] = React.useState<Errors>({});
+  const [attempt, setAttempt] = React.useState(0);
   const [status, setStatus] = React.useState<'idle' | 'submitting' | 'sent' | 'failed'>('idle');
   const set = <K extends keyof typeof values>(key: K, value: (typeof values)[K]) => setValues((v) => ({ ...v, [key]: value }));
 
@@ -76,10 +78,11 @@ export function ApplicationFormLayout({ title, labels, uploadMessages, onSubmit,
     if (!cv) next.cv = labels.required;
     if (!values.consent) next.consent = labels.required;
     setErrors(next);
+    if (Object.keys(next).length > 0) setAttempt((n) => n + 1);
     if (Object.keys(next).length > 0 || !cv) return;
     setStatus('submitting');
     try {
-      await onSubmit({ ...values, name: values.name.trim(), email: values.email.trim(), cv, elapsedMs: Date.now() - startedAt.current });
+      await onSubmit({ ...values, name: values.name.trim(), email: values.email.trim(), cv, startedAt: startedAt.current });
       setStatus('sent');
     } catch {
       setStatus('failed');
@@ -93,12 +96,12 @@ export function ApplicationFormLayout({ title, labels, uploadMessages, onSubmit,
       <div className={cn('flex flex-col gap-8', aside ? 'lg:col-span-7' : 'lg:col-span-8')}>
         <h2 className="text-h2 font-bold text-text-heading">{title}</h2>
         {status === 'sent' ? (
-          <p role="status" className="rounded-cta bg-emerald-50 p-6 text-body-lg font-bold text-text-link">
+          <p role="status" tabIndex={-1} ref={(el) => el?.focus()} className="rounded-cta bg-emerald-50 p-6 text-body-lg font-bold text-text-link outline-none">
             {labels.success}
           </p>
         ) : (
           <form onSubmit={submit} noValidate className="flex flex-col gap-6">
-            <FormErrorSummary title={labels.summaryTitle} errors={summaryItems} />
+            <FormErrorSummary title={labels.summaryTitle} errors={summaryItems} focusKey={attempt} />
             <div className="grid gap-6 sm:grid-cols-2">
               <Field id="application-name" label={labels.name} required error={errors.name}>
                 <TextInput autoComplete="name" value={values.name} onChange={(e) => set('name', e.target.value)} />
@@ -114,14 +117,16 @@ export function ApplicationFormLayout({ title, labels, uploadMessages, onSubmit,
               id="application-cv"
               label={labels.cv}
               file={cv}
-              onFileChange={setCv}
-              accept={['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']}
+              onFileChange={(file) => {
+                setCv(file);
+                if (file) setErrors((e) => ({ ...e, cv: undefined }));
+              }}
+              // Extensions too: Windows browsers often report an empty MIME type for .doc and .docx.
+              accept={['.pdf', '.doc', '.docx', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']}
               maxSizeBytes={maxCvBytes}
               messages={uploadMessages}
+              error={errors.cv}
             />
-            {errors.cv ? (
-              <p className="-mt-4 text-body-sm text-status-error">{errors.cv}</p>
-            ) : null}
             <Field id="application-cover" label={labels.coverLetter}>
               <Textarea value={values.coverLetter} onChange={(e) => set('coverLetter', e.target.value)} />
             </Field>

@@ -66,3 +66,11 @@ describe('ShareBox', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('ShareBox review fixes', () => {
+  it('shares the article title (shareText), not the box heading', () => {
+    render(<ShareBox {...props} shareText="Annual audit: what changed" />);
+    expect(screen.getByRole('link', { name: 'Share on WhatsApp' }).getAttribute('href')).toContain('Annual%20audit');
+    expect(screen.getByRole('link', { name: 'Share on WhatsApp' }).getAttribute('href')).not.toContain('Enjoyed');
+  });
+});

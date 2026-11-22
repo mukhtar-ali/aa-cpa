@@ -114,3 +114,23 @@ describe('Footer', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('Footer review fixes', () => {
+  it('link columns are named by their titles even when the title has spaces', () => {
+    render(<Footer {...props} />);
+    expect(screen.getByRole('navigation', { name: 'Quick links' })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Services' })).toBeInTheDocument();
+  });
+
+  it('never renders a script link from data', () => {
+    render(
+      <Footer
+        {...props}
+        socials={[{ network: 'linkedin', href: 'javascript:alert(1)', label: 'LinkedIn' }]}
+        columns={[{ title: 'More', links: [{ label: 'Bad', href: 'javascript:alert(1)' }] }]}
+        legal={{ ...props.legal, links: [{ label: 'Bad legal', href: 'data:text/html,x' }] }}
+      />,
+    );
+    for (const a of document.querySelectorAll('a')) expect(a.getAttribute('href') ?? '').not.toMatch(/^(javascript|data):/i);
+  });
+});

@@ -9,6 +9,9 @@ export default defineConfig({
     globals: true,
     setupFiles: [path.resolve(import.meta.dirname, './vitest.setup.ts')],
     css: true,
+    // Generous limits: the guard tests scan hundreds of files and the first test of a run pays a cold start on slow drives.
+    testTimeout: 30_000,
+    hookTimeout: 60_000,
     pool: 'threads',
     fileParallelism: false,
     isolate: false,

@@ -64,3 +64,22 @@ describe('IconButton', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('IconButton link mode review fixes', () => {
+  it('calls onClick on a link', async () => {
+    const onClick = vi.fn((e: React.MouseEvent) => e.preventDefault());
+    render(<IconButton label="Page 2" icon="chevron" href="/p/2" onClick={onClick} />);
+    await userEvent.click(screen.getByRole('link', { name: 'Page 2' }));
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('a disabled link keeps the link role (so its label is announced), has no href and ignores clicks', async () => {
+    const onClick = vi.fn();
+    render(<IconButton label="Previous page" icon="chevron" href="/p/0" disabled onClick={onClick} />);
+    const el = screen.getByRole('link', { name: 'Previous page' });
+    expect(el).not.toHaveAttribute('href');
+    expect(el).toHaveAttribute('aria-disabled', 'true');
+    await userEvent.click(el);
+    expect(onClick).not.toHaveBeenCalled();
+  });
+});

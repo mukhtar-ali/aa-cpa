@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { cn } from '../../lib/cn';
+import { contactHref } from '../../lib/contact-links';
+import { safeHref } from '../../lib/safe-href';
 import { Icon } from '../../icons';
 import type { IconName } from '../../icons';
 import { IconButton } from '../../primitives/IconButton';
@@ -37,12 +39,7 @@ const CONTACT_ICONS: Record<ContactChannel['type'], IconName> = {
   hours: 'clock',
 };
 
-const hrefFor = (c: ContactChannel): string | undefined => {
-  if (c.href) return c.href;
-  if (c.type === 'phone') return `tel:${c.value.replace(/[^\d+]/g, '')}`;
-  if (c.type === 'email') return `mailto:${c.value}`;
-  return undefined;
-};
+const hrefFor = (c: ContactChannel): string | undefined => contactHref(c.type, c.value, c.href);
 
 /**
  * Site footer (Figma 411:3881 / 407:85): dark band with brand and socials, three link columns, contact row, legal row with
@@ -64,7 +61,7 @@ export const Footer = React.forwardRef<HTMLElement, FooterProps>(
                   <IconButton
                     label={social.label}
                     icon={SOCIAL_ICONS[social.network]}
-                    href={social.href}
+                    href={safeHref(social.href) ?? '#'}
                     variant="ghost-light"
                     size="sm"
                     external
@@ -73,16 +70,16 @@ export const Footer = React.forwardRef<HTMLElement, FooterProps>(
               ))}
             </ul>
           </div>
-          {columns.map((column) => (
-            <nav key={column.title} aria-labelledby={`footer-col-${column.title}`} className="flex flex-col gap-5">
-              <h2 id={`footer-col-${column.title}`} className="text-body-md font-bold text-text-inverse">
+          {columns.map((column, columnIndex) => (
+            <nav key={column.title} aria-labelledby={`footer-col-${columnIndex}`} className="flex flex-col gap-5">
+              <h2 id={`footer-col-${columnIndex}`} className="text-body-md font-bold text-text-inverse">
                 {column.title}
               </h2>
               <ul className="flex flex-col gap-3.5">
                 {column.links.map((link) => (
                   <li key={link.href + link.label}>
                     <a
-                      href={link.href}
+                      href={safeHref(link.href) ?? '#'}
                       {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                       className="text-body-md text-text-inverse-muted transition-colors duration-(--motion-duration-fast) ease-standard hover:text-text-inverse"
                     >
@@ -132,9 +129,9 @@ export const Footer = React.forwardRef<HTMLElement, FooterProps>(
                 </React.Fragment>
               ))}
               {legal.links.map((link) => (
-                <React.Fragment key={link.href}>
+                <React.Fragment key={link.href + link.label}>
                   <span aria-hidden="true">|</span>
-                  <a href={link.href} className="underline underline-offset-4 hover:text-text-inverse">
+                  <a href={safeHref(link.href) ?? '#'} className="underline underline-offset-4 hover:text-text-inverse">
                     {link.label}
                   </a>
                 </React.Fragment>

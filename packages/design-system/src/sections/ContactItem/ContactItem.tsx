@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../lib/cn';
+import { contactHref } from '../../lib/contact-links';
 import { Icon } from '../../icons';
 import type { IconName } from '../../icons';
 import type { ContactChannel } from '../../types';
@@ -10,14 +11,6 @@ export interface ContactItemProps extends Omit<React.HTMLAttributes<HTMLElement>
 
 const ICONS: Record<ContactChannel['type'], IconName> = { phone: 'phone', email: 'mail', whatsapp: 'whatsapp', hours: 'clock' };
 
-function hrefFor(channel: ContactChannel): string | undefined {
-  if (channel.href) return channel.href;
-  const digits = channel.value.replace(/[^\d+]/g, '');
-  if (channel.type === 'phone') return `tel:${digits}`;
-  if (channel.type === 'email') return `mailto:${channel.value}`;
-  if (channel.type === 'whatsapp') return `https://wa.me/${digits.replace('+', '')}`;
-  return undefined;
-}
 
 /**
  * Contact line: icon in a 48 px emerald-100 circle, muted label and bold value. Phone, email and WhatsApp values are links (tel:, mailto:,
@@ -27,7 +20,7 @@ function hrefFor(channel: ContactChannel): string | undefined {
  * @figma 527:5423
  */
 export const ContactItem = React.forwardRef<HTMLElement, ContactItemProps>(({ channel, className, ...props }, ref) => {
-  const href = hrefFor(channel);
+  const href = contactHref(channel.type, channel.value, channel.href);
   const value = channel.type === 'hours' ? channel.value : <bdi dir="ltr">{channel.value}</bdi>;
   return (
     <div ref={ref as React.Ref<HTMLDivElement>} className={cn('flex items-center gap-4', className)} {...(props as React.HTMLAttributes<HTMLDivElement>)}>

@@ -75,3 +75,16 @@ describe('Pagination', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('Pagination review fixes', () => {
+  it('an ellipsis never hides a single page', () => {
+    expect(pageItems(4, 20)).toEqual([1, 2, 3, 4, 5, 'gap-end', 20]);
+    expect(pageItems(17, 20)).toEqual([1, 'gap-start', 16, 17, 18, 19, 20]);
+  });
+
+  it('an out-of-range page is clamped so Previous and Next never point at a missing page', () => {
+    render(<Pagination page={99} pageCount={5} hrefFor={(n) => `/p/${n}`} labels={labels} />);
+    expect(screen.getByRole('link', { name: 'Page 5' })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('link', { name: 'Previous page' })).toHaveAttribute('href', '/p/4');
+  });
+});
