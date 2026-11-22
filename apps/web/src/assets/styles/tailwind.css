@@ -1,4 +1,9 @@
 @import 'tailwindcss';
+@import '@repo/design-system/styles.css';
+
+:root {
+    --font-almarai: var(--font-almarai-latin), var(--font-almarai-arabic);
+}
 
 /* ---------------------------------------------------------------------------------------------------------
    Design tokens. Neutral surfaces + one accent (the admin's orange hue, darkened for text/button contrast:

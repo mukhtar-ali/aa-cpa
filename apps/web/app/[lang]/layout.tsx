@@ -4,12 +4,12 @@ import localFont from 'next/font/local';
 import Script from 'next/script';
 import { ToastContainer } from 'react-toastify';
 import { endpoint, GA_ID_REGEX, GlobalSeoSettingsModelWeb, GTM_ID_REGEX } from '@repo/shared';
-import { WebLayout } from '@/src/components/ui/layouts/WebLayout';
+import { CustomHeader } from '@/src/components/ui/layouts/CustomHeader';
+import { CustomFooter } from '@/src/components/ui/layouts/CustomFooter';
+import { ChromeSwitch } from '@/src/reference/ChromeSwitch';
 import { getHeaderProjects, getWebsiteInfo } from '@/src/lib/server-data';
 import { FBPixel } from '@/src/components/ui/FBPixel';
 import { MonitoringReporter } from '@/src/monitoring/MonitoringReporter';
-import PageTransition from '@/src/animations/PageTransition';
-import { PreloaderWrapper } from '@/src/animations/PreloaderWrapper';
 import '@/src/assets/styles/tailwind.css';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,6 +20,8 @@ const inter = localFont({
     weight: '100 900',
     variable: '--font-inter',
     display: 'swap',
+    // Legacy fonts: not used by the design-system pages, so do not preload them (about 110 kB less on the critical path).
+    preload: false,
 });
 // Inter has no Arabic glyphs, so Arabic pages would fall back to an arbitrary system font. Cairo covers Arabic and
 // Latin, shipped as two single-script files; each is its own family, and tailwind.css chains them
@@ -29,11 +31,35 @@ const cairoLatin = localFont({
     weight: '200 1000',
     variable: '--font-cairo-latin',
     display: 'swap',
+    // Legacy fonts: not used by the design-system pages, so do not preload them (about 110 kB less on the critical path).
+    preload: false,
 });
 const cairoArabic = localFont({
     src: '../../src/assets/fonts/cairo-arabic-wght-normal.woff2',
     weight: '200 1000',
     variable: '--font-cairo-arabic',
+    display: 'swap',
+    // Legacy fonts: not used by the design-system pages, so do not preload them (about 110 kB less on the critical path).
+    preload: false,
+});
+const almaraiLatin = localFont({
+    src: [
+        { path: '../../../../packages/design-system/assets/fonts/almarai-latin-300.woff2', weight: '300', style: 'normal' },
+        { path: '../../../../packages/design-system/assets/fonts/almarai-latin-400.woff2', weight: '400', style: 'normal' },
+        { path: '../../../../packages/design-system/assets/fonts/almarai-latin-700.woff2', weight: '700', style: 'normal' },
+        { path: '../../../../packages/design-system/assets/fonts/almarai-latin-800.woff2', weight: '800', style: 'normal' },
+    ],
+    variable: '--font-almarai-latin',
+    display: 'swap',
+});
+const almaraiArabic = localFont({
+    src: [
+        { path: '../../../../packages/design-system/assets/fonts/almarai-arabic-300.woff2', weight: '300', style: 'normal' },
+        { path: '../../../../packages/design-system/assets/fonts/almarai-arabic-400.woff2', weight: '400', style: 'normal' },
+        { path: '../../../../packages/design-system/assets/fonts/almarai-arabic-700.woff2', weight: '700', style: 'normal' },
+        { path: '../../../../packages/design-system/assets/fonts/almarai-arabic-800.woff2', weight: '800', style: 'normal' },
+    ],
+    variable: '--font-almarai-arabic',
     display: 'swap',
 });
 const locales = ['en', 'ar'];
@@ -109,7 +135,7 @@ export default async function RootLayout({
     const gaId = seo?.googleAnalyticsId && GA_ID_REGEX.test(seo.googleAnalyticsId) ? seo.googleAnalyticsId : undefined;
 
     return (
-        <html lang={lang} dir={dir} className={`${inter.variable} ${cairoLatin.variable} ${cairoArabic.variable}`}>
+        <html lang={lang} dir={dir} className={`${inter.variable} ${cairoLatin.variable} ${cairoArabic.variable} ${almaraiLatin.variable} ${almaraiArabic.variable}`}>
             <head>
                 {gtmId && (
                     <Script id="gtm-base" strategy="afterInteractive">
@@ -155,11 +181,9 @@ export default async function RootLayout({
                 <FBPixel />
                 <MonitoringReporter />
                 <ToastContainer position="top-center" rtl={dir === 'rtl'} />
-                <PreloaderWrapper>
-                    <PageTransition>
-                        <WebLayout websiteInfo={websiteInfo} projects={headerProjects}>{children}</WebLayout>
-                    </PageTransition>
-                </PreloaderWrapper>
+                <ChromeSwitch header={<CustomHeader projects={headerProjects} />} footer={<CustomFooter info={websiteInfo} />}>
+                    {children}
+                </ChromeSwitch>
             </body>
         </html>
     );

@@ -1,0 +1,3 @@
+/* Storybook only: apps/web already provides Tailwind; the library stylesheet does not import it. */
+@import 'tailwindcss';
+@import '../src/styles/index.css';

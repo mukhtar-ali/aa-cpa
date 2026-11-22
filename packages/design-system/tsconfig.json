@@ -1,0 +1,10 @@
+{
+  "extends": "@repo/typescript-config/react-library.json",
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx",
+    "rootDir": "."
+  },
+  "include": ["src", ".storybook", "scripts", "vitest.setup.ts"],
+  "exclude": ["node_modules", "dist", "storybook-static"]
+}

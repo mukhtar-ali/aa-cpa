@@ -1,0 +1,49 @@
+{
+  "variables": [
+    {
+      "name": "bg/page",
+      "value": "#ffffff",
+      "type": "COLOR",
+      "description": "Page background colour"
+    },
+    {
+      "name": "action/primary",
+      "value": "#228664",
+      "figmaValue": "#238b68",
+      "a11yOverride": true,
+      "reason": "WCAG 2.2 AA contrast 4.5:1 on white (R4)",
+      "type": "COLOR",
+      "description": "Primary action colour with accessibility contrast override"
+    },
+    {
+      "name": "text/heading",
+      "value": "#111827",
+      "type": "COLOR",
+      "description": "Heading text colour"
+    },
+    {
+      "name": "font-size/h1",
+      "value": "48px",
+      "type": "FLOAT",
+      "description": "Heading 1 font size"
+    },
+    {
+      "name": "spacing/24",
+      "value": "24px",
+      "type": "FLOAT",
+      "description": "Spacing unit 24px"
+    },
+    {
+      "name": "radius/32",
+      "value": "32px",
+      "type": "FLOAT",
+      "description": "Section border radius 32px"
+    },
+    {
+      "name": "shadow/card",
+      "value": "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+      "type": "STRING",
+      "description": "Card box shadow"
+    }
+  ]
+}

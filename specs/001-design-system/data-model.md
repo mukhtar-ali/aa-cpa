@@ -33,7 +33,7 @@ interface ImageRef {           // used by every image-bearing component
 interface LinkRef { label: string; href: Href; external?: boolean; }
 
 interface ActionRef extends LinkRef {   // CTA rendered as Button
-  variant?: 'primary' | 'secondary' | 'outline-light' | 'link';
+  variant?: 'primary' | 'secondary' | 'paper' | 'link';
 }
 
 type IsoDate = string;          // '2026-10-12'; formatted with lib/format

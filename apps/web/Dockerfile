@@ -23,6 +23,7 @@ COPY apps/admin/package.json ./apps/admin/package.json
 COPY apps/web/package.json ./apps/web/package.json
 COPY packages/shared/package.json ./packages/shared/package.json
 COPY packages/ui/package.json ./packages/ui/package.json
+COPY packages/design-system/package.json ./packages/design-system/package.json
 COPY packages/eslint-config/package.json ./packages/eslint-config/package.json
 COPY packages/typescript-config/package.json ./packages/typescript-config/package.json
 
@@ -37,6 +38,8 @@ COPY packages/typescript-config ./packages/typescript-config
 COPY packages/eslint-config ./packages/eslint-config
 COPY packages/shared ./packages/shared
 COPY packages/ui ./packages/ui
+# Design system: consumed as source (transpilePackages) and its fonts are read by next/font at build time.
+COPY packages/design-system ./packages/design-system
 COPY apps/web ./apps/web
 # apps/web/public is empty (not tracked by git) until brand assets land (MUK-453);
 # make sure it exists so the runtime stage's COPY works on a clean clone.

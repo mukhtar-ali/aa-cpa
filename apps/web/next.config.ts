@@ -33,6 +33,7 @@ for (const name of ['BASE_URL', 'NEXT_PUBLIC_API_URL', 'NEXT_PUBLIC_SITE_URL'] a
 }
 
 const nextConfig: NextConfig = {
+    transpilePackages: ['@repo/design-system'],
     env: {
         BASE_URL: process.env.BASE_URL,
     },

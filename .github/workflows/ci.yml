@@ -61,6 +61,18 @@ jobs:
       - name: API unit tests
         run: pnpm --filter @repo/api test -- --passWithNoTests
 
+      - name: Design system tests
+        run: pnpm --filter @repo/design-system test
+
+      - name: Build Storybook
+        run: pnpm --filter @repo/design-system build-storybook
+
+      - name: Upload Storybook artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-static
+          path: packages/design-system/storybook-static
+
   # Builds the three production images through docker-compose and smoke-tests the
   # stack. GitHub runners ship with Docker, so this verifies the Dockerfiles without
   # needing Docker on a developer machine.
