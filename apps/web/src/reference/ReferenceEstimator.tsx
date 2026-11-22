@@ -25,7 +25,7 @@ export function ReferenceEstimator({ content, locale }: { content: HomeContent['
                     labels: content.labels,
                     currency: 'SAR',
                     estimate: async (answers) => {
-                        const revenue = Number(answers.revenue ?? 0);
+                        const revenue = Number(answers.revenue) || 0;
                         const base = Math.max(25000, Math.round((revenue * 0.004) / 5000) * 5000);
                         return { min: base, max: Math.round(base * 1.4) };
                     },

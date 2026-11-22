@@ -7,6 +7,9 @@ import { homeAr } from '@/src/reference/home.ar';
 import { homeEn } from '@/src/reference/home.en';
 import { ReferenceEstimator } from '@/src/reference/ReferenceEstimator';
 
+// The gate reads an env var: never bake the answer in at build time.
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 /** Reference composition of the approved homepage (Figma 411:169) built only from design-system components with mock content. */

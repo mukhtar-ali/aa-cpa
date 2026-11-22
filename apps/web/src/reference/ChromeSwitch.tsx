@@ -5,7 +5,8 @@ import { usePathname } from 'next/navigation';
 import PageTransition from '@/src/animations/PageTransition';
 import { PreloaderWrapper } from '@/src/animations/PreloaderWrapper';
 
-const REFERENCE_PATH = /^\/[a-z]{2}\/reference(\/|$)/;
+// Exact reference routes only, so a legacy page whose slug happens to be "reference" keeps its chrome.
+const REFERENCE_PATH = /^\/[a-z]{2}\/reference\/home\/?$/;
 
 /**
  * Renders the legacy starter chrome (header, footer, preloader, page transition) around the page, except on the design-system
