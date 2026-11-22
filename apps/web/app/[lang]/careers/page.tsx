@@ -1,6 +1,6 @@
 import type { Metadata, ResolvingMetadata } from 'next';
 import Link from 'next/link';
-import { endpoint, type CareersPageSettingsModelWeb, type JobModelWeb, type ListingPageWeb } from '@repo/shared';
+import { endpoint, type CareersPageSettingsModel, type JobModelWeb, type ListingPageWeb, type Localized } from '@repo/shared';
 import { getT } from '@/dictionaries/server';
 import { Pagination } from '@/src/components/ui/Pagination';
 import { buildPageMetadata, fetchPage, parsePageNumber } from '@/src/lib/server-data';
@@ -21,7 +21,7 @@ type Props = {
 
 /** One API call: this page's SEO, its page settings (`hero`) and one page of open jobs. */
 const loadPage = (lang: string, page: number) =>
-    fetchPage<ListingPageWeb<CareersPageSettingsModelWeb, JobModelWeb>>(
+    fetchPage<ListingPageWeb<Localized<CareersPageSettingsModel>, JobModelWeb>>(
         endpoint.careersPage.pageWeb,
         lang,
         `pageNumber=${page}&pageSize=${PAGE_SIZE}`,
@@ -70,7 +70,7 @@ export default async function CareersPage({ params, searchParams }: Props) {
                                 </span>
                             </div>
                             {job.location && <p className="mt-1 text-sm text-muted">{job.location}</p>}
-                            {job.description && <p className="mt-2 text-sm text-muted">{job.description}</p>}
+                            {job.summary && <p className="mt-2 text-sm text-muted">{job.summary}</p>}
                         </Link>
                     ))}
                 </div>

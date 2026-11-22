@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { endpoint, JobModelWeb, NewsModelWeb, PaginatorModel, ProjectModelWeb } from '@repo/shared';
+import { endpoint, JobModelWeb, NewsModelWeb, PaginatorModel } from '@repo/shared';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 const API_URL = process.env.BASE_URL ?? 'http://localhost:3001';
@@ -45,8 +45,7 @@ function slugEntries<T extends { slug?: string | null; updatedAt?: string }>(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const [projects, news, jobs] = await Promise.all([
-        fetchAll<ProjectModelWeb>(endpoint.project.listWeb),
+    const [news, jobs] = await Promise.all([
         fetchAll<NewsModelWeb>(endpoint.news.listWeb),
         fetchAll<JobModelWeb>(endpoint.job.listWeb),
     ]);
@@ -55,14 +54,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { url: `${SITE_URL}/${locale}`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 1 },
         { url: `${SITE_URL}/${locale}/about`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.6 },
         { url: `${SITE_URL}/${locale}/contact`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.6 },
-        { url: `${SITE_URL}/${locale}/projects`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.8 },
         { url: `${SITE_URL}/${locale}/news`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.7 },
         { url: `${SITE_URL}/${locale}/careers`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.7 },
     ]);
 
     return [
         ...staticEntries,
-        ...slugEntries(projects, '', 0.8),
         ...slugEntries(news, '/news', 0.6),
         ...slugEntries(jobs, '/careers', 0.6),
     ];

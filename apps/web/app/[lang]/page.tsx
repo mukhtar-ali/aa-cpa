@@ -2,7 +2,7 @@ import type { Metadata, ResolvingMetadata } from 'next';
 import { buildPageMetadata, fetchPage } from '@/src/lib/server-data';
 import Image from 'next/image';
 import Link from 'next/link';
-import { endpoint, HomeModelWeb, PaginatorModel, ProjectModelWeb, type WithPageSeo } from '@repo/shared';
+import { endpoint, HomeModelWeb, type WithPageSeo } from '@repo/shared';
 import { getT } from '@/dictionaries/server';
 import { Animations } from '@/src/animations/Animations';
 import { AnimationType } from '@/src/animations/animation';
@@ -38,24 +38,14 @@ export async function generateMetadata(
 
 export default async function HomePage({
     params,
-    searchParams,
 }: {
     params: Promise<{ lang: string }>;
-    searchParams: Promise<{ q?: string }>;
 }) {
     const { lang } = await params;
-    const { q } = await searchParams;
     const t = await getT();
 
-    // `lang` is also in the URL so the cached response for /en and /ar can never be shared.
-    const projectsUrl = q
-        ? `${endpoint.project.listWeb}?search=${encodeURIComponent(q)}&lang=${lang}`
-        : `${endpoint.project.listWeb}?lang=${lang}`;
-
-    const [home, projects] = await Promise.all([
-        loadHome(lang),
-        fetchJson<PaginatorModel<ProjectModelWeb>>(projectsUrl, lang),
-    ]);
+    // The real-estate projects list is gone with the 002 backend; feature 003 rebuilds the home page.
+    const home = await loadHome(lang);
 
     return (
         <Animations
@@ -118,50 +108,6 @@ export default async function HomePage({
                     </section>
                 )}
 
-                <section id="projects" className="mt-16">
-                    <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-                        <h2 className="animate-fade-up section-title">{t.header.menu.projects}</h2>
-                        <form className="flex items-center gap-2" action={`/${lang}`}>
-                            <input
-                                type="search"
-                                name="q"
-                                defaultValue={q ?? ''}
-                                placeholder={t.search.placeholder}
-                                dir={lang === 'ar' ? 'rtl' : 'ltr'}
-                                className="field w-56"
-                            />
-                            <button
-                                type="submit"
-                                className="btn btn-outline"
-                            >
-                                {t.fields.submit}
-                            </button>
-                            {q && (
-                                <Link href={`/${lang}#projects`} className="text-sm underline text-muted">
-                                    {t.search.clear}
-                                </Link>
-                            )}
-                        </form>
-                    </div>
-
-                    {projects?.items.length === 0 && (
-                        <p className="empty">
-                            {q ? `${t.search.noResults} "${q}"` : 'No projects published yet.'}
-                        </p>
-                    )}
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        {projects?.items.map((p) => (
-                            <Link
-                                key={p.slug}
-                                href={`/${lang}/${p.slug}`}
-                                className="animate-fade-up card card-link p-5"
-                            >
-                                <h3 className="font-semibold">{p.title || p.slug}</h3>
-                                {p.location && <p className="mt-1 text-sm text-muted">{p.location}</p>}
-                            </Link>
-                        ))}
-                    </div>
-                </section>
             </div>
         </Animations>
     );

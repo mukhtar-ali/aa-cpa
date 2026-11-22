@@ -1,10 +1,10 @@
 import type { Metadata, ResolvingMetadata } from 'next';
 import { buildPageMetadata, fetchPage } from '@/src/lib/server-data';
-import { endpoint, type ContactFormSectionModelWeb, type ContactHeroSectionModelWeb, type WithPageSeo } from '@repo/shared';
+import { endpoint, type ContactFormSectionModel, type ContactHeroSectionModel, type Localized, type WithPageSeo } from '@repo/shared';
 import { getT } from '@/dictionaries/server';
 import { ContactForm } from '@/src/components/contact/ContactForm';
 
-type ContactPageWeb = WithPageSeo<{ hero: ContactHeroSectionModelWeb | null; form: ContactFormSectionModelWeb | null }>;
+type ContactPageWeb = WithPageSeo<{ hero: Localized<ContactHeroSectionModel> | null; form: Localized<ContactFormSectionModel> | null }>;
 
 /** One API call: the Contact page's SEO, hero and form section. */
 const loadContact = (lang: string) => fetchPage<ContactPageWeb>(endpoint.contact.pageWeb, lang);

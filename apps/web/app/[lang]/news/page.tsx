@@ -51,7 +51,7 @@ export default async function NewsPage({ params, searchParams }: Props) {
                     >
                         {article.thumbnail && (
                             <Image
-                                src={article.thumbnail}
+                                src={typeof article.thumbnail === 'string' ? article.thumbnail : article.thumbnail.url}
                                 alt={article.title || article.slug || ''}
                                 width={400}
                                 height={225}

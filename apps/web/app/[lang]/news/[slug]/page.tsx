@@ -25,7 +25,7 @@ export default async function NewsArticlePage({
             <h1 className="mt-1 page-title">{article.title || article.slug}</h1>
             {article.thumbnail && (
                 <Image
-                    src={article.thumbnail}
+                    src={typeof article.thumbnail === 'string' ? article.thumbnail : article.thumbnail.url}
                     alt={article.title || article.slug || ''}
                     width={800}
                     height={450}

@@ -7,3 +7,4 @@ export * from './date';
 export * from './seo_page_key_utils';
 export * from './url';
 export * from './seo';
+export * from './localized.type';

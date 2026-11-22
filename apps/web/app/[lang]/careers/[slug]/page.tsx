@@ -35,7 +35,7 @@ export default async function JobPage({
                 </span>
             </div>
             {job.location && <p className="mt-2 text-sm text-muted">{job.location}</p>}
-            {job.description && <p className="mt-4 text-muted">{job.description}</p>}
+            {job.summary && <p className="mt-4 text-muted">{job.summary}</p>}
 
             {/* job.body is sanitized server-side on every create/update, same as News. */}
             {job.body && (
