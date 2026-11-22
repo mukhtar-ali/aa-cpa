@@ -1,1 +1,9 @@
+# Line endings: LF in the repository and in working trees on every OS. A Windows checkout used to commit whole files as CRLF,
+# which made every line of a file show as changed and turned merges between branches into whole-file conflicts.
+* text=auto eol=lf
+
 *.sh text eol=lf
+# Windows-only scripts keep CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
