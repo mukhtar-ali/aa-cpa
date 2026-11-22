@@ -44,12 +44,12 @@ export default async function ReferenceHomePage({ params }: { params: Promise<{ 
             </div>
             <GapSection {...c.gap} className="relative z-10 -mt-8 rounded-t-section lg:min-h-[795px]" />
             <LogoMarquee className="py-9" label={c.marquee.label} rows={c.marquee.rows} pauseLabel={c.marquee.pauseLabel} />
-            <ServiceTabs className="lg:min-h-[1033px]" eyebrow={c.services.eyebrow} title={c.services.title} services={c.services.items} tabsLabel={c.labels.services} />
+            <ServiceTabs className="lg:min-h-[1033px]" eyebrow={c.services.eyebrow} title={c.services.title} headline={c.services.headline} headlineAccent={c.services.headlineAccent} services={c.services.items} tabsLabel={c.labels.services} />
             <ReasonsSection {...c.reasons} locale={lang} className="pb-0 lg:min-h-[983px]" />
             <CredentialsGrid {...c.credentials} showPlaceholders className="lg:min-h-[339px]" />
             <section className="bg-bg-page py-section-lg lg:min-h-[676px]">
                 <Container className="flex flex-col gap-12">
-                    <SectionHeading eyebrow={c.process.eyebrow} title={c.process.title} description={c.process.description} />
+                    <SectionHeading eyebrow={c.process.eyebrow} title={c.process.title} accent={c.process.accent} description={c.process.description} split />
                     <ProcessSteps steps={c.process.steps} locale={lang} />
                 </Container>
             </section>

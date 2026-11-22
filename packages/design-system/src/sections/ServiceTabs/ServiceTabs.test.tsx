@@ -23,9 +23,19 @@ const setup = (locale: 'ar' | 'en' = 'en') =>
   );
 
 describe('ServiceTabs', () => {
+  it('shows the headline with the accent line above the photo when given', () => {
+    render(
+      <div lang="en" dir="ltr">
+        <ServiceTabs eyebrow="Why" title="T" headline="Big-firm precision" headlineAccent="at local speed" services={services} tabsLabel="Services" />
+      </div>,
+    );
+    expect(screen.getByText('Big-firm precision')).toHaveClass('text-h3', 'font-bold');
+    expect(screen.getByText('at local speed')).toHaveClass('text-transparent');
+  });
+
   it('has the H2, a labelled vertical tablist with one tab per service, and the first selected', () => {
     setup();
-    expect(screen.getByRole('heading', { level: 2 })).toHaveClass('text-h4');
+    expect(screen.getByRole('heading', { level: 2 })).toHaveClass('text-h5');
     const list = screen.getByRole('tablist', { name: 'Services' });
     expect(list).toHaveAttribute('aria-orientation', 'vertical');
     const tabs = screen.getAllByRole('tab');

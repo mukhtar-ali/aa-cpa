@@ -72,6 +72,8 @@ export const homeEn: HomeContent = {
   services: {
     eyebrow: 'Why AA-CPA',
     title: 'Audit and compliance for a smarter Saudi economy',
+    headline: 'The precision of the big global firms',
+    headlineAccent: 'at the speed of a direct local partner',
     items: [
       { id: 'consulting', title: 'Professional consulting', summary: 'Audit reports ready for banks and boards, reviewed directly by a licensed partner, not a changing junior team.', image: img('service-consulting', 557, 470), href: '#', ctaLabel: 'Request a quote', highlight: { label: 'Average response time to your enquiry', value: '24 hours', note: 'Straight from a licensed partner, not a receptionist.' } },
       { id: 'audit', title: 'External audit', summary: 'Independent audits to SOCPA standards, signed by a partner who knows your business.', image: img('service-audit', 557, 470), href: '#', ctaLabel: 'Request a quote' },
@@ -110,7 +112,8 @@ export const homeEn: HomeContent = {
   },
   process: {
     eyebrow: 'How we work',
-    title: 'From the first call to a report a partner signs',
+    title: 'From the first call',
+    accent: 'to a report a partner signs',
     description: 'A clear four-step path with dates announced from the start, so you never have to chase anyone to find out where your file is.',
     steps: [
       { index: 1, title: 'Intro call', body: 'We understand your business, the scope of work and the deadlines you owe your bank or regulator.' },

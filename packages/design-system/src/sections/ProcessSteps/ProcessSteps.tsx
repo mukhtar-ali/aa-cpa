@@ -19,12 +19,12 @@ const pad = (n: number, locale: 'ar' | 'en') => (n < 10 ? `0${formatNumber(n, lo
 export const ProcessSteps = React.forwardRef<HTMLOListElement, ProcessStepsProps>(({ steps, locale = 'ar', className, ...props }, ref) => (
   <ol ref={ref} className={cn('grid gap-6 sm:grid-cols-2 lg:grid-cols-4', className)} {...props}>
     {steps.map((step) => (
-      <li key={step.index} className="flex flex-col gap-4 rounded-card border border-solid border-border-decor bg-bg-surface p-6">
+      <li key={step.index} className="flex flex-col gap-4 rounded-card border border-solid border-border-decor bg-transparent p-6 lg:min-h-80">
         <span aria-hidden="true" className="bg-linear-to-b from-gradient-start to-gradient-end-text-large bg-clip-text text-h1 font-bold text-transparent">
           {pad(step.index, locale)}
         </span>
         <h3 className="text-h5 font-bold text-text-heading">{step.title}</h3>
-        <p className="text-body-md text-text-body">{step.body}</p>
+        <p className="text-body-sm text-text-body">{step.body}</p>
       </li>
     ))}
   </ol>

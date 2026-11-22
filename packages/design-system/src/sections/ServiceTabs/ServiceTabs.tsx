@@ -8,8 +8,12 @@ import { Pattern } from '../../layout/Pattern';
 import type { ServiceSummary } from '../../types';
 
 export interface ServiceTabsProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
+  /** Small bold line under the title, for example "Why AA-CPA". */
   eyebrow?: string;
   title: string;
+  /** Large tagline above the photo (first line, then the second line in the accent gradient). */
+  headline?: string;
+  headlineAccent?: string;
   services: ServiceSummary[];
   /** Id of the service shown first (default: the first one). */
   defaultServiceId?: string;
@@ -24,17 +28,17 @@ export interface ServiceTabsProps extends Omit<React.HTMLAttributes<HTMLElement>
  *
  * @figma 411:3712, 425:2
  */
-export function ServiceTabs({ eyebrow, title, services, defaultServiceId, tabsLabel, className, ...props }: ServiceTabsProps) {
+export function ServiceTabs({ eyebrow, title, headline, headlineAccent, services, defaultServiceId, tabsLabel, className, ...props }: ServiceTabsProps) {
   const first = services[0];
   if (!first) return null;
   return (
     <section className={cn('relative isolate overflow-hidden rounded-t-section bg-bg-surface-ice py-section-lg', className)} {...props}>
       <Pattern name="flow-lines" tone="light" className="-z-10 opacity-40" />
-      <Tabs.Root defaultValue={defaultServiceId ?? first.id} orientation="vertical" className="mx-auto grid max-w-301 gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-x-6 lg:px-8">
-        <div className="flex flex-col gap-8 lg:col-span-5 lg:col-start-1">
-          <div className="flex flex-col gap-1.5">
-            {eyebrow ? <p className="text-body-lg font-bold text-text-heading">{eyebrow}</p> : null}
-            <h2 className="text-h4 font-bold text-text-heading">{title}</h2>
+      <Tabs.Root defaultValue={defaultServiceId ?? first.id} orientation="vertical" className="mx-auto grid max-w-301 gap-12 px-4 sm:px-6 lg:grid-cols-[24.125rem_34.75rem] lg:justify-between lg:px-8">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-6">
+            <h2 className="text-h5 font-bold text-text-heading">{title}</h2>
+            {eyebrow ? <p className="text-body-sm font-bold text-text-heading">{eyebrow}</p> : null}
           </div>
           <Tabs.List aria-label={tabsLabel} className="flex flex-col">
             {services.map((service) => (
@@ -51,8 +55,15 @@ export function ServiceTabs({ eyebrow, title, services, defaultServiceId, tabsLa
             ))}
           </Tabs.List>
         </div>
+        <div className="flex flex-col gap-8">
+          {headline ? (
+            <p className="text-h3 font-bold text-text-heading">
+              {headline}
+              {headlineAccent ? <span className="block bg-linear-to-b from-gradient-start to-gradient-end-text-large bg-clip-text text-transparent">{headlineAccent}</span> : null}
+            </p>
+          ) : null}
         {services.map((service) => (
-          <Tabs.Content key={service.id} value={service.id} className="flex flex-col gap-6 outline-none lg:col-span-7 lg:col-start-6">
+          <Tabs.Content key={service.id} value={service.id} className="flex flex-col gap-6 outline-none">
             {service.image ? (
               <div className="relative">
                 <img
@@ -80,6 +91,7 @@ export function ServiceTabs({ eyebrow, title, services, defaultServiceId, tabsLa
             ) : null}
           </Tabs.Content>
         ))}
+        </div>
       </Tabs.Root>
     </section>
   );

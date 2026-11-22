@@ -22,7 +22,7 @@ describe('ProcessSteps', () => {
   it('each step has an H3 title (H5 size) and body text; the decorative numeral is hidden from assistive technology', () => {
     render(<ProcessSteps steps={steps} locale="en" />);
     expect(screen.getByRole('heading', { level: 3, name: 'Intro call' })).toHaveClass('text-h5', 'font-bold');
-    expect(screen.getByText('We understand your business and deadlines.')).toHaveClass('text-body-md');
+    expect(screen.getByText('We understand your business and deadlines.')).toHaveClass('text-body-sm');
     const numeral = screen.getByText('01');
     expect(numeral).toHaveAttribute('aria-hidden', 'true');
     expect(numeral).toHaveClass('text-h1', 'text-transparent');
@@ -37,7 +37,7 @@ describe('ProcessSteps', () => {
 
   it('cards are bordered with the 20 px radius', () => {
     render(<ProcessSteps steps={steps} />);
-    expect(screen.getAllByRole('listitem')[0]).toHaveClass('rounded-card', 'border-border-decor', 'bg-bg-surface');
+    expect(screen.getAllByRole('listitem')[0]).toHaveClass('rounded-card', 'border-border-decor', 'bg-transparent', 'lg:min-h-80');
   });
 
   it.each(['ar', 'en'] as const)('has no axe violations in %s', async (lang) => {
