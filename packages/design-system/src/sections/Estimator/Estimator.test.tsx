@@ -159,6 +159,24 @@ describe('Estimator', () => {
     expect(screen.getByText('Question 4 of 4')).toBeInTheDocument();
   });
 
+  it('an estimate failure on a numeric last question shows the message once', async () => {
+    setup(
+      makeConfig({
+        questions: [
+          { id: 'revenue', prompt: 'Approximate annual revenue (SAR)', kind: 'currency', min: 1 },
+          { id: 'staff', prompt: 'Number of employees', kind: 'number', min: 1, max: 10000 },
+        ],
+        estimate: vi.fn().mockRejectedValue(new Error('x')),
+      }),
+    );
+    await userEvent.type(screen.getByLabelText('Approximate annual revenue (SAR)'), '12000000');
+    await userEvent.click(screen.getByRole('button', { name: 'Start estimate' }));
+    await userEvent.type(screen.getByLabelText('Number of employees'), '85');
+    await userEvent.click(screen.getByRole('button', { name: 'Your estimated range' }));
+    await screen.findByText(labels.error);
+    expect(screen.getAllByText(labels.error)).toHaveLength(1);
+  });
+
   it('restart clears the answers and returns to question 1', async () => {
     setup();
     await answerAll();

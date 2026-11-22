@@ -184,11 +184,6 @@ export function Estimator({ title, intro, config, locale = 'ar', className, ...p
                   </Button>
                 ) : null}
               </div>
-              {error && step.kind === 'question' && question.kind !== 'choice' && error === labels.error ? (
-                <p role="alert" className="text-body-sm text-status-error-inverse">
-                  {error}
-                </p>
-              ) : null}
             </>
           ) : null
         ) : null}
