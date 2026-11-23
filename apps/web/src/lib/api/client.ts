@@ -50,7 +50,25 @@ async function request(path: string, init: RequestInit & { next?: unknown }, tim
     }
 }
 
+/**
+ * In a draft-mode request the editor's token (httpOnly cookie set by `/api/preview`) is sent so the API returns drafts. Outside a
+ * request (build, `generateStaticParams`) `next/headers` throws and there is simply no preview.
+ */
+async function draftToken(): Promise<string | undefined> {
+    try {
+        const { draftMode, cookies } = await import('next/headers');
+        if (!(await draftMode()).isEnabled) return undefined;
+        return (await cookies()).get('cpa_preview_token')?.value;
+    } catch {
+        return undefined;
+    }
+}
+
 export async function apiGet<T>(path: string, options: ApiGetOptions<T>): Promise<T> {
+    if (options.preview === undefined) {
+        const token = await draftToken();
+        if (token) options = { ...options, preview: token };
+    }
     const url = withQuery(path, options.lang, options.query);
     const headers: Record<string, string> = { 'Accept-Language': options.lang };
     if (options.preview) headers['X-Preview-Token'] = options.preview;

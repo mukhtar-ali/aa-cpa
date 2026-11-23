@@ -76,11 +76,11 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 
 ## Phase 9: User Story 6 — Freshness & preview (P2)
 
-- [ ] T038 [US6] Tests then `WEB/app/api/revalidate/route.ts` (secret, tags validation)
-- [ ] T039 [US6] `WEB/app/api/preview/route.ts` and `exit/route.ts` (draft mode, token verify, safe redirect path), `noindex` in draft mode
-- [ ] T039a [US6] `WEB/app/api/health/route.ts` (`{ status, version }` from build SHA) with test — used by 004 uptime checks
-- [ ] T040a [US6] Resilience test `e2e/specs/web/api-down.spec.ts`: warm the cache, stop the API, cached pages still render; an uncached page shows the branded error with contact details
-- [ ] T040 [US6] Playwright `e2e/specs/web/freshness-preview.spec.ts` (publish → visible < 60 s; preview draft; expired token)
+- [X] T038 [US6] Tests then `WEB/app/api/revalidate/route.ts` (secret, tags validation)
+- [X] T039 [US6] `WEB/app/api/preview/route.ts` and `exit/route.ts` (draft mode, token verify, safe redirect path), `noindex` in draft mode
+- [X] T039a [US6] `WEB/app/api/health/route.ts` (`{ status, version }` from build SHA) with test — used by 004 uptime checks
+- [ ] T040a [US6] Resilience test `e2e/specs/web/api-down.spec.ts`: warm the cache, stop the API, cached pages still render; an uncached page shows the branded error with contact details (written, not yet run)
+- [ ] T040 [US6] Playwright `e2e/specs/web/freshness-preview.spec.ts` (publish → visible < 60 s; preview draft; expired token) (written, not yet run; the publish-to-visible-under-60s check is manual, quickstart P5)
 
 ## Phase 10: Polish
 

@@ -33,6 +33,11 @@ export function proxy(request: NextRequest) {
         const requestHeaders = new Headers(request.headers);
         requestHeaders.set('x-locale', pathLocale);
         const response = NextResponse.next({ request: { headers: requestHeaders } });
+        // An editor previewing drafts (cookie from /api/preview) must never be indexed or cached by a shared cache.
+        if (request.cookies.get('cpa_preview')?.value === '1') {
+            response.headers.set('x-robots-tag', 'noindex, nofollow');
+            response.headers.set('cache-control', 'private, no-store');
+        }
         // Following a language link is the switch: remember it.
         if (cookie !== pathLocale) response.cookies.set(LOCALE_COOKIE, pathLocale, LOCALE_COOKIE_OPTIONS);
         return response;

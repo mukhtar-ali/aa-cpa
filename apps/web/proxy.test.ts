@@ -51,4 +51,11 @@ describe('proxy', () => {
         expect(res.headers.get('retry-after')).toBe('3600');
         expect(await res.text()).toContain('Down for maintenance');
     });
+
+    it('marks preview requests noindex and uncached', () => {
+        const res = proxy(req('/ar/services', { cookie: 'cpa_preview=1' }));
+        expect(res.headers.get('x-robots-tag')).toBe('noindex, nofollow');
+        expect(res.headers.get('cache-control')).toBe('private, no-store');
+        expect(proxy(req('/ar/services', {})).headers.get('x-robots-tag')).toBeNull();
+    });
 });
