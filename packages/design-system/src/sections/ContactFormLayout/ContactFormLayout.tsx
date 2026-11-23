@@ -47,6 +47,8 @@ export interface ContactFormLayoutProps extends Omit<React.HTMLAttributes<HTMLEl
   description?: string;
   labels: ContactFormLabels;
   services: { value: string; label: string }[];
+  /** Service preselected when the form opens (for example from a service page's `?service=`); ignored if it is not in `services`. */
+  defaultService?: string;
   onSubmit: (values: ContactFormValues) => Promise<void>;
   /** Side content (contact items, office cards) shown next to the form from `lg`. */
   aside?: React.ReactNode;
@@ -63,9 +65,9 @@ type Errors = Partial<Record<'name' | 'mobile' | 'email' | 'message' | 'consent'
  *
  * @figma 524:3651 (unverified)
  */
-export function ContactFormLayout({ title, description, labels, services, onSubmit, aside, submitTimeoutMs = 30_000, className, ...props }: ContactFormLayoutProps) {
+export function ContactFormLayout({ title, description, labels, services, defaultService, onSubmit, aside, submitTimeoutMs = 30_000, className, ...props }: ContactFormLayoutProps) {
   const startedAt = React.useRef(Date.now());
-  const [values, setValues] = React.useState({ name: '', mobile: '', email: '', service: '', message: '', consent: false, website: '' });
+  const [values, setValues] = React.useState({ name: '', mobile: '', email: '', service: services.some((o) => o.value === defaultService) ? (defaultService as string) : '', message: '', consent: false, website: '' });
   const [errors, setErrors] = React.useState<Errors>({});
   const [attempt, setAttempt] = React.useState(0);
   const [status, setStatus] = React.useState<'idle' | 'submitting' | 'sent' | 'failed'>('idle');

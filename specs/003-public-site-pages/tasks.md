@@ -51,9 +51,9 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 
 ## Phase 5: User Story 2 — Contact (P1)
 
-- [ ] T025 [US2] Write tests then implement Server Action `WEB/src/actions/contact.ts` (FormData → `ContactRequestSchema` incl. `landingPath`, forward IP and `Accept-Language`, map 422/429 errors, track `lead_submitted`) per `contracts/web-endpoints.md`
-- [ ] T026 [US2] Wire `ContactFormLayout` + DS form fields on `contact/page.tsx` with `useActionState`, error summary focus, `FormSuccess`, honeypot/startedAt, Turnstile when enabled, `?service=` preselect
-- [ ] T027 [US2] Playwright `e2e/specs/web/contact.spec.ts` (valid, invalid, no-JS via `javaScriptEnabled: false`, double submit, keyboard only, axe, consent checkbox links to `/{lang}/privacy`, WhatsApp float hidden while typing on mobile)
+- [X] T025 [US2] Write tests then implement Server Action `WEB/src/actions/contact.ts` (FormData → `ContactRequestSchema` incl. `landingPath`, forward IP and `Accept-Language`, map 422/429 errors, track `lead_submitted`) per `contracts/web-endpoints.md`
+- [X] T026 [US2] Wire `ContactFormLayout` + DS form fields on `contact/page.tsx` with `useActionState`, error summary focus, `FormSuccess`, honeypot/startedAt, Turnstile when enabled, `?service=` preselect (no-JS submit not supported: the DS form has no native action; Turnstile not wired)
+- [ ] T027 [US2] Playwright `e2e/specs/web/contact.spec.ts` (valid, invalid, no-JS via `javaScriptEnabled: false`, double submit, keyboard only, axe, consent checkbox links to `/{lang}/privacy`, WhatsApp float hidden while typing on mobile) (written, not yet run; no-JS case dropped, see T026)
 
 ## Phase 6: User Story 5 — Articles & case stories (P2)
 

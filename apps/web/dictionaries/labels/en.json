@@ -83,5 +83,22 @@
         "helpTitle": "Have a question?",
         "helpBody": "Our team can answer any question about this document.",
         "download": "Download PDF"
+    },
+    "contactForm": {
+        "name": "Full name",
+        "mobile": "Mobile number",
+        "email": "Email",
+        "service": "Service",
+        "servicePlaceholder": "Choose a service",
+        "message": "Your message",
+        "consentPrefix": "I agree to my data being processed under the",
+        "consentLink": "privacy policy",
+        "submit": "Send",
+        "required": "This field is required",
+        "invalidMobile": "Enter a valid Saudi mobile number",
+        "invalidEmail": "Enter a valid email address",
+        "summaryTitle": "Please correct the following fields",
+        "failure": "We could not send this. Please try again shortly.",
+        "rateLimited": "Too many attempts. Please try again later."
     }
 }
