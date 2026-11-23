@@ -435,6 +435,13 @@ describe('PagesService', () => {
         const parsed = ArticlesPageWebSchema.safeParse(res);
         expect(parsed.success).toBe(true);
         expect(res.estimator).toBeDefined();
+        expect(res.pagination).toEqual({ page: 1, pageSize: 12, total: 1, totalPages: 1 });
+    });
+
+    it('filters articles by sector', async () => {
+        await service.getArticlesPage('ar', { sector: 'retail' });
+        const where = (prisma.news.findMany as jest.Mock).mock.calls.at(-1)[0].where;
+        expect(where.sectors).toEqual({ some: { sector: { slug: 'retail' } } });
     });
 
     it('returns careers page matching CareersPageWebSchema without estimator', async () => {
