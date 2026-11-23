@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { endpoint } from '@repo/shared';
-import { Container } from '@repo/design-system/layout';
+import { Container, Section } from '@repo/design-system/layout';
 import { Heading, Text } from '@repo/design-system/primitives';
 import { LegalDocument } from '@repo/design-system/sections';
 import { getPage, tryGetPage } from '@/src/lib/api/pages';
@@ -38,13 +38,13 @@ export default async function LegalPage({ params }: Props) {
 
     return (
         <>
-            <section className="bg-bg-hero py-section-lg text-text-inverse">
+            <Section tone="hero">
                 <Container className="flex flex-col gap-4 pt-24">
                     <Heading level={1} tone="inverse">{l.title}</Heading>
                     {l.subtitle && <Text tone="inverse">{l.subtitle}</Text>}
                 </Container>
-            </section>
-            <section className="bg-bg-surface-ice py-section-lg">
+            </Section>
+            <Section tone="ice">
                 <Container>
                     <LegalDocument
                         document={l.document}
@@ -52,7 +52,7 @@ export default async function LegalPage({ params }: Props) {
                         labels={{ tocTitle: p.tocTitle, tocLabel: p.tocLabel, updated: p.updated, summary: p.summary, helpTitle: l.questionCard?.title ?? p.helpTitle, helpBody: l.questionCard?.body ?? p.helpBody, download: p.download }}
                     />
                 </Container>
-            </section>
+            </Section>
         </>
     );
 }

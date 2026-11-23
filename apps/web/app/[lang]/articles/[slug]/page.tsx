@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { endpoint } from '@repo/shared';
-import { Container } from '@repo/design-system/layout';
+import { Container, Section } from '@repo/design-system/layout';
 import { ArticleBody, ArticleHeader, AuthorCard, RelatedCarousel, ShareBox, TableOfContents } from '@repo/design-system/sections';
 import { ApiError, apiGet } from '@/src/lib/api/client';
 import { tags } from '@/src/lib/api/endpoints';
@@ -69,7 +69,7 @@ export default async function ArticlePage({ params }: Props) {
                 dateISO={a.date}
                 cover={a.cover}
             />
-            <section className="bg-bg-page py-section-lg">
+            <Section tone="page">
                 <Container className="grid gap-12 lg:grid-cols-[1fr_22rem]">
                     {/* Arabic-only fallback on an English page is marked so screen readers and the layout switch direction (FR-013). */}
                     <div lang={a.isFallback && lang === 'en' ? 'ar' : undefined} dir={a.isFallback && lang === 'en' ? 'rtl' : undefined} className="flex flex-col gap-10">
@@ -86,13 +86,13 @@ export default async function ArticlePage({ params }: Props) {
                         </aside>
                     )}
                 </Container>
-            </section>
+            </Section>
             {a.related.length > 0 && (
-                <section className="bg-bg-surface-ice py-section-lg">
+                <Section tone="ice">
                     <Container>
                         <RelatedCarousel title={t.relatedTitle} articles={a.related} readMoreLabel={labels.home.readMore} prevLabel={t.prev} nextLabel={t.nextSlide} progressLabel={t.relatedProgress} locale={lang} />
                     </Container>
-                </section>
+                </Section>
             )}
         </>
     );

@@ -29,7 +29,7 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 - [ ] T009 [P] Add DS sections `ErrorState`, `EmptyState`, `PreviewBanner`, `FormSuccess`, `SkipLink` in `DS/src/sections/` with stories + tests (001 conventions)
 - [X] T010 Rewrite `WEB/app/[lang]/layout.tsx`: html lang/dir, fonts, skip link, Header/Footer/MobileNav/WhatsAppFloat from `/api/site/chrome` (WhatsApp button hidden below md while a form field has focus — FR-004), PreviewBanner when draft mode, focus reset on navigation
 - [X] T011 [P] Implement `WEB/src/lib/seo/page-metadata.ts` (`buildMetadata`) with tests (canonical, alternates ar/en/x-default=ar, OG basics)
-- [ ] T012 [P] Implement `WEB/src/lib/analytics.ts` typed `track()` forwarding to the monitoring endpoint through `MonitoringReporter` (done, with tests; page views are already sent by the reporter); wire `page_view` (client route-change listener in the locale layout) and `contact_click{channel}` on header, footer, contact page and WhatsApp float links
+- [X] T012 [P] Implement `WEB/src/lib/analytics.ts` typed `track()` forwarding to the monitoring endpoint through `MonitoringReporter` (done, with tests; page views are already sent by the reporter); wire `page_view` (client route-change listener in the locale layout) and `contact_click{channel}` on header, footer, contact page and WhatsApp float links
 - [X] T013 Implement `WEB/app/[lang]/not-found.tsx`, `error.tsx`, `WEB/app/global-error.tsx` using DS `ErrorState`
 
 ## Phase 3: User Story 7 — Starter leftovers removed (P1)
@@ -84,12 +84,12 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 
 ## Phase 10: Polish
 
-- [ ] T041 Lighthouse CI passing budgets on all templates; fix regressions; record in `reviews/performance.md`
-- [ ] T042 [P] Grep guard test `WEB/src/__guards__/no-hardcoded-copy.test.ts` (no Arabic/Latin sentence literals in `app/**` JSX outside dictionaries)
-- [ ] T042a [P] Guard tests `WEB/src/__guards__/no-raw-values.test.ts` and `no-physical-direction.test.ts` over `WEB/app/**` and `WEB/src/**` (same rules as 001 T017/T018 — constitution II/III)
-- [ ] T042b [P] Measure styles written outside the library (001 SC-007): count non-layout utility classes in `WEB/app/**`; target < 5%; record in `reviews/style-audit.md`
-- [ ] T043 [P] Full axe sweep `e2e/specs/web/a11y.spec.ts` on all pages × 2 langs
-- [ ] T044 Collect client sign-off on designed states (404, 500/maintenance, empty, form success, closed job, preview banner, accessibility page) in `reviews/designed-states.md`; update `docs/STATUS.md` web section; batch report `specs/003-public-site-pages/reviews/final-report.md`; run quickstart P1–P6; open PR
+- [ ] T041 Lighthouse CI passing budgets on all templates; fix regressions; record in `reviews/performance.md` (configured, not measured; see reviews/performance.md)
+- [X] T042 [P] Grep guard test `WEB/src/__guards__/no-hardcoded-copy.test.ts` (no Arabic/Latin sentence literals in `app/**` JSX outside dictionaries)
+- [X] T042a [P] Guard tests `WEB/src/__guards__/no-raw-values.test.ts` and `no-physical-direction.test.ts` over `WEB/app/**` and `WEB/src/**` (same rules as 001 T017/T018 — constitution II/III)
+- [X] T042b [P] Measure styles written outside the library (001 SC-007): count non-layout utility classes in `WEB/app/**`; target < 5%; record in `reviews/style-audit.md` (measured 13.8 %, target not met; see reviews/style-audit.md)
+- [ ] T043 [P] Full axe sweep `e2e/specs/web/a11y.spec.ts` on all pages × 2 langs (written, not yet run)
+- [ ] T044 Collect client sign-off on designed states (404, 500/maintenance, empty, form success, closed job, preview banner, accessibility page) in `reviews/designed-states.md`; update `docs/STATUS.md` web section; batch report `specs/003-public-site-pages/reviews/final-report.md`; run quickstart P1–P6; open PR (docs written: designed-states, STATUS.md, final-report; client sign-off, quickstart run and PR still open)
 
 ## Dependencies
 

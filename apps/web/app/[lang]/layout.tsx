@@ -80,7 +80,8 @@ export async function generateMetadata({
                 { url: '/images/favicon/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
             ],
             apple: [{ url: '/images/favicon/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
-            other: [{ rel: 'mask-icon', url: '/images/favicon/safari-pinned-tab.svg', color: '#000000' }],
+            // allow-raw: browser pinned-tab colour in the icon manifest, not a style
+        other: [{ rel: 'mask-icon', url: '/images/favicon/safari-pinned-tab.svg', color: '#000000' }],
         },
         manifest: '/images/favicon/site.webmanifest',
         other: { 'msapplication-config': '/images/favicon/browserconfig.xml' },

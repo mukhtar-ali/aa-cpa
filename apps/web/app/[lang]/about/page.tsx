@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { endpoint } from '@repo/shared';
-import { Container, PageHero } from '@repo/design-system/layout';
-import { Button } from '@repo/design-system/primitives';
+import { Container, PageHero, Section } from '@repo/design-system/layout';
+import { Button, Heading, Text } from '@repo/design-system/primitives';
 import { LogoMarquee, OfficeCard, PhotoQuoteBand, SectionHeading, Statement } from '@repo/design-system/sections';
 import { getPage, tryGetPage } from '@/src/lib/api/pages';
 import { getLabels, isLang } from '@/src/lib/i18n/dictionaries';
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { lang } = await params;
     if (!isLang(lang)) return {};
     const page = await tryGetPage<AboutApi & { seo?: unknown }>(endpoint.pages.about, 'about', lang);
-    return buildMetadata({ lang, path: '/about', seo: toPageSeo(page?.seo), fallbackTitle: page?.hero.title ?? (lang === 'ar' ? 'من نحن' : 'About us') });
+    return buildMetadata({ lang, path: '/about', seo: toPageSeo(page?.seo), fallbackTitle: page?.hero.title ?? getLabels(lang).meta.about });
 }
 
 /** About (Figma 445:36452): hero, who we are, who signs your file, commitments, offices, partner quote. */
@@ -36,18 +36,18 @@ export default async function AboutPage({ params }: Props) {
     return (
         <>
             {a.hero.image && <PageHero title={a.hero.title} subtitle={a.hero.subtitle} image={a.hero.image} breadcrumbs={a.hero.breadcrumbs} breadcrumbsLabel={labels.home.breadcrumbs} action={a.hero.action} />}
-            <section className="bg-bg-page py-section-lg">
+            <Section tone="page">
                 <Container className="flex flex-col gap-12">
                     <Statement>{a.intro.statement}</Statement>
                     <div className="flex flex-col items-start gap-6 lg:ms-auto lg:max-w-188">
-                        <p className="text-body-lg text-text-body">{a.intro.body}</p>
+                        <Text size="lg">{a.intro.body}</Text>
                         {a.intro.action && <Button href={a.intro.action.href} variant={a.intro.action.variant ?? 'primary'}>{a.intro.action.label}</Button>}
                     </div>
                 </Container>
                 {a.marqueeRows.length > 0 && <LogoMarquee className="pt-12" label={labels.home.clients} rows={a.marqueeRows} pauseLabel={labels.home.pauseMarquee} />}
-            </section>
+            </Section>
             {a.signatory && (
-                <section className="bg-bg-surface-ice py-section-lg">
+                <Section tone="ice">
                     <Container className="grid items-center gap-12 lg:grid-cols-2">
                         <div className="flex flex-col items-start gap-6">
                             <SectionHeading eyebrow={a.signatory.eyebrow} title={a.signatory.title} accent={a.signatory.accent} />
@@ -63,9 +63,9 @@ export default async function AboutPage({ params }: Props) {
                             </figure>
                         )}
                     </Container>
-                </section>
+                </Section>
             )}
-            <section className="bg-bg-page py-section-lg">
+            <Section tone="page">
                 <Container className="flex flex-col gap-10">
                     <SectionHeading title={a.commitments.title} description={a.commitments.subtitle} />
                     <ol className="flex flex-col">
@@ -73,16 +73,16 @@ export default async function AboutPage({ params }: Props) {
                             <li key={item.title} className="flex items-start gap-6 border-b border-solid border-border-subtle py-6">
                                 <span aria-hidden="true" className="text-h2 font-bold text-text-accent">{i + 1}</span>
                                 <div className="flex flex-col gap-2">
-                                    <h3 className="text-h5 font-bold text-text-heading">{item.title}</h3>
-                                    <p className="text-body-lg text-text-body">{item.body}</p>
+                                    <Heading level={3} size="h5">{item.title}</Heading>
+                                    <Text size="lg">{item.body}</Text>
                                 </div>
                             </li>
                         ))}
                     </ol>
                 </Container>
-            </section>
+            </Section>
             {a.offices.items.length > 0 && (
-                <section className="bg-bg-surface-ice py-section-lg">
+                <Section tone="ice">
                     <Container className="flex flex-col gap-10">
                         {a.offices.title && <SectionHeading title={a.offices.title} />}
                         <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -93,7 +93,7 @@ export default async function AboutPage({ params }: Props) {
                             ))}
                         </ul>
                     </Container>
-                </section>
+                </Section>
             )}
             {a.quote?.image && <PhotoQuoteBand title={a.quote.title} body={a.quote.body} action={a.quote.action} image={a.quote.image} />}
             <EstimatorBlock lang={lang} estimator={raw.estimator} testimonial={raw.testimonial} />

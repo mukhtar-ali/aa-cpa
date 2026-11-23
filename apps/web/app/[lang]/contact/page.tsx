@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { endpoint } from '@repo/shared';
-import { Container, PageHero } from '@repo/design-system/layout';
+import { Container, PageHero, Section } from '@repo/design-system/layout';
 import { ContactItem, FaqAccordion, OfficeCard, OfficeMap, SectionHeading } from '@repo/design-system/sections';
 import { getPage, tryGetPage } from '@/src/lib/api/pages';
 import { getChrome } from '@/src/lib/api/site';
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Pick<Props, 'params'>): Promi
     const { lang } = await params;
     if (!isLang(lang)) return {};
     const page = await tryGetPage<ContactPageApi>(endpoint.pages.contact, 'contact', lang);
-    return buildMetadata({ lang, path: '/contact', seo: toPageSeo(page?.seo), fallbackTitle: page?.hero.title ?? (lang === 'ar' ? 'تواصل معنا' : 'Contact us') });
+    return buildMetadata({ lang, path: '/contact', seo: toPageSeo(page?.seo), fallbackTitle: page?.hero.title ?? getLabels(lang).meta.contact });
 }
 
 /** Contact (Figma 524:3651): hero, channels, enquiry form, offices with map, FAQ. */
@@ -37,7 +37,7 @@ export default async function ContactPage({ params, searchParams }: Props) {
     return (
         <>
             {c.hero.image && <PageHero title={c.hero.title} subtitle={c.hero.subtitle} image={c.hero.image} breadcrumbs={c.hero.breadcrumbs} breadcrumbsLabel={labels.home.breadcrumbs} action={c.hero.action} />}
-            <section className="bg-bg-page py-section-lg" data-contact-location="contact-page">
+            <Section tone="page" data-contact-location="contact">
                 <Container className="grid gap-12 lg:grid-cols-2">
                     <div className="flex flex-col gap-8 lg:order-2">
                         <SectionHeading eyebrow={c.intro.eyebrow} title={c.intro.title} description={c.intro.body} />
@@ -59,9 +59,9 @@ export default async function ContactPage({ params, searchParams }: Props) {
                         successMessage={`${c.form.successTitle}. ${c.form.successBody}`}
                     />
                 </Container>
-            </section>
+            </Section>
             {c.offices.items.length > 0 && (
-                <section className="bg-bg-surface-ice py-section-lg">
+                <Section tone="ice">
                     <Container className="flex flex-col gap-10">
                         <SectionHeading eyebrow={c.offices.eyebrow || undefined} title={c.offices.title} />
                         {c.offices.mapImage && <OfficeMap offices={c.offices.items} map={c.offices.mapImage} label={c.offices.title} />}
@@ -73,15 +73,15 @@ export default async function ContactPage({ params, searchParams }: Props) {
                             ))}
                         </ul>
                     </Container>
-                </section>
+                </Section>
             )}
             {c.faq && c.faq.items.length > 0 && (
-                <section className="bg-bg-page py-section-lg">
+                <Section tone="page">
                     <Container className="flex flex-col gap-10">
                         <SectionHeading eyebrow={c.faq.eyebrow} title={c.faq.title} />
                         <FaqAccordion items={c.faq.items} />
                     </Container>
-                </section>
+                </Section>
             )}
         </>
     );

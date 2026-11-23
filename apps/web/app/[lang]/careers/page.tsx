@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { endpoint } from '@repo/shared';
-import { Container, PageHero } from '@repo/design-system/layout';
+import { Container, PageHero, Section } from '@repo/design-system/layout';
 import { EmptyState, JobRow, PerkTile, SectionHeading, TimelineStepper } from '@repo/design-system/sections';
 import { FilterLinks } from '@/src/components/FilterLinks';
 import { apiGet } from '@/src/lib/api/client';
@@ -23,7 +23,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     if (!isLang(lang)) return {};
     const { department } = await searchParams;
     const page = await load(lang).catch(() => null);
-    const meta = buildMetadata({ lang, path: '/careers', seo: toPageSeo(page?.seo), fallbackTitle: page?.hero.title ?? (lang === 'ar' ? 'الوظائف' : 'Careers') });
+    const meta = buildMetadata({ lang, path: '/careers', seo: toPageSeo(page?.seo), fallbackTitle: page?.hero.title ?? getLabels(lang).meta.careers });
     return department ? { ...meta, robots: { index: false, follow: true } } : meta;
 }
 
@@ -40,7 +40,7 @@ export default async function CareersPage({ params, searchParams }: Props) {
         <>
             {c.hero.image && <PageHero title={c.hero.title} subtitle={c.hero.subtitle} image={c.hero.image} breadcrumbs={c.hero.breadcrumbs} breadcrumbsLabel={labels.home.breadcrumbs} action={c.hero.action} />}
             {c.perks.items.length > 0 && (
-                <section className="bg-bg-page py-section-lg">
+                <Section tone="page">
                     <Container className="flex flex-col gap-10">
                         <SectionHeading eyebrow={c.perks.eyebrow} title={c.perks.title} />
                         <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -51,17 +51,17 @@ export default async function CareersPage({ params, searchParams }: Props) {
                             ))}
                         </ul>
                     </Container>
-                </section>
+                </Section>
             )}
             {c.team && (
-                <section className="bg-bg-surface-ice py-section-lg">
+                <Section tone="ice">
                     <Container className="grid items-center gap-12 lg:grid-cols-2">
                         <SectionHeading eyebrow={c.team.eyebrow} title={c.team.title} accent={c.team.accent} description={c.team.body} />
                         {c.team.image && <img src={c.team.image.src} alt="" width={c.team.image.width} height={c.team.image.height} className="h-auto w-full rounded-card object-cover" />}
                     </Container>
-                </section>
+                </Section>
             )}
-            <section id="jobs" className="bg-bg-page py-section-lg">
+            <Section tone="page" id="jobs">
                 <Container className="flex flex-col gap-10">
                     <SectionHeading eyebrow={c.jobs.eyebrow} title={c.jobs.title} />
                     {c.departments.length > 0 && <FilterLinks label={t.filterLabel} items={[{ label: t.allDepartments, href: c.allHref, active: !department }, ...c.departments]} />}
@@ -77,14 +77,14 @@ export default async function CareersPage({ params, searchParams }: Props) {
                         </ul>
                     )}
                 </Container>
-            </section>
+            </Section>
             {c.hiring && c.hiring.steps.length > 0 && (
-                <section className="bg-bg-surface-ice py-section-lg">
+                <Section tone="ice">
                     <Container className="flex flex-col gap-10">
                         <SectionHeading eyebrow={c.hiring.eyebrow} title={c.hiring.title} />
                         <TimelineStepper steps={c.hiring.steps} locale={lang} />
                     </Container>
-                </section>
+                </Section>
             )}
         </>
     );

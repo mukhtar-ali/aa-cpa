@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { endpoint } from '@repo/shared';
-import { Container, PageHero } from '@repo/design-system/layout';
+import { Container, PageHero, Section } from '@repo/design-system/layout';
 import { PhotoQuoteBand, ServiceCard, Statement } from '@repo/design-system/sections';
 import { getPage, tryGetPage } from '@/src/lib/api/pages';
 import { getLabels, isLang } from '@/src/lib/i18n/dictionaries';
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { lang } = await params;
     if (!isLang(lang)) return {};
     const page = await tryGetPage<ServicesPageApi & { seo?: unknown }>(endpoint.pages.services, 'services', lang);
-    return buildMetadata({ lang, path: '/services', seo: toPageSeo(page?.seo), fallbackTitle: page?.hero.title ?? (lang === 'ar' ? 'خدماتنا' : 'Services') });
+    return buildMetadata({ lang, path: '/services', seo: toPageSeo(page?.seo), fallbackTitle: page?.hero.title ?? getLabels(lang).meta.services });
 }
 
 /** Services (Figma 448:41066): hero, statement, one card per service, partner quote. */
@@ -35,7 +35,7 @@ export default async function ServicesPage({ params }: Props) {
     return (
         <>
             {s.hero.image && <PageHero title={s.hero.title} subtitle={s.hero.subtitle} image={s.hero.image} breadcrumbs={s.hero.breadcrumbs} breadcrumbsLabel={labels.home.breadcrumbs} action={s.hero.action} />}
-            <section className="bg-bg-surface-ice py-section-lg">
+            <Section tone="ice">
                 <Container className="flex flex-col gap-12">
                     <Statement>{s.statement}</Statement>
                     <ul className="flex flex-col gap-8">
@@ -46,7 +46,7 @@ export default async function ServicesPage({ params }: Props) {
                         ))}
                     </ul>
                 </Container>
-            </section>
+            </Section>
             {s.quote?.image && <PhotoQuoteBand title={s.quote.title} body={s.quote.body} action={s.quote.action} image={s.quote.image} />}
             <EstimatorBlock lang={lang} estimator={raw.estimator} testimonial={raw.testimonial} />
         </>

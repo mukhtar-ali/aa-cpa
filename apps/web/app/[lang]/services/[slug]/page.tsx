@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { endpoint } from '@repo/shared';
-import { Container, PageHero } from '@repo/design-system/layout';
-import { Button } from '@repo/design-system/primitives';
-import { CtaCards, FaqAccordion, MethodologyList, SectionHeading, Statement } from '@repo/design-system/sections';
+import { Container, PageHero, Section } from '@repo/design-system/layout';
+import { Button, Heading } from '@repo/design-system/primitives';
+import { CtaCards, FaqAccordion, MethodologyList, PerkTile, SectionHeading, Statement } from '@repo/design-system/sections';
 import { ApiError, apiGet } from '@/src/lib/api/client';
 import { tags } from '@/src/lib/api/endpoints';
 import { EstimatorBlock } from '@/src/components/EstimatorBlock';
@@ -66,7 +66,7 @@ export default async function ServicePage({ params }: Props) {
                     action={{ label: t.requestQuote, href: s.contactHref }}
                 />
             )}
-            <section className="bg-bg-page py-section-lg">
+            <Section tone="page">
                 <Container className="flex flex-col gap-12">
                     {s.statement && <Statement>{s.statement}</Statement>}
                     {s.audience && <SectionHeading title={t.audience} description={s.audience} />}
@@ -74,12 +74,11 @@ export default async function ServicePage({ params }: Props) {
                     {s.methodology.length > 0 && <MethodologyList title={t.methodology} rows={s.methodology} />}
                     {s.deliverables.length > 0 && (
                         <div className="flex flex-col gap-6">
-                            <h2 className="text-h2 font-bold text-text-heading">{t.deliverables}</h2>
+                            <Heading level={2}>{t.deliverables}</Heading>
                             <ul className="grid gap-4 md:grid-cols-2">
                                 {s.deliverables.map((d) => (
-                                    <li key={d.title} className="rounded-cta border border-solid border-border-subtle bg-bg-surface p-6">
-                                        <h3 className="text-h5 font-bold text-text-heading">{d.title}</h3>
-                                        {d.body && <p className="mt-2 text-body-sm text-text-body">{d.body}</p>}
+                                    <li key={d.title}>
+                                        <PerkTile perk={{ title: d.title, body: d.body ?? '' }} />
                                     </li>
                                 ))}
                             </ul>
@@ -87,7 +86,7 @@ export default async function ServicePage({ params }: Props) {
                     )}
                     {s.sectors.length > 0 && (
                         <div className="flex flex-col gap-4">
-                            <h2 className="text-h2 font-bold text-text-heading">{t.sectors}</h2>
+                            <Heading level={2}>{t.sectors}</Heading>
                             <ul className="flex flex-wrap gap-3">
                                 {s.sectors.map((sector) => (
                                     <li key={sector.id}>
@@ -98,8 +97,8 @@ export default async function ServicePage({ params }: Props) {
                         </div>
                     )}
                 </Container>
-            </section>
-            <section className="bg-bg-surface-ice py-section-lg">
+            </Section>
+            <Section tone="ice">
                 <Container className="flex flex-col gap-12">
                     {s.faqs.length > 0 && <FaqAccordion id="faq" title={t.faqHeading} items={s.faqs} />}
                     <CtaCards
@@ -110,7 +109,7 @@ export default async function ServicePage({ params }: Props) {
                         ]}
                     />
                 </Container>
-            </section>
+            </Section>
             <EstimatorBlock lang={lang} serviceId={api.id} />
         </>
     );

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { endpoint } from '@repo/shared';
-import { Container } from '@repo/design-system/layout';
+import { Container, Section } from '@repo/design-system/layout';
 import { CredentialsGrid, EmptyState, GapSection, HomeHero, LogoMarquee, NewsGrid, PhotoQuoteBand, ProcessSteps, ReasonsSection, SectionHeading, ServiceTabs } from '@repo/design-system/sections';
 import { apiGet, ApiError } from '@/src/lib/api/client';
 import { tags } from '@/src/lib/api/endpoints';
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { lang } = await params;
     if (!isLang(lang)) return {};
     const page = await load(lang).catch(() => null);
-    return buildMetadata({ lang, path: '', seo: toPageSeo(page?.seo), fallbackTitle: lang === 'ar' ? 'عبدالرحمن الشبيبشيري للاستشارات المهنية' : 'Abdulrahman Al-Shabibshiri Professional Consulting' });
+    return buildMetadata({ lang, path: '', seo: toPageSeo(page?.seo), fallbackTitle: getLabels(lang).meta.home });
 }
 
 /** Home (Figma 411:169). Sections are the design-system ones; this page only maps CMS content onto them. */
@@ -63,20 +63,20 @@ export default async function HomePage({ params }: Props) {
             )}
             {h.reasons.image && <ReasonsSection {...h.reasons} image={h.reasons.image} locale={lang} className="pb-0" />}
             {h.credentials.logos.length > 0 && <CredentialsGrid {...h.credentials} />}
-            <section className="bg-bg-page py-section-lg">
+            <Section tone="page">
                 <Container className="flex flex-col gap-12">
                     <SectionHeading eyebrow={h.process.eyebrow} title={h.process.title} accent={h.process.accent} description={h.process.description} split />
                     <ProcessSteps steps={h.process.steps} locale={lang} />
                 </Container>
-            </section>
+            </Section>
             {h.quote.image && <PhotoQuoteBand {...h.quote} image={h.quote.image} />}
             {h.news.articles.length > 0 && (
-                <section className="bg-bg-surface-ice py-section-lg lg:pt-15">
+                <Section tone="ice" className="lg:pt-15">
                     <Container className="flex flex-col gap-12">
                         <SectionHeading eyebrow={h.news.head?.eyebrow} title={h.news.head?.title ?? ''} split action={{ label: h.news.head?.action?.label ?? labels.common.viewAll, href: localizeHref(lang, h.news.head?.action?.href ?? '/articles') }} />
                         <NewsGrid articles={h.news.articles} readMoreLabel={labels.home.readMore} locale={lang} />
                     </Container>
-                </section>
+                </Section>
             )}
             <EstimatorBlock lang={lang} estimator={api.estimator} testimonial={api.testimonial} />
         </>

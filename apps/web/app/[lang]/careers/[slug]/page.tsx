@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { endpoint } from '@repo/shared';
 import { markSanitizedHtml } from '@repo/design-system/lib';
-import { Container } from '@repo/design-system/layout';
+import { Container, Section } from '@repo/design-system/layout';
 import { Breadcrumbs, Button, Heading, Text } from '@repo/design-system/primitives';
-import { EmptyState, JobRow, SectionHeading } from '@repo/design-system/sections';
+import { EmptyState, JobRow, PerkTile, SectionHeading } from '@repo/design-system/sections';
 import { ApplyForm } from '@/src/components/ApplyForm';
 import { ApiError, apiGet } from '@/src/lib/api/client';
 import { tags } from '@/src/lib/api/endpoints';
@@ -49,7 +49,7 @@ export default async function JobPage({ params }: Props) {
 
     return (
         <>
-            <section className="bg-bg-hero py-section-lg text-text-inverse">
+            <Section tone="hero">
                 <Container className="flex flex-col items-start gap-6 pt-24">
                     <Breadcrumbs
                         tone="dark"
@@ -63,8 +63,8 @@ export default async function JobPage({ params }: Props) {
                     {j.lead && <Text tone="inverse">{j.lead}</Text>}
                     {j.isOpen && <Button href="#apply">{t.applyNow}</Button>}
                 </Container>
-            </section>
-            <section className="bg-bg-page py-section-lg">
+            </Section>
+            <Section tone="page">
                 <Container className="flex flex-col gap-12">
                     <dl className="grid gap-4 rounded-card bg-bg-surface-ice p-6 sm:grid-cols-2 lg:grid-cols-4">
                         {j.facts.map(([key, value]) => (
@@ -77,32 +77,31 @@ export default async function JobPage({ params }: Props) {
                     {j.bodyHtml && <div className="ds-prose" dangerouslySetInnerHTML={{ __html: markSanitizedHtml(j.bodyHtml) }} />}
                     {j.responsibilities.length > 0 && (
                         <div className="flex flex-col gap-4">
-                            <h2 className="text-h3 font-bold text-text-heading">{t.responsibilities}</h2>
+                            <Heading level={2} size="h3">{t.responsibilities}</Heading>
                             <ul className="ds-prose">{j.responsibilities.map((r) => <li key={r}>{r}</li>)}</ul>
                         </div>
                     )}
                     {j.requirements.length > 0 && (
                         <div className="flex flex-col gap-4">
-                            <h2 className="text-h3 font-bold text-text-heading">{t.requirements}</h2>
+                            <Heading level={2} size="h3">{t.requirements}</Heading>
                             <ul className="ds-prose">{j.requirements.map((r) => <li key={r}>{r}</li>)}</ul>
                         </div>
                     )}
                     {j.benefits.length > 0 && (
                         <div className="flex flex-col gap-4">
-                            <h2 className="text-h3 font-bold text-text-heading">{t.benefits}</h2>
+                            <Heading level={2} size="h3">{t.benefits}</Heading>
                             <ul className="grid gap-4 md:grid-cols-2">
                                 {j.benefits.map((b) => (
-                                    <li key={b.title} className="rounded-cta border border-solid border-border-subtle bg-bg-surface p-6">
-                                        <h3 className="text-h5 font-bold text-text-heading">{b.title}</h3>
-                                        <p className="mt-2 text-body-sm text-text-body">{b.body}</p>
+                                    <li key={b.title}>
+                                        <PerkTile perk={b} />
                                     </li>
                                 ))}
                             </ul>
                         </div>
                     )}
                 </Container>
-            </section>
-            <section className="bg-bg-surface-ice py-section-lg">
+            </Section>
+            <Section tone="ice">
                 <Container>
                     {j.isOpen ? (
                         <ApplyForm lang={lang} slug={slug} department={api.department} labels={t} formLabels={labels.contactForm} />
@@ -113,9 +112,9 @@ export default async function JobPage({ params }: Props) {
                         </div>
                     )}
                 </Container>
-            </section>
+            </Section>
             {j.similar.length > 0 && (
-                <section className="bg-bg-page py-section-lg">
+                <Section tone="page">
                     <Container className="flex flex-col gap-8">
                         <SectionHeading title={t.similar} />
                         <ul className="flex flex-col gap-4">
@@ -126,7 +125,7 @@ export default async function JobPage({ params }: Props) {
                             ))}
                         </ul>
                     </Container>
-                </section>
+                </Section>
             )}
         </>
     );

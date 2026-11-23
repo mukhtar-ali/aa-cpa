@@ -184,5 +184,14 @@
         "fallbackTitle": "Tell us about your scope",
         "fallbackBody": "Send us your company details and we will prepare a suitable proposal.",
         "fallbackCta": "Contact us"
+    },
+    "meta": {
+        "home": "Abdulrahman Al-Shabibshiri Professional Consulting",
+        "about": "About us",
+        "services": "Services",
+        "sectors": "Sectors",
+        "articles": "Articles",
+        "careers": "Careers",
+        "contact": "Contact us"
     }
 }
