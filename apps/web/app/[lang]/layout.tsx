@@ -2,46 +2,24 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import localFont from 'next/font/local';
 import Script from 'next/script';
-import { ToastContainer } from 'react-toastify';
 import { endpoint, GA_ID_REGEX, GlobalSeoSettingsModelWeb, GTM_ID_REGEX } from '@repo/shared';
-import { CustomHeader } from '@/src/components/ui/layouts/CustomHeader';
-import { CustomFooter } from '@/src/components/ui/layouts/CustomFooter';
+import { DesignSystemProvider, Footer, Header, UtilityBar } from '@repo/design-system/layout';
+import { Logo } from '@repo/design-system/primitives';
+import { SkipLink } from '@repo/design-system/sections';
 import { ChromeSwitch } from '@/src/reference/ChromeSwitch';
-import { getHeaderProjects, getWebsiteInfo } from '@/src/lib/server-data';
 import { FBPixel } from '@/src/components/ui/FBPixel';
 import { MonitoringReporter } from '@/src/monitoring/MonitoringReporter';
+import { ContactClickTracker } from '@/src/components/chrome/ContactClickTracker';
+import { LocaleToggleLink } from '@/src/components/chrome/LocaleToggleLink';
+import { PreviewBannerGate } from '@/src/components/chrome/PreviewBannerGate';
+import { RouteFocus } from '@/src/components/chrome/RouteFocus';
+import { WhatsAppFloatGate } from '@/src/components/chrome/WhatsAppFloatGate';
+import { dirOf, getLabels, isLang, locales } from '@/src/lib/i18n/dictionaries';
+import { getChrome } from '@/src/lib/api/site';
+import { toChromeProps } from '@/src/mappers/chrome';
 import '@/src/assets/styles/tailwind.css';
-import 'react-toastify/dist/ReactToastify.css';
 
-// Self-hosted (src/assets/fonts), not next/font/google: the Google variant downloads the fonts while `next build` runs, so
-// an unreachable fonts.googleapis.com on the build server failed the whole image build.
-const inter = localFont({
-    src: '../../src/assets/fonts/inter-latin-wght-normal.woff2',
-    weight: '100 900',
-    variable: '--font-inter',
-    display: 'swap',
-    // Legacy fonts: not used by the design-system pages, so do not preload them (about 110 kB less on the critical path).
-    preload: false,
-});
-// Inter has no Arabic glyphs, so Arabic pages would fall back to an arbitrary system font. Cairo covers Arabic and
-// Latin, shipped as two single-script files; each is its own family, and tailwind.css chains them
-// (latin first, arabic as the per-glyph fallback) when <html lang="ar">.
-const cairoLatin = localFont({
-    src: '../../src/assets/fonts/cairo-latin-wght-normal.woff2',
-    weight: '200 1000',
-    variable: '--font-cairo-latin',
-    display: 'swap',
-    // Legacy fonts: not used by the design-system pages, so do not preload them (about 110 kB less on the critical path).
-    preload: false,
-});
-const cairoArabic = localFont({
-    src: '../../src/assets/fonts/cairo-arabic-wght-normal.woff2',
-    weight: '200 1000',
-    variable: '--font-cairo-arabic',
-    display: 'swap',
-    // Legacy fonts: not used by the design-system pages, so do not preload them (about 110 kB less on the critical path).
-    preload: false,
-});
+// Self-hosted Almarai (design-system fonts): latin and arabic files, chained per glyph in tailwind.css.
 const almaraiLatin = localFont({
     src: [
         { path: '../../../../packages/design-system/assets/fonts/almarai-latin-300.woff2', weight: '300', style: 'normal' },
@@ -62,7 +40,6 @@ const almaraiArabic = localFont({
     variable: '--font-almarai-arabic',
     display: 'swap',
 });
-const locales = ['en', 'ar'];
 const BASE_URL = process.env.BASE_URL ?? 'http://localhost:3001';
 
 async function getGlobalSeo(lang: string): Promise<GlobalSeoSettingsModelWeb | null> {
@@ -112,6 +89,12 @@ export async function generateMetadata({
     };
 }
 
+export function generateStaticParams() {
+    return locales.map((lang) => ({ lang }));
+}
+
+export const dynamicParams = false;
+
 export default async function RootLayout({
     children,
     params,
@@ -120,14 +103,13 @@ export default async function RootLayout({
     params: Promise<{ lang: string }>;
 }) {
     const { lang } = await params;
-    if (!locales.includes(lang)) notFound();
+    if (!isLang(lang)) notFound();
 
-    const dir = lang === 'ar' ? 'rtl' : 'ltr';
-    const [seo, websiteInfo, headerProjects] = await Promise.all([
-        getGlobalSeo(lang),
-        getWebsiteInfo(lang),
-        getHeaderProjects(lang),
-    ]);
+    const dir = dirOf(lang);
+    const labels = getLabels(lang);
+    const other = lang === 'ar' ? 'en' : 'ar';
+    const [seo, rawChrome] = await Promise.all([getGlobalSeo(lang), getChrome(lang)]);
+    const chrome = rawChrome ? toChromeProps(rawChrome, lang) : null;
     // These IDs are embedded in inline <script> code. They come from an admin-editable CMS field, so
     // re-validate them here (values stored before the API enforced the format may still be bad) and
     // only ever emit them as JSON string literals / encoded URL components. Invalid IDs are skipped.
@@ -136,8 +118,54 @@ export default async function RootLayout({
     const gtmId = analyticsEnabled && seo?.googleTagManagerId && GTM_ID_REGEX.test(seo.googleTagManagerId) ? seo.googleTagManagerId : undefined;
     const gaId = analyticsEnabled && seo?.googleAnalyticsId && GA_ID_REGEX.test(seo.googleAnalyticsId) ? seo.googleAnalyticsId : undefined;
 
+    const toggle = chrome?.localeSwitch ? (
+        <LocaleToggleLink target={other} label={chrome.localeSwitch.label} accessibleLabel={labels.a11y.switchLanguage} />
+    ) : undefined;
+    const headerLogo = chrome ? (
+        <a href={chrome.logo.href}>
+            <Logo variant="on-dark" label={chrome.logo.label} />
+        </a>
+    ) : null;
+
+    const header =
+        chrome && headerLogo ? (
+            <div data-contact-location="header" className="bg-bg-hero">
+                <UtilityBar {...chrome.utility} localeSwitch={toggle} />
+                <Header
+                    theme="hero"
+                    desktopLocaleSwitch={false}
+                    logo={headerLogo}
+                    nav={chrome.nav}
+                    cta={chrome.cta}
+                    localeSwitch={toggle}
+                    menuLabel={labels.a11y.openMenu}
+                    closeLabel={labels.a11y.closeMenu}
+                    navLabel={labels.a11y.mainNavigation}
+                />
+            </div>
+        ) : null;
+    const footer = chrome ? (
+        <div data-contact-location="footer">
+            <Footer
+                logo={
+                    <a href={chrome.logo.href}>
+                        <Logo variant="on-dark" label={chrome.logo.label} />
+                    </a>
+                }
+                description={chrome.footer.description}
+                socials={chrome.footer.socials}
+                columns={chrome.footer.columns}
+                contacts={chrome.footer.contacts}
+                legal={chrome.footer.legal}
+                backToTopLabel={chrome.footer.backToTopLabel ?? labels.common.backToTop}
+                wordmark={chrome.footer.wordmark ?? chrome.logo.label}
+                socialsLabel={chrome.logo.label}
+            />
+        </div>
+    ) : null;
+
     return (
-        <html lang={lang} dir={dir} className={`${inter.variable} ${cairoLatin.variable} ${cairoArabic.variable} ${almaraiLatin.variable} ${almaraiArabic.variable}`}>
+        <html lang={lang} dir={dir} className={`${almaraiLatin.variable} ${almaraiArabic.variable}`}>
             <head>
                 {gtmId && (
                     <Script id="gtm-base" strategy="afterInteractive">
@@ -182,10 +210,16 @@ export default async function RootLayout({
                 )}
                 {analyticsEnabled && <FBPixel />}
                 <MonitoringReporter />
-                <ToastContainer position="top-center" rtl={dir === 'rtl'} />
-                <ChromeSwitch header={<CustomHeader projects={headerProjects} />} footer={<CustomFooter info={websiteInfo} />}>
-                    {children}
-                </ChromeSwitch>
+                <ContactClickTracker />
+                <RouteFocus />
+                <DesignSystemProvider locale={lang}>
+                    <SkipLink label={labels.a11y.skipToContent} />
+                    <PreviewBannerGate message={labels.preview.banner} exitLabel={labels.preview.exit} />
+                    <ChromeSwitch header={header} footer={footer}>
+                        {children}
+                    </ChromeSwitch>
+                    {chrome?.whatsapp ? <WhatsAppFloatGate href={chrome.whatsapp.href} label={labels.common.whatsapp} /> : null}
+                </DesignSystemProvider>
             </body>
         </html>
     );
