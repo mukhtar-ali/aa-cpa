@@ -57,9 +57,9 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 
 ## Phase 6: User Story 5 — Articles & case stories (P2)
 
-- [ ] T028 [P] [US5] Mapper + tests `articles.ts`; page `articles/page.tsx` (`473:36031`): featured block, category filter chips as links, pagination links, `?sector=` filter, empty state
-- [ ] T029 [P] [US5] Page `articles/[slug]/page.tsx` (`506:2706`): header, body, TOC, author, share box (track `article_shared`), related carousel, case-story variant, permanent redirect on moved slug (FR-003)
-- [ ] T030 [US5] Playwright `e2e/specs/web/articles.spec.ts` (filter URL, pagination, TOC, share copy, related)
+- [X] T028 [P] [US5] Mapper + tests `articles.ts`; page `articles/page.tsx` (`473:36031`): featured block, category filter chips as links, pagination links, `?sector=` filter, empty state
+- [X] T029 [P] [US5] Page `articles/[slug]/page.tsx` (`506:2706`): header, body, TOC, author, share box (track `article_shared`), related carousel, case-story variant, permanent redirect on moved slug (FR-003)
+- [ ] T030 [US5] Playwright `e2e/specs/web/articles.spec.ts` (filter URL, pagination, TOC, share copy, related) (written, not yet run)
 
 ## Phase 7: User Story 4 — Careers & applications (P2)
 

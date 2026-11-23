@@ -100,5 +100,31 @@
         "summaryTitle": "يرجى تصحيح الحقول التالية",
         "failure": "تعذّر الإرسال. حاول مرة أخرى بعد قليل.",
         "rateLimited": "محاولات كثيرة. حاول لاحقًا."
+    },
+    "articles": {
+        "featuredLatest": "أحدث المقالات",
+        "filterLabel": "تصفية حسب التصنيف",
+        "all": "الكل",
+        "paginationLabel": "التنقل بين الصفحات",
+        "previous": "السابق",
+        "next": "التالي",
+        "pageN": "الصفحة",
+        "toc": "في هذا المقال",
+        "tags": "الوسوم",
+        "shareTitle": "شارك المقال",
+        "copyLink": "نسخ الرابط",
+        "whatsapp": "واتساب",
+        "linkedin": "لينكدإن",
+        "x": "إكس",
+        "copy": "نسخ",
+        "copied": "تم نسخ الرابط",
+        "copyFailed": "تعذّر النسخ، حدّد الرابط يدويًا",
+        "minRead": "دقائق قراءة",
+        "relatedTitle": "مقالات ذات صلة",
+        "prev": "السابق",
+        "nextSlide": "التالي",
+        "relatedProgress": "المقالات ذات الصلة",
+        "articles": "المقالات",
+        "sectorFilter": "القطاع"
     }
 }

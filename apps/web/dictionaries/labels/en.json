@@ -100,5 +100,31 @@
         "summaryTitle": "Please correct the following fields",
         "failure": "We could not send this. Please try again shortly.",
         "rateLimited": "Too many attempts. Please try again later."
+    },
+    "articles": {
+        "featuredLatest": "Latest articles",
+        "filterLabel": "Filter by category",
+        "all": "All",
+        "paginationLabel": "Pagination",
+        "previous": "Previous",
+        "next": "Next",
+        "pageN": "Page",
+        "toc": "In this article",
+        "tags": "Tags",
+        "shareTitle": "Share this article",
+        "copyLink": "Copy link",
+        "whatsapp": "WhatsApp",
+        "linkedin": "LinkedIn",
+        "x": "X",
+        "copy": "Copy",
+        "copied": "Link copied",
+        "copyFailed": "Could not copy, select the link instead",
+        "minRead": "min read",
+        "relatedTitle": "Related articles",
+        "prev": "Previous",
+        "nextSlide": "Next",
+        "relatedProgress": "Related articles",
+        "articles": "Articles",
+        "sectorFilter": "Sector"
     }
 }
