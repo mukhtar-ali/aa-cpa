@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { publishedNow } from '@/common/visibility';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SectorMapper } from '../sector.mapper';
 
@@ -8,11 +9,7 @@ export class ListSectorsService {
 
     async listWeb(lang: string) {
         const sectors = await this.prisma.sector.findMany({
-            where: {
-                isPublished: true,
-                isDeleted: false,
-                publishedAt: { lte: new Date() },
-            },
+            where: publishedNow(),
             include: {
                 translations: true,
             },

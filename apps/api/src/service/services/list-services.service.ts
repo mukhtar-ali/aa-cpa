@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { publishedNow } from '@/common/visibility';
 import { PrismaService } from '@/prisma/prisma.service';
 import { ServiceMapper } from '../service.mapper';
 import { PaginationQueryModel } from '@repo/shared';
@@ -9,11 +10,7 @@ export class ListServicesService {
 
     async listWeb(lang: string) {
         const services = await this.prisma.service.findMany({
-            where: {
-                isPublished: true,
-                isDeleted: false,
-                publishedAt: { lte: new Date() },
-            },
+            where: publishedNow(),
             include: {
                 translations: true,
             },
