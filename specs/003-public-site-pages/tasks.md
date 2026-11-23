@@ -63,10 +63,10 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 
 ## Phase 7: User Story 4 — Careers & applications (P2)
 
-- [ ] T031 [P] [US4] Mapper + tests `careers.ts`; page `careers/page.tsx` (`519:38941`) with department filter links, team section, hiring steps
-- [ ] T032 [US4] Page `careers/[slug]/page.tsx` (`514:3194`): summary card, lists, benefits, share, similar jobs, closed state, permanent redirect on moved slug (FR-003)
-- [ ] T033 [US4] Tests then Server Action `WEB/src/actions/apply.ts` (multipart forward, file errors, track `job_applied`); wire `ApplicationFormLayout` with upload progress via the XHR route handler `WEB/app/api/apply-upload/route.ts` (research R4; add it to plan and `contracts/web-endpoints.md`, with a test) and focus on "Apply now"
-- [ ] T034 [US4] Playwright `e2e/specs/web/careers.spec.ts` (filter, apply valid PDF, wrong type, too big, closed job, no-JS)
+- [X] T031 [P] [US4] Mapper + tests `careers.ts`; page `careers/page.tsx` (`519:38941`) with department filter links, team section, hiring steps
+- [X] T032 [US4] Page `careers/[slug]/page.tsx` (`514:3194`): summary card, lists, benefits, share, similar jobs, closed state, permanent redirect on moved slug (FR-003)
+- [X] T033 [US4] Tests then Server Action `WEB/src/actions/apply.ts` (multipart forward, file errors, track `job_applied`); wire `ApplicationFormLayout` with upload progress via the XHR route handler `WEB/app/api/apply-upload/route.ts` (research R4; add it to plan and `contracts/web-endpoints.md`, with a test) and focus on "Apply now" (progress events are collected but the DS form has no progress UI yet; no-JS apply not supported)
+- [ ] T034 [US4] Playwright `e2e/specs/web/careers.spec.ts` (filter, apply valid PDF, wrong type, too big, closed job, no-JS) (written, not yet run; no-JS case dropped, see T033)
 
 ## Phase 8: User Story 3 — Estimator & quote (P2)
 

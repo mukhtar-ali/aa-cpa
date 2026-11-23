@@ -1,0 +1,133 @@
+import type { Metadata } from 'next';
+import { notFound, permanentRedirect } from 'next/navigation';
+import { endpoint } from '@repo/shared';
+import { markSanitizedHtml } from '@repo/design-system/lib';
+import { Container } from '@repo/design-system/layout';
+import { Breadcrumbs, Button, Heading, Text } from '@repo/design-system/primitives';
+import { EmptyState, JobRow, SectionHeading } from '@repo/design-system/sections';
+import { ApplyForm } from '@/src/components/ApplyForm';
+import { ApiError, apiGet } from '@/src/lib/api/client';
+import { tags } from '@/src/lib/api/endpoints';
+import { getLabels, isLang, type Lang } from '@/src/lib/i18n/dictionaries';
+import { buildMetadata } from '@/src/lib/seo/page-metadata';
+import { jobPath, toJobDetailProps, type JobDetailApi } from '@/src/mappers/careers';
+import { localizeHref } from '@/src/mappers/href';
+import { toPageSeo } from '@/src/mappers/seo';
+
+type Props = { params: Promise<{ lang: string; slug: string }> };
+
+export const dynamic = 'force-dynamic';
+
+const load = (slug: string, lang: Lang) => apiGet<JobDetailApi>(endpoint.jobs.getBySlug(slug), { lang, tags: [tags.job(slug), tags.jobs] });
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { lang, slug } = await params;
+    if (!isLang(lang)) return {};
+    const job = await load(slug, lang).catch(() => null);
+    if (!job || job.redirectTo) return {};
+    const meta = buildMetadata({ lang, path: jobPath(slug), seo: toPageSeo(job.seo), fallbackTitle: job.title, fallbackDescription: job.summary });
+    return job.isOpen === false ? { ...meta, robots: { index: false, follow: true } } : meta;
+}
+
+/** Job details (Figma 514:3194): summary, lists, benefits, application form, similar jobs; a closed job shows the closed state instead of the form. */
+export default async function JobPage({ params }: Props) {
+    const { lang, slug } = await params;
+    if (!isLang(lang)) notFound();
+    const labels = getLabels(lang);
+    const t = labels.careers;
+
+    let api: JobDetailApi;
+    try {
+        api = await load(slug, lang);
+    } catch (error) {
+        if (error instanceof ApiError && error.isNotFound) notFound();
+        throw error;
+    }
+    if (api.redirectTo) permanentRedirect(localizeHref(lang, jobPath(api.redirectTo)));
+    const j = toJobDetailProps(api, lang);
+    const factLabel = t as unknown as Record<string, string>;
+
+    return (
+        <>
+            <section className="bg-bg-hero py-section-lg text-text-inverse">
+                <Container className="flex flex-col items-start gap-6 pt-24">
+                    <Breadcrumbs
+                        tone="dark"
+                        label={labels.home.breadcrumbs}
+                        items={[
+                            { label: labels.home.home, href: localizeHref(lang, '/') },
+                            { label: t.backToJobs, href: localizeHref(lang, '/careers') },
+                        ]}
+                    />
+                    <Heading level={1} tone="inverse">{j.title}</Heading>
+                    {j.lead && <Text tone="inverse">{j.lead}</Text>}
+                    {j.isOpen && <Button href="#apply">{t.applyNow}</Button>}
+                </Container>
+            </section>
+            <section className="bg-bg-page py-section-lg">
+                <Container className="flex flex-col gap-12">
+                    <dl className="grid gap-4 rounded-card bg-bg-surface-ice p-6 sm:grid-cols-2 lg:grid-cols-4">
+                        {j.facts.map(([key, value]) => (
+                            <div key={key} className="flex flex-col gap-1">
+                                <dt className="text-body-sm text-text-muted">{factLabel[key]}</dt>
+                                <dd className="font-bold text-text-heading">{value}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                    {j.bodyHtml && <div className="ds-prose" dangerouslySetInnerHTML={{ __html: markSanitizedHtml(j.bodyHtml) }} />}
+                    {j.responsibilities.length > 0 && (
+                        <div className="flex flex-col gap-4">
+                            <h2 className="text-h3 font-bold text-text-heading">{t.responsibilities}</h2>
+                            <ul className="ds-prose">{j.responsibilities.map((r) => <li key={r}>{r}</li>)}</ul>
+                        </div>
+                    )}
+                    {j.requirements.length > 0 && (
+                        <div className="flex flex-col gap-4">
+                            <h2 className="text-h3 font-bold text-text-heading">{t.requirements}</h2>
+                            <ul className="ds-prose">{j.requirements.map((r) => <li key={r}>{r}</li>)}</ul>
+                        </div>
+                    )}
+                    {j.benefits.length > 0 && (
+                        <div className="flex flex-col gap-4">
+                            <h2 className="text-h3 font-bold text-text-heading">{t.benefits}</h2>
+                            <ul className="grid gap-4 md:grid-cols-2">
+                                {j.benefits.map((b) => (
+                                    <li key={b.title} className="rounded-cta border border-solid border-border-subtle bg-bg-surface p-6">
+                                        <h3 className="text-h5 font-bold text-text-heading">{b.title}</h3>
+                                        <p className="mt-2 text-body-sm text-text-body">{b.body}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </Container>
+            </section>
+            <section className="bg-bg-surface-ice py-section-lg">
+                <Container>
+                    {j.isOpen ? (
+                        <ApplyForm lang={lang} slug={slug} department={api.department} labels={t} formLabels={labels.contactForm} />
+                    ) : (
+                        <div className="flex flex-col items-start gap-6">
+                            <EmptyState title={t.closedTitle} body={t.closedBody} />
+                            <Button href={localizeHref(lang, '/careers')}>{t.backToJobs}</Button>
+                        </div>
+                    )}
+                </Container>
+            </section>
+            {j.similar.length > 0 && (
+                <section className="bg-bg-page py-section-lg">
+                    <Container className="flex flex-col gap-8">
+                        <SectionHeading title={t.similar} />
+                        <ul className="flex flex-col gap-4">
+                            {j.similar.map((job) => (
+                                <li key={job.id}>
+                                    <JobRow job={job} detailsLabel={t.viewDetails} />
+                                </li>
+                            ))}
+                        </ul>
+                    </Container>
+                </section>
+            )}
+        </>
+    );
+}
