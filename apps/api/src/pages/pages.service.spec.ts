@@ -466,6 +466,33 @@ describe('PagesService', () => {
         }
     });
 
+    it('uses CMS text in the requested language instead of the built-in fallback', async () => {
+        const original = prisma.section.findUnique;
+        prisma.section.findUnique = jest.fn().mockResolvedValue({ data: { statement: { ar: 'نص مخصص', en: 'Custom statement' } } });
+        try {
+            expect((await service.getAboutPage('en')).statement).toBe('Custom statement');
+            expect((await service.getAboutPage('ar')).statement).toBe('نص مخصص');
+        } finally {
+            prisma.section.findUnique = original;
+        }
+    });
+
+    it('strips scripts and event handlers from legal section bodies', async () => {
+        const original = prisma.section.findUnique;
+        prisma.section.findUnique = jest.fn().mockResolvedValue({
+            data: {
+                sections: [{ id: 'a', title: ml('T', 'T'), body: ml('<p onclick="x()">ok</p><script>alert(1)</script><a href="javascript:alert(1)">l</a>', 'x') }],
+            },
+        });
+        try {
+            const res = await service.getLegalPage('privacy', 'ar');
+            expect(res.sections[0].body).toContain('ok');
+            expect(res.sections[0].body).not.toMatch(/script|onclick|javascript:/i);
+        } finally {
+            prisma.section.findUnique = original;
+        }
+    });
+
     it('throws NotFoundException for unknown legal page key', async () => {
         await expect(service.getLegalPage('unknown', 'ar')).rejects.toThrow(NotFoundException);
     });
