@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { publishedNow } from '@/common/visibility';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SectorMapper } from '../sector.mapper';
 
@@ -10,8 +11,7 @@ export class GetSectorBySlugService {
         const sector = await this.prisma.sector.findFirst({
             where: {
                 slug,
-                isDeleted: false,
-                isPublished: true,
+                ...publishedNow(),
             },
             include: {
                 translations: true,

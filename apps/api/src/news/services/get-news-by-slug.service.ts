@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { publishedNow } from '@/common/visibility';
 import { PrismaService } from '@/prisma/prisma.service';
 import { NewsMapper } from '../helpers/news.mapper';
 
@@ -9,7 +10,7 @@ export class GetNewsBySlugService {
     async execute(slug: string, webOnly: boolean, lang: string = 'ar', previewToken?: string) {
         const where: any = { slug, isDeleted: false };
         if (webOnly) {
-            where.isPublished = true;
+            Object.assign(where, publishedNow());
         }
 
         const news = await this.prisma.news.findFirst({
@@ -48,8 +49,7 @@ export class GetNewsBySlugService {
         const related = await this.prisma.news.findMany({
             where: {
                 id: { not: news.id },
-                isPublished: true,
-                isDeleted: false,
+                ...publishedNow(),
                 categoryId: news.categoryId,
             },
             take: 3,

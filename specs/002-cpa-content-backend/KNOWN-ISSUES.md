@@ -29,3 +29,9 @@ exports `Localized` from `@repo/shared`, which should be added to 002 properly: 
   (`* text=auto eol=lf`). Contributors on Windows should run `git add --renormalize .` once after pulling.
 - The 002 plan's quickstart gates were not run against the web app (it is out of scope for this feature), which is how the break above went
   unnoticed. CI should build the web app, or the plan should list the legacy pages it breaks.
+
+## Open from the 2026-11-23 analysis
+
+- Scheduled publish (FR-011, Asia/Riyadh): no API task or time-zone test found; confirm the public filter hides future-dated items and add a test.
+- SC-005 (spam rejection ≥ 95%) has no instrumentation task; treat it as a post-launch metric.
+- `Localized` is exported from `@repo/shared` on `integration/001-002`; make sure it is on the 002 branch before merging to `main`.

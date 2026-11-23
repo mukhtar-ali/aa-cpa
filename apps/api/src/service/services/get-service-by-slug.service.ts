@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { publishedNow } from '@/common/visibility';
 import { PrismaService } from '@/prisma/prisma.service';
 import { ServiceMapper } from '../service.mapper';
 
@@ -10,8 +11,7 @@ export class GetServiceBySlugService {
         let service = await this.prisma.service.findFirst({
             where: {
                 slug,
-                isDeleted: false,
-                ...(previewToken ? {} : { isPublished: true }),
+                ...(previewToken ? { isDeleted: false } : publishedNow()),
             },
             include: {
                 translations: true,

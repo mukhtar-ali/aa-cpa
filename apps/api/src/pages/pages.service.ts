@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { publishedNow } from '@/common/visibility';
 import { PrismaService } from '@/prisma/prisma.service';
 import { localize } from '@/common/localize';
 import { toImageRef } from '@/common/image-field.util';
@@ -118,7 +119,7 @@ export class PagesService {
         const [raw, services, offices] = await Promise.all([
             this.getSectionData('site-chrome'),
             this.prisma.service.findMany({
-                where: { isPublished: true, isDeleted: false },
+                where: { ...publishedNow() },
                 orderBy: { order: 'asc' },
                 include: { translations: true },
             }),
@@ -241,12 +242,12 @@ export class PagesService {
                 this.getSeo('home', lang),
                 this.getSectionData('page-home'),
                 this.prisma.service.findMany({
-                    where: { isPublished: true, isDeleted: false },
+                    where: { ...publishedNow() },
                     orderBy: { order: 'asc' },
                     include: { translations: true },
                 }),
                 this.prisma.news.findMany({
-                    where: { isPublished: true, isDeleted: false },
+                    where: { ...publishedNow() },
                     orderBy: { publishedAt: 'desc' },
                     take: 4,
                     include: {
@@ -471,7 +472,7 @@ export class PagesService {
             this.getSeo('services', lang),
             this.getSectionData('page-services'),
             this.prisma.service.findMany({
-                where: { isPublished: true, isDeleted: false },
+                where: { ...publishedNow() },
                 orderBy: { order: 'asc' },
                 include: { translations: true },
             }),
@@ -508,7 +509,7 @@ export class PagesService {
             this.getSeo('sectors', lang),
             this.getSectionData('page-sectors'),
             this.prisma.sector.findMany({
-                where: { isPublished: true, isDeleted: false },
+                where: { ...publishedNow() },
                 orderBy: { order: 'asc' },
                 include: { translations: true },
             }),
@@ -518,8 +519,7 @@ export class PagesService {
             }),
             this.prisma.news.findMany({
                 where: {
-                    isPublished: true,
-                    isDeleted: false,
+                    ...publishedNow(),
                     category: { isCaseStory: true },
                 },
                 orderBy: { publishedAt: 'desc' },
@@ -567,8 +567,7 @@ export class PagesService {
         const pageSize = Number(query.pageSize) > 0 ? Number(query.pageSize) : 12;
 
         const where: any = {
-            isPublished: true,
-            isDeleted: false,
+            ...publishedNow(),
             ...(query.category ? { category: { slug: query.category } } : {}),
         };
 
@@ -577,7 +576,7 @@ export class PagesService {
                 this.getSeo('articles', lang),
                 this.getSectionData('page-articles'),
                 this.prisma.news.findMany({
-                    where: { isPublished: true, isDeleted: false, isFeatured: true },
+                    where: { ...publishedNow(), isFeatured: true },
                     orderBy: { publishedAt: 'desc' },
                     take: 3,
                     include: {
@@ -630,8 +629,7 @@ export class PagesService {
     async getCareersPage(lang: string, query: { department?: string } = {}) {
         const now = new Date();
         const jobWhere: any = {
-            isPublished: true,
-            isDeleted: false,
+            ...publishedNow(now),
             OR: [{ closesAt: null }, { closesAt: { gt: now } }],
             ...(query.department ? { department: { slug: query.department } } : {}),
         };
@@ -716,7 +714,7 @@ export class PagesService {
                 orderBy: { order: 'asc' },
             }),
             this.prisma.service.findMany({
-                where: { isPublished: true, isDeleted: false },
+                where: { ...publishedNow() },
                 orderBy: { order: 'asc' },
                 include: { translations: true },
             }),

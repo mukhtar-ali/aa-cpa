@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-18
 
-**Status**: Draft
+**Status**: Implemented (89 tasks done); follow-ups in KNOWN-ISSUES.md
 
 **Input**: User description: "Wire the AA-CPA site to a backend: remove the real-estate domain (Projects, Units,
 Inquiries) and provide the bilingual content model, public read API, admin management API and lead capture
@@ -195,7 +195,7 @@ migration drops the old tables on a copy of the current database without data lo
 - Slug changes after publication → old URL redirects to the new one.
 - Two editors edit the same item → last save wins with a visible "updated by/at"; no silent data loss on
   concurrent create.
-- Deleting a sector or service referenced by case stories, articles or FAQs → blocked or references cleaned, with a
+- Deleting a sector or service referenced by case stories, articles or FAQs → blocked with 409 and the list of references (T048a), with a
   clear message.
 - Email delivery fails → submission is still stored; delivery is retried and failures are visible to admins.
 - Large logo/photo uploads → resized/optimized; unsupported formats refused.
@@ -232,7 +232,7 @@ migration drops the old tables on a copy of the current database without data lo
 - **FR-016**: Page content blocks for each approved page (heroes, statements, intros, section headings, CTA texts,
   partner quote, careers team section) and site chrome (utility bar texts, navigation, footer columns, contact
   channels, social links, legal registry numbers) MUST be editable.
-- **FR-017**: Legal pages (privacy, terms): last updated date, summary points, ordered sections, optional PDF.
+- **FR-017**: Legal pages (privacy, terms, accessibility statement): last updated date, summary points, ordered sections, optional PDF.
 - **FR-018**: Per-page SEO (title, description, social image, canonical) and global SEO/tracking MUST continue to work
   for the new pages.
 
