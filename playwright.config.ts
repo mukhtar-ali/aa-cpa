@@ -20,10 +20,20 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      testIgnore: /design-system\//,
+      testIgnore: /(design-system|web)\//,
       use: { 
         ...devices['Desktop Chrome'],
         channel: 'chrome', // Use the user's installed Google Chrome
+      },
+    },
+    {
+      // Feature 003 public site journeys (needs the API on 3001 and the web app on 3000, seeded).
+      name: 'web',
+      testMatch: /web\/.*\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        channel: 'chrome',
+        baseURL: process.env.WEB_BASE_URL ?? 'http://localhost:3000',
       },
     },
     {

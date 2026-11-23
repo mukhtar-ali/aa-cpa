@@ -1,66 +1,50 @@
 import type { MetadataRoute } from 'next';
-import { endpoint, JobModelWeb, NewsModelWeb, PaginatorModel } from '@repo/shared';
+import { endpoint } from '@repo/shared';
+import { apiGet } from '@/src/lib/api/client';
+import { tags } from '@/src/lib/api/endpoints';
+import { siteUrl } from '@/src/lib/seo/page-metadata';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
-const API_URL = process.env.BASE_URL ?? 'http://localhost:3001';
-const LOCALES = ['en', 'ar'] as const;
+const LOCALES = ['ar', 'en'] as const;
+const STATIC_PATHS = ['', '/about', '/services', '/sectors', '/articles', '/careers', '/contact', '/privacy', '/terms', '/accessibility'];
 
-// Built when the sitemap is requested, NOT during `next build`. The list comes from the API, which is often not reachable
-// (or not even deployed yet) while the image is being built; a hanging request used to fail the whole build after
-// three 60 s retries. The API response is still cached for an hour.
+// Built when requested, not during `next build`: the API is often unreachable while the image is built. 004 completes this
+// (alternates, lastmod from the CMS, image entries); this is the minimal version required by feature 003.
 export const dynamic = 'force-dynamic';
 
-const API_TIMEOUT_MS = 8000;
+interface Slugged {
+    slug?: string | null;
+    updatedAt?: string;
+}
 
-async function fetchAll<T>(url: string): Promise<T[]> {
+/** Reads a collection endpoint that returns either an array or `{ items }`. A failure lists the static pages only. */
+async function slugs(path: string, tag: string): Promise<Slugged[]> {
     try {
-        // A timeout so a slow or unreachable API can never make the sitemap hang: it just lists the static pages.
-        const res = await fetch(`${API_URL}${url}?pageSize=1000`, {
-            next: { revalidate: 3600 },
-            signal: AbortSignal.timeout(API_TIMEOUT_MS),
-        });
-        if (!res.ok) return [];
-        const data = (await res.json()) as PaginatorModel<T>;
-        return data.items;
+        const data = await apiGet<Slugged[] | { items: Slugged[] }>(path, { lang: 'ar', tags: [tag], query: { pageSize: 1000 }, timeoutMs: 8000 });
+        return Array.isArray(data) ? data : data.items;
     } catch {
         return [];
     }
 }
 
-function slugEntries<T extends { slug?: string | null; updatedAt?: string }>(
-    items: T[],
-    pathPrefix: string,
-    priority: number,
-): MetadataRoute.Sitemap {
-    return items
+const entriesFor = (prefix: string, items: Slugged[], priority: number): MetadataRoute.Sitemap =>
+    items
         .filter((item) => item.slug)
         .flatMap((item) =>
             LOCALES.map((locale) => ({
-                url: `${SITE_URL}/${locale}${pathPrefix ? `${pathPrefix}/` : '/'}${item.slug}`,
+                url: `${siteUrl()}/${locale}${prefix}/${item.slug}`,
                 lastModified: item.updatedAt ? new Date(item.updatedAt) : new Date(),
-                changeFrequency: 'weekly' as const,
                 priority,
             })),
         );
-}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const [news, jobs] = await Promise.all([
-        fetchAll<NewsModelWeb>(endpoint.news.listWeb),
-        fetchAll<JobModelWeb>(endpoint.job.listWeb),
+    const [services, articles, jobs] = await Promise.all([
+        slugs(endpoint.services.list, tags.services),
+        slugs(endpoint.articles.list, tags.articles),
+        slugs(endpoint.jobs.list, tags.jobs),
     ]);
-
-    const staticEntries: MetadataRoute.Sitemap = LOCALES.flatMap((locale) => [
-        { url: `${SITE_URL}/${locale}`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 1 },
-        { url: `${SITE_URL}/${locale}/about`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.6 },
-        { url: `${SITE_URL}/${locale}/contact`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.6 },
-        { url: `${SITE_URL}/${locale}/news`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.7 },
-        { url: `${SITE_URL}/${locale}/careers`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.7 },
-    ]);
-
-    return [
-        ...staticEntries,
-        ...slugEntries(news, '/news', 0.6),
-        ...slugEntries(jobs, '/careers', 0.6),
-    ];
+    const statics = STATIC_PATHS.flatMap((path) =>
+        LOCALES.map((locale) => ({ url: `${siteUrl()}/${locale}${path}`, lastModified: new Date(), priority: path === '' ? 1 : 0.8 })),
+    );
+    return [...statics, ...entriesFor('/services', services, 0.7), ...entriesFor('/articles', articles, 0.6), ...entriesFor('/careers', jobs, 0.6)];
 }

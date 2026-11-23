@@ -34,9 +34,9 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 
 ## Phase 3: User Story 7 — Starter leftovers removed (P1)
 
-- [ ] T014 [US7] Delete starter routes and components listed in research R8; remove `gsap`, `@gsap/react`, `react-toastify`, legacy fonts and tokens; fix imports; keep `reference/` and `src/reference` (guarded, see f71b9df). Rewrite the legacy `careers`, `contact` and `news` pages and `sitemap.ts` so nothing imports removed `@repo/shared` models (see `specs/002-cpa-content-backend/KNOWN-ISSUES.md`). Gate: `pnpm --filter @repo/web check-types` and `pnpm turbo run build --filter=@repo/web` both green, re-run at the end of every batch
-- [ ] T015 [US7] Rewrite `WEB/app/sitemap.ts` minimal version (static pages + services/articles/jobs) without removed types (004 completes it)
-- [ ] T016 [US7] Playwright `e2e/specs/web/removed-routes.spec.ts` (old project/unit URLs → 404 page; `/news` redirects)
+- [X] T014 [US7] Delete starter routes and components listed in research R8; remove `gsap`, `@gsap/react`, `react-toastify`, legacy fonts and tokens; fix imports; keep `reference/` and `src/reference` (guarded, see f71b9df). Rewrite the legacy `careers`, `contact` and `news` pages and `sitemap.ts` so nothing imports removed `@repo/shared` models (see `specs/002-cpa-content-backend/KNOWN-ISSUES.md`). Gate: `pnpm --filter @repo/web check-types` and `pnpm turbo run build --filter=@repo/web` both green, re-run at the end of every batch
+- [X] T015 [US7] Rewrite `WEB/app/sitemap.ts` minimal version (static pages + services/articles/jobs) without removed types (004 completes it)
+- [ ] T016 [US7] (written, not yet run: needs API + web running) Playwright `e2e/specs/web/removed-routes.spec.ts` (old project/unit URLs → 404 page; `/news` redirects)
 
 ## Phase 4: User Story 1 — Browse in Arabic/English (P1) 🎯 MVP
 
