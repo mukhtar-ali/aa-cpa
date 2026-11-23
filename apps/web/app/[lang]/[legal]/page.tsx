@@ -5,18 +5,21 @@ import { Container } from '@repo/design-system/layout';
 import { Heading, Text } from '@repo/design-system/primitives';
 import { LegalDocument } from '@repo/design-system/sections';
 import { getPage, tryGetPage } from '@/src/lib/api/pages';
-import { getLabels, isLang, locales } from '@/src/lib/i18n/dictionaries';
+import { getLabels, isLang } from '@/src/lib/i18n/dictionaries';
 import { buildMetadata } from '@/src/lib/seo/page-metadata';
-import { isLegalKey, LEGAL_KEYS, toLegalProps, type LegalPageApi } from '@/src/mappers/legal';
+import { isLegalKey, toLegalProps, type LegalPageApi } from '@/src/mappers/legal';
 import { toPageSeo } from '@/src/mappers/seo';
 
 type Props = { params: Promise<{ lang: string; legal: string }> };
 
-// Only the known legal keys exist at this level; any other single segment is a 404.
-export const dynamicParams = false;
-export const generateStaticParams = () => locales.flatMap((lang) => LEGAL_KEYS.map((legal) => ({ lang, legal })));
+// Rendered on first request and then cached by tag (no generateStaticParams): CI builds the web app without an API, and a build-time
+// prerender would fail there. Any key other than the known ones is a 404 below.
 
 const path = (key: string) => `/api/pages/legal/${key}`;
+
+// Rendered per request: CI builds the web app without an API, so a build-time prerender would fail. The API calls themselves are
+// cached and revalidated by tag (`apiGet`), so this does not hit the API on every visit.
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { lang, legal } = await params;

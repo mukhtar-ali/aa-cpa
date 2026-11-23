@@ -15,6 +15,10 @@ type Props = { params: Promise<{ lang: string }> };
 
 const load = (lang: 'ar' | 'en') => apiGet<HomeApi & { seo?: unknown }>(endpoint.pages.home, { lang, tags: [tags.page('home')] });
 
+// Rendered per request: CI builds the web app without an API, so a build-time prerender would fail. The API calls themselves are
+// cached and revalidated by tag (`apiGet`), so this does not hit the API on every visit.
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { lang } = await params;
     if (!isLang(lang)) return {};

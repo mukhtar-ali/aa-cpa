@@ -11,6 +11,10 @@ import { toServicesProps, type ServicesPageApi } from '@/src/mappers/services';
 
 type Props = { params: Promise<{ lang: string }> };
 
+// Rendered per request: CI builds the web app without an API, so a build-time prerender would fail. The API calls themselves are
+// cached and revalidated by tag (`apiGet`), so this does not hit the API on every visit.
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { lang } = await params;
     if (!isLang(lang)) return {};

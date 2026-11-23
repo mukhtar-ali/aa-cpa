@@ -45,8 +45,8 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 - [X] T019 [P] [US1] Mapper + tests `services.ts`; pages `services/page.tsx` (`448:41066`) and `services/[slug]/page.tsx` (`448:41873`) with `generateStaticParams`, permanent redirect on moved slug (FR-003), contact CTA with `?service=`
 - [X] T020 [P] [US1] Mapper + tests `sectors.ts`; page `sectors/page.tsx` (`547:4555`), sector links → `/articles?sector=`
 - [X] T021 [P] [US1] Mapper + tests `legal.ts`; pages `privacy/page.tsx` (`525:3854`), `terms/page.tsx` (`525:4136`), `accessibility/page.tsx` (legal layout, content from 004)
-- [ ] T022 [US1] Mapper + tests `contact.ts`; page `contact/page.tsx` (`524:3651`) content parts (channels, offices map, FAQ) — form wired in US2
-- [ ] T023 [US1] Playwright `e2e/specs/web/navigation.spec.ts`: all pages × 2 langs render, nav/footer links resolve, language switch keeps page, fallback Arabic block has `dir="rtl"`
+- [X] T022 [US1] Mapper + tests `contact.ts`; page `contact/page.tsx` (`524:3651`) content parts (channels, offices map, FAQ) — form wired in US2
+- [ ] T023 [US1] Playwright `e2e/specs/web/navigation.spec.ts`: all pages × 2 langs render, nav/footer links resolve, language switch keeps page, fallback Arabic block has `dir="rtl"` (written, not yet run: needs API + web running)
 - [ ] T024 [US1] Parity review per page at 1512/360/768/1024; record in `specs/003-public-site-pages/reviews/parity.md`
 
 ## Phase 5: User Story 2 — Contact (P1)
