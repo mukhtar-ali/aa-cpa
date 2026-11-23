@@ -56,7 +56,7 @@ test.describe('contact form', () => {
     });
 
     test('?service= preselects the service', async ({ page, request }) => {
-        const services = (await (await request.get('/api/services?lang=en')).json()) as { slug: string; title: string }[];
+        const services = (await (await request.get(`${process.env.API_BASE_URL ?? 'http://localhost:3001'}/api/services?lang=en`)).json()) as { slug: string; title: string }[];
         test.skip(services.length === 0, 'no seeded services');
         await page.goto(`${url('en')}?service=${services[0].slug}`);
         await expect(page.getByLabel(/^service/i)).toHaveValue(/.+/);
