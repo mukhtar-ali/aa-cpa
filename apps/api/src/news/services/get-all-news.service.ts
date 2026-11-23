@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { NewsQueryModel } from '@repo/shared';
+import { publishedNow } from '@/common/visibility';
 import { PrismaService } from '@/prisma/prisma.service';
 import { buildPaginationResult } from '@/common/pagination/pagination.util';
 import { NewsMapper } from '../helpers/news.mapper';
@@ -20,7 +21,7 @@ export class GetAllNewsService {
 
         // The public (web) list is ALWAYS published-only
         if (webOnly) {
-            where.isPublished = true;
+            Object.assign(where, publishedNow());
         } else if (query.isPublished !== undefined) {
             where.isPublished = (query.isPublished as any) === true || (query.isPublished as any) === 'true';
         }

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JobQueryModel } from '@repo/shared';
+import { publishedNow } from '@/common/visibility';
 import { PrismaService } from '@/prisma/prisma.service';
 import { buildPaginationResult } from '@/common/pagination/pagination.util';
 import { JobMapper } from '../helpers/job.mapper';
@@ -20,7 +21,7 @@ export class GetAllJobsService {
 
         // The public (web) list is ALWAYS published-only and open-only (closesAt > now or null)
         if (webOnly) {
-            where.isPublished = true;
+            Object.assign(where, publishedNow());
             where.OR = [
                 { closesAt: null },
                 { closesAt: { gt: new Date() } },

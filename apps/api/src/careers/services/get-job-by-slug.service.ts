@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { publishedNow } from '@/common/visibility';
 import { PrismaService } from '@/prisma/prisma.service';
 import { JobMapper } from '../helpers/job.mapper';
 
@@ -8,7 +9,7 @@ export class GetJobBySlugService {
 
     async execute(slug: string, webOnly: boolean, lang: string = 'ar', previewToken?: string) {
         const where: any = { slug, isDeleted: false };
-        if (webOnly) where.isPublished = true;
+        if (webOnly) Object.assign(where, publishedNow());
 
         const job = await this.prisma.job.findFirst({
             where,
@@ -45,8 +46,7 @@ export class GetJobBySlugService {
             where: {
                 id: { not: job.id },
                 departmentId: job.departmentId,
-                isPublished: true,
-                isDeleted: false,
+                ...publishedNow(),
                 OR: [
                     { closesAt: null },
                     { closesAt: { gt: new Date() } },
