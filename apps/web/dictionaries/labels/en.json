@@ -55,6 +55,23 @@
         "servicesTabs": "Services",
         "readMore": "Read more",
         "breadcrumbs": "Breadcrumb",
-        "getDirections": "Get directions"
+        "getDirections": "Get directions",
+        "home": "Home"
+    },
+    "services": {
+        "expertTitle": "Talk to an expert",
+        "expertBody": "Share a few details about your business and our team will help you choose the right package.",
+        "expertCta": "Contact us",
+        "faqTitle": "Explore the FAQ",
+        "faqBody": "Answers to the most common questions about this service.",
+        "faqCta": "FAQ",
+        "notSure": "Not sure this service is for you?",
+        "faqHeading": "Frequently asked questions",
+        "methodology": "Our methodology",
+        "deliverables": "What you get",
+        "sectors": "Sectors we serve",
+        "audience": "Who it is for",
+        "whyUs": "Why us",
+        "requestQuote": "Request a quote"
     }
 }

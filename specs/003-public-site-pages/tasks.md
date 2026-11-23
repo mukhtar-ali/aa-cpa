@@ -42,7 +42,7 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 
 - [X] T017 [P] [US1] Mapper + tests `WEB/src/mappers/home.ts`; page `WEB/app/[lang]/page.tsx` (Figma `411:169`) (estimator block arrives with T035)
 - [X] T018 [P] [US1] Mapper + tests `about.ts`; page `WEB/app/[lang]/about/page.tsx` (Figma `445:36452`)
-- [ ] T019 [P] [US1] Mapper + tests `services.ts`; pages `services/page.tsx` (`448:41066`) and `services/[slug]/page.tsx` (`448:41873`) with `generateStaticParams`, permanent redirect on moved slug (FR-003), contact CTA with `?service=`
+- [X] T019 [P] [US1] Mapper + tests `services.ts`; pages `services/page.tsx` (`448:41066`) and `services/[slug]/page.tsx` (`448:41873`) with `generateStaticParams`, permanent redirect on moved slug (FR-003), contact CTA with `?service=`
 - [ ] T020 [P] [US1] Mapper + tests `sectors.ts`; page `sectors/page.tsx` (`547:4555`), sector links → `/articles?sector=`
 - [ ] T021 [P] [US1] Mapper + tests `legal.ts`; pages `privacy/page.tsx` (`525:3854`), `terms/page.tsx` (`525:4136`), `accessibility/page.tsx` (legal layout, content from 004)
 - [ ] T022 [US1] Mapper + tests `contact.ts`; page `contact/page.tsx` (`524:3651`) content parts (channels, offices map, FAQ) — form wired in US2
