@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { forwardApplication } from '@/src/actions/apply-core';
+import { forwardApplication, MAX_CV_BYTES } from '@/src/actions/apply-core';
 import { isLang } from '@/src/lib/i18n/dictionaries';
 
 export const dynamic = 'force-dynamic';
@@ -14,6 +14,11 @@ export async function POST(request: Request) {
     const slug = url.searchParams.get('slug') ?? '';
     const lang = url.searchParams.get('lang') ?? '';
     if (!isLang(lang) || !/^[a-z0-9-]+$/i.test(slug)) return NextResponse.json({ ok: false, error: 'invalid' }, { status: 400 });
+
+    // Refuse before parsing: `formData()` buffers the whole body. Allow room for the text fields and multipart framing.
+    const length = Number(request.headers.get('content-length'));
+    if (!Number.isFinite(length) || length <= 0) return NextResponse.json({ ok: false, error: 'invalid' }, { status: 411 });
+    if (length > MAX_CV_BYTES + 64 * 1024) return NextResponse.json({ ok: false, error: 'invalid', fileError: 'tooLarge' }, { status: 413 });
 
     const data = await request.formData().catch(() => null);
     if (!data) return NextResponse.json({ ok: false, error: 'invalid' }, { status: 400 });

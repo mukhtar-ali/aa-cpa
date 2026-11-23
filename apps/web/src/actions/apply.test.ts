@@ -43,13 +43,19 @@ describe('forwardApplication', () => {
 });
 
 describe('POST /api/apply-upload', () => {
-    const req = (qs: string, body?: FormData) => new Request(`http://x.test/api/apply-upload${qs}`, { method: 'POST', body });
+    const req = (qs: string, body?: FormData, length = 1000) => new Request(`http://x.test/api/apply-upload${qs}`, { method: 'POST', headers: { 'content-length': String(length) }, body });
+    it('refuses an oversized body before parsing it, and one with no length', async () => {
+        const big = new Request('http://x.test/api/apply-upload?slug=ok&lang=en', { method: 'POST', headers: { 'content-length': String(MAX_CV_BYTES + 200_000) }, body: 'x' });
+        expect((await POST(big)).status).toBe(413);
+        const none = new Request('http://x.test/api/apply-upload?slug=ok&lang=en', { method: 'POST', headers: { 'content-length': '0' }, body: 'x' });
+        expect((await POST(none)).status).toBe(411);
+    });
     it('rejects a bad slug or language', async () => {
         expect((await POST(req('?slug=../x&lang=en', form(pdf())))).status).toBe(400);
         expect((await POST(req('?slug=ok&lang=fr', form(pdf())))).status).toBe(400);
     });
     it('answers 415 for a wrong file type and 413 for a large one', async () => {
         expect((await POST(req('?slug=ok&lang=en', form(pdf(10, 'image/png'))))).status).toBe(415);
-        expect((await POST(req('?slug=ok&lang=en', form(pdf(MAX_CV_BYTES + 1))))).status).toBe(413);
+        expect((await POST(req('?slug=ok&lang=en', form(pdf(MAX_CV_BYTES + 1)), MAX_CV_BYTES + 1000))).status).toBe(413);
     });
 });
