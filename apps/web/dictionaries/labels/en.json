@@ -48,5 +48,11 @@
     "preview": {
         "banner": "Preview mode: you are viewing unpublished content",
         "exit": "Exit preview"
+    },
+    "home": {
+        "clients": "Our clients",
+        "pauseMarquee": "Pause logo animation",
+        "servicesTabs": "Services",
+        "readMore": "Read more"
     }
 }
