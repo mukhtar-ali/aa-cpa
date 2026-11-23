@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useReportWebVitals } from 'next/web-vitals';
 import { endpoint } from '@repo/shared';
+import { ANALYTICS_EVENT, type AnalyticsDetail } from '@/src/lib/analytics';
 
 /**
  * Sends Core Web Vitals, uncaught errors and page views to the API's anonymous ingestion endpoint
@@ -36,7 +37,13 @@ type ErrorItem = {
     page: string;
     timestamp: number;
 };
-type EventItem = { type: 'pageview'; name: 'pageview'; page: string; timestamp: number };
+type EventItem = {
+    type: 'pageview' | 'event';
+    name: string;
+    properties?: Record<string, unknown>;
+    page: string;
+    timestamp: number;
+};
 
 const queue = { metrics: [] as MetricItem[], errors: [] as ErrorItem[], events: [] as EventItem[] };
 const seenErrors = new Set<string>();
@@ -170,12 +177,20 @@ export function MonitoringReporter() {
             if (document.visibilityState === 'hidden') flush();
         };
         const timer = window.setInterval(flush, FLUSH_INTERVAL_MS);
+        // Product events from track() (src/lib/analytics.ts): same consent rules and batching as page views.
+        const onTrack = (event: Event) => {
+            if (!isEnabled()) return;
+            const { name, properties } = (event as CustomEvent<AnalyticsDetail>).detail;
+            push(queue.events, { type: 'event', name, properties, page: truncate(window.location.pathname, 500), timestamp: Date.now() });
+        };
+        window.addEventListener(ANALYTICS_EVENT, onTrack);
         window.addEventListener('error', onWindowError);
         window.addEventListener('unhandledrejection', onUnhandledRejection);
         document.addEventListener('visibilitychange', onHidden);
         window.addEventListener('pagehide', flush);
         return () => {
             window.clearInterval(timer);
+            window.removeEventListener(ANALYTICS_EVENT, onTrack);
             window.removeEventListener('error', onWindowError);
             window.removeEventListener('unhandledrejection', onUnhandledRejection);
             document.removeEventListener('visibilitychange', onHidden);

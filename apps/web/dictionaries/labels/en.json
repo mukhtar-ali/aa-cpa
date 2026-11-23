@@ -1,0 +1,52 @@
+{
+    "a11y": {
+        "skipToContent": "Skip to content",
+        "openMenu": "Open menu",
+        "closeMenu": "Close menu",
+        "mainNavigation": "Main navigation",
+        "switchLanguage": "Switch language"
+    },
+    "common": {
+        "readMore": "Read more",
+        "learnMore": "Learn more",
+        "viewAll": "View all",
+        "backToTop": "Back to top",
+        "whatsapp": "Chat on WhatsApp",
+        "loading": "Loading",
+        "previous": "Previous",
+        "next": "Next",
+        "page": "Page",
+        "translationFallback": "This content is currently available in Arabic only"
+    },
+    "forms": {
+        "required": "This field is required",
+        "invalidEmail": "Enter a valid email address",
+        "invalidMobile": "Enter a valid mobile number",
+        "consent": "I agree to my data being processed under the privacy policy",
+        "submit": "Send",
+        "sending": "Sending",
+        "applyNow": "Apply now",
+        "fileTooLarge": "The file is larger than allowed",
+        "fileTypeNotAllowed": "This file type is not allowed",
+        "genericError": "We could not send this. Please try again shortly.",
+        "rateLimited": "Too many attempts. Please try again later.",
+        "successTitle": "Sent",
+        "successBody": "Thank you. We will be in touch soon."
+    },
+    "states": {
+        "emptyTitle": "Nothing here yet",
+        "emptyBody": "There is nothing to show right now. Please check back later.",
+        "errorTitle": "Something went wrong",
+        "errorBody": "We could not load this page. Please try again.",
+        "retry": "Try again",
+        "notFoundTitle": "Page not found",
+        "notFoundBody": "The page may have moved or the link is wrong.",
+        "goHome": "Back to home",
+        "maintenanceTitle": "Down for maintenance",
+        "maintenanceBody": "We will be back shortly. Thank you for your patience."
+    },
+    "preview": {
+        "banner": "Preview mode: you are viewing unpublished content",
+        "exit": "Exit preview"
+    }
+}

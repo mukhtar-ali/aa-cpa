@@ -1,57 +1,48 @@
-import { match } from '@formatjs/intl-localematcher';
-import { CookieEnum } from '@repo/ui';
-import Negotiator from 'negotiator';
 import { NextRequest, NextResponse } from 'next/server';
+import { getLabels } from '@/src/lib/i18n/dictionaries';
+import { LOCALE_COOKIE, LOCALE_COOKIE_OPTIONS, localeOfPath, negotiateLocale } from '@/src/lib/i18n/negotiate';
 
-const locales = ['en', 'ar'] as const;
-const defaultLocale = 'ar';
+const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
-function getLocaleFromHeaders(request: NextRequest): string {
-    try {
-        const headers: Record<string, string> = {};
-        request.headers.forEach((value, key) => { headers[key] = value; });
-        const rawLanguages = new Negotiator({ headers }).languages();
-        const validLanguages = rawLanguages.filter(
-            (lang) => lang && lang !== '*' && /^[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*$/.test(lang)
-        );
-        if (validLanguages.length === 0) {
-            return defaultLocale;
-        }
-        return match(validLanguages, locales as unknown as string[], defaultLocale);
-    } catch {
-        return defaultLocale;
-    }
+/** 503 page used while MAINTENANCE_MODE=true (research R7). Plain HTML: it must not depend on the API or the app shell. */
+export function maintenanceResponse(lang: 'ar' | 'en'): NextResponse {
+    const labels = getLabels(lang).states;
+    const html = `<!doctype html><html lang="${lang}" dir="${lang === 'ar' ? 'rtl' : 'ltr'}"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>${escapeHtml(labels.maintenanceTitle)}</title></head>
+<body style="font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center">
+<main><h1>${escapeHtml(labels.maintenanceTitle)}</h1><p>${escapeHtml(labels.maintenanceBody)}</p></main></body></html>`;
+    return new NextResponse(html, {
+        status: 503,
+        headers: { 'content-type': 'text/html; charset=utf-8', 'retry-after': '3600', 'cache-control': 'no-store' },
+    });
 }
 
 export function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
+    const pathLocale = localeOfPath(pathname);
+    const cookie = request.cookies.get(LOCALE_COOKIE)?.value;
 
-    const pathnameLocale = locales.find(
-        (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
-    );
+    if (process.env.MAINTENANCE_MODE === 'true') {
+        return maintenanceResponse(
+            pathLocale ?? negotiateLocale({ cookie, acceptLanguage: request.headers.get('accept-language') }),
+        );
+    }
 
-    const requestHeaders = new Headers(request.headers);
-
-    if (pathnameLocale) {
-        requestHeaders.set('x-locale', pathnameLocale);
-
+    if (pathLocale) {
+        const requestHeaders = new Headers(request.headers);
+        requestHeaders.set('x-locale', pathLocale);
         const response = NextResponse.next({ request: { headers: requestHeaders } });
-        response.cookies.set(CookieEnum.language, pathnameLocale, { path: '/', maxAge: 60 * 60 * 24 * 365 });
+        // Following a language link is the switch: remember it.
+        if (cookie !== pathLocale) response.cookies.set(LOCALE_COOKIE, pathLocale, LOCALE_COOKIE_OPTIONS);
         return response;
     }
 
-    const cookieLocale = request.cookies.get(CookieEnum.language)?.value;
-    let locale: string;
-    if (cookieLocale && locales.includes(cookieLocale as (typeof locales)[number])) {
-        locale = cookieLocale;
-    } else {
-        locale = getLocaleFromHeaders(request);
-    }
-
+    const locale = negotiateLocale({ cookie, acceptLanguage: request.headers.get('accept-language') });
     const url = request.nextUrl.clone();
     url.pathname = `/${locale}${pathname}`;
     const response = NextResponse.redirect(url);
-    response.cookies.set(CookieEnum.language, locale, { path: '/', maxAge: 60 * 60 * 24 * 365 });
+    response.cookies.set(LOCALE_COOKIE, locale, LOCALE_COOKIE_OPTIONS);
     return response;
 }
 

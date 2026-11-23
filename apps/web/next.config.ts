@@ -19,6 +19,15 @@ function apiImagePattern(): NonNullable<NextConfig['images']>['remotePatterns'] 
     }
 }
 
+// Extra CDN hosts for next/image, comma separated (IMAGE_HOSTS=cdn.example.com,images.example.com), https only.
+function envImagePatterns(): NonNullable<NextConfig['images']>['remotePatterns'] {
+    return (process.env.IMAGE_HOSTS ?? '')
+        .split(',')
+        .map((host) => host.trim())
+        .filter((host) => /^[a-z0-9.*-]+$/i.test(host))
+        .map((hostname) => ({ protocol: 'https' as const, hostname }));
+}
+
 // These three are inlined into the build. Deploy tools (Coolify) pass an EMPTY value for a variable that was never filled
 // in, which used to produce a site whose every page hung: an empty BASE_URL makes the server's fetch() of a relative URL
 // wait forever, and an empty NEXT_PUBLIC_SITE_URL put "/sitemap.xml" in robots.txt. Refuse to build instead. An unset
@@ -34,13 +43,18 @@ for (const name of ['BASE_URL', 'NEXT_PUBLIC_API_URL', 'NEXT_PUBLIC_SITE_URL'] a
 
 const nextConfig: NextConfig = {
     transpilePackages: ['@repo/design-system'],
+    // Job applications carry a CV (up to 5 MB in 002) through a Server Action; the default 1 MB would reject it.
+    experimental: { serverActions: { bodySizeLimit: '6mb' } },
+    async redirects() {
+        return [{ source: '/:lang(ar|en)/news/:path*', destination: '/:lang/articles/:path*', permanent: true }];
+    },
     env: {
         BASE_URL: process.env.BASE_URL,
     },
     images: {
         remotePatterns: [
             { protocol: 'https', hostname: '**.amazonaws.com' },
-            { protocol: 'https', hostname: 'example.com' },
+            ...(envImagePatterns() ?? []),
             ...(apiImagePattern() ?? []),
         ],
         // Next refuses to optimise images served from localhost/private addresses by default. That is right in
