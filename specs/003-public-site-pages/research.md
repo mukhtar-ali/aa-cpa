@@ -63,10 +63,11 @@
 
 ## R8. Removal of starter leftovers
 
-- **Decision**: Delete `app/[lang]/projects`, `app/[lang]/[slug]` (projects/units), `_components/hero-slider.tsx`,
+- **Decision** (re-based 2026-11-23 on the tree of `integration/001-002`: `projects`, `[slug]` and `units` are already gone there; on `main` or an older base delete them too): Delete leftovers of `app/[lang]/projects`, `app/[lang]/[slug]` (projects/units), `_components/hero-slider.tsx`,
   `src/components/units/*`, `src/components/ui/CustomButton.tsx`, `CustomHeader.tsx`, `CustomFooter.tsx`, legacy
   `src/animations/*` preloader/page transition and the GSAP dependency (removal confirmed 2026-11-18), Inter/Cairo
-  fonts, legacy tokens in `tailwind.css`, `src/lib/server-data.ts` functions for projects; `news` routes become
+  fonts, legacy tokens in `tailwind.css`, `src/lib/server-data.ts` functions for projects; `sitemap.ts` projects/units entries,
+  and rewrite legacy `src/components/careers`, `src/components/contact`, `app/[lang]/careers/*`, `app/[lang]/contact` onto the 002 models; keep `reference/`; `news` routes become
   `articles` with `/news/*` → `/articles/*` permanent redirects in `next.config.ts`.
 
 ## R9. Analytics hook points

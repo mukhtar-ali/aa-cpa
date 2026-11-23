@@ -13,6 +13,7 @@ Redirects: `/` → `/{negotiated}`; `/{lang}/news/:path*` → `/{lang}/articles/
 | --- | --- | --- | --- |
 | POST `/api/revalidate` | 002 API outbox | header `x-revalidate-secret: WEB_REVALIDATE_SECRET`; JSON `{ tags: string[] }` (max 50, each matching `^[a-z]+(:[a-z0-9-]+)?$`) | `200 { revalidated: string[] }`; `401` bad secret; `400` invalid body |
 | GET `/api/preview?token=&path=` | editor's browser (link from admin) | `token` JWT issued by 002 `POST /api/preview/token` (verified with `PREVIEW_SECRET`, `exp` ≤ 15 min); `path` must start with `/ar/` or `/en/` | enables draft mode, `307` to `path`; `401` invalid/expired token |
+| POST `/api/apply-upload` | careers application form (client XHR, for upload progress only, research R4) | multipart: `job`, `name`, `email`, `phone`, `cv` (same limits as 002 `POST /api/applications`); Turnstile token + honeypot | proxies to the 002 endpoint; `201` `{ id }`; `400/413/415` file errors; `429` rate limited |
 | GET `/api/preview/exit?path=` | preview banner | — | disables draft mode, `307` to `path` |
 | GET `/api/health` | uptime monitor (004) | — | `200 { status: 'ok', version }` |
 
