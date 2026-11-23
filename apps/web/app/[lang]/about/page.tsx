@@ -7,6 +7,8 @@ import { LogoMarquee, OfficeCard, PhotoQuoteBand, SectionHeading, Statement } fr
 import { getPage, tryGetPage } from '@/src/lib/api/pages';
 import { getLabels, isLang } from '@/src/lib/i18n/dictionaries';
 import { buildMetadata } from '@/src/lib/seo/page-metadata';
+import { EstimatorBlock } from '@/src/components/EstimatorBlock';
+import { type WithEstimator } from '@/src/mappers/estimator';
 import { toAboutProps, type AboutApi } from '@/src/mappers/about';
 import { toPageSeo } from '@/src/mappers/seo';
 
@@ -28,7 +30,8 @@ export default async function AboutPage({ params }: Props) {
     const { lang } = await params;
     if (!isLang(lang)) notFound();
     const labels = getLabels(lang);
-    const a = toAboutProps(await getPage<AboutApi>(endpoint.pages.about, 'about', lang), lang, labels.home.getDirections);
+    const raw = await getPage<AboutApi & WithEstimator>(endpoint.pages.about, 'about', lang);
+    const a = toAboutProps(raw, lang, labels.home.getDirections);
 
     return (
         <>
@@ -93,6 +96,7 @@ export default async function AboutPage({ params }: Props) {
                 </section>
             )}
             {a.quote?.image && <PhotoQuoteBand title={a.quote.title} body={a.quote.body} action={a.quote.action} image={a.quote.image} />}
+            <EstimatorBlock lang={lang} estimator={raw.estimator} testimonial={raw.testimonial} />
         </>
     );
 }

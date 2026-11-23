@@ -6,6 +6,7 @@ import { Button } from '@repo/design-system/primitives';
 import { CtaCards, FaqAccordion, MethodologyList, SectionHeading, Statement } from '@repo/design-system/sections';
 import { ApiError, apiGet } from '@/src/lib/api/client';
 import { tags } from '@/src/lib/api/endpoints';
+import { EstimatorBlock } from '@/src/components/EstimatorBlock';
 import { getLabels, isLang, locales } from '@/src/lib/i18n/dictionaries';
 import { buildMetadata } from '@/src/lib/seo/page-metadata';
 import { localizeHref } from '@/src/mappers/href';
@@ -110,6 +111,7 @@ export default async function ServicePage({ params }: Props) {
                     />
                 </Container>
             </section>
+            <EstimatorBlock lang={lang} serviceId={api.id} />
         </>
     );
 }

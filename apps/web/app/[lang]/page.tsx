@@ -5,7 +5,9 @@ import { Container } from '@repo/design-system/layout';
 import { CredentialsGrid, EmptyState, GapSection, HomeHero, LogoMarquee, NewsGrid, PhotoQuoteBand, ProcessSteps, ReasonsSection, SectionHeading, ServiceTabs } from '@repo/design-system/sections';
 import { apiGet, ApiError } from '@/src/lib/api/client';
 import { tags } from '@/src/lib/api/endpoints';
+import { EstimatorBlock } from '@/src/components/EstimatorBlock';
 import { getLabels, isLang } from '@/src/lib/i18n/dictionaries';
+import { type WithEstimator } from '@/src/mappers/estimator';
 import { toHomeProps, type HomeApi } from '@/src/mappers/home';
 import { localizeHref } from '@/src/mappers/href';
 import { toPageSeo } from '@/src/mappers/seo';
@@ -13,7 +15,7 @@ import { buildMetadata } from '@/src/lib/seo/page-metadata';
 
 type Props = { params: Promise<{ lang: string }> };
 
-const load = (lang: 'ar' | 'en') => apiGet<HomeApi & { seo?: unknown }>(endpoint.pages.home, { lang, tags: [tags.page('home')] });
+const load = (lang: 'ar' | 'en') => apiGet<HomeApi & WithEstimator & { seo?: unknown }>(endpoint.pages.home, { lang, tags: [tags.page('home')] });
 
 // Rendered per request: CI builds the web app without an API, so a build-time prerender would fail. The API calls themselves are
 // cached and revalidated by tag (`apiGet`), so this does not hit the API on every visit.
@@ -32,7 +34,7 @@ export default async function HomePage({ params }: Props) {
     if (!isLang(lang)) notFound();
     const labels = getLabels(lang);
 
-    let api: HomeApi & { seo?: unknown };
+    let api: HomeApi & WithEstimator & { seo?: unknown };
     try {
         api = await load(lang);
     } catch (error) {
@@ -76,6 +78,7 @@ export default async function HomePage({ params }: Props) {
                     </Container>
                 </section>
             )}
+            <EstimatorBlock lang={lang} estimator={api.estimator} testimonial={api.testimonial} />
         </>
     );
 }

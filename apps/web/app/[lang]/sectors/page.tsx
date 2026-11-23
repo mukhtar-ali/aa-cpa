@@ -7,6 +7,8 @@ import { getPage, tryGetPage } from '@/src/lib/api/pages';
 import { getLabels, isLang } from '@/src/lib/i18n/dictionaries';
 import { buildMetadata } from '@/src/lib/seo/page-metadata';
 import { toPageSeo } from '@/src/mappers/seo';
+import { EstimatorBlock } from '@/src/components/EstimatorBlock';
+import { type WithEstimator } from '@/src/mappers/estimator';
 import { toSectorsProps, type SectorsPageApi } from '@/src/mappers/sectors';
 
 type Props = { params: Promise<{ lang: string }> };
@@ -27,7 +29,8 @@ export default async function SectorsPage({ params }: Props) {
     const { lang } = await params;
     if (!isLang(lang)) notFound();
     const labels = getLabels(lang);
-    const s = toSectorsProps(await getPage<SectorsPageApi>(endpoint.pages.sectors, 'sectors', lang), lang);
+    const raw = await getPage<SectorsPageApi & WithEstimator>(endpoint.pages.sectors, 'sectors', lang);
+    const s = toSectorsProps(raw, lang);
 
     return (
         <>
@@ -47,6 +50,7 @@ export default async function SectorsPage({ params }: Props) {
                     </Container>
                 </section>
             )}
+            <EstimatorBlock lang={lang} estimator={raw.estimator} testimonial={raw.testimonial} />
         </>
     );
 }

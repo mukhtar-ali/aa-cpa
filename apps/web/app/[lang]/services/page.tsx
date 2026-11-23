@@ -7,6 +7,8 @@ import { getPage, tryGetPage } from '@/src/lib/api/pages';
 import { getLabels, isLang } from '@/src/lib/i18n/dictionaries';
 import { buildMetadata } from '@/src/lib/seo/page-metadata';
 import { toPageSeo } from '@/src/mappers/seo';
+import { EstimatorBlock } from '@/src/components/EstimatorBlock';
+import { type WithEstimator } from '@/src/mappers/estimator';
 import { toServicesProps, type ServicesPageApi } from '@/src/mappers/services';
 
 type Props = { params: Promise<{ lang: string }> };
@@ -27,7 +29,8 @@ export default async function ServicesPage({ params }: Props) {
     const { lang } = await params;
     if (!isLang(lang)) notFound();
     const labels = getLabels(lang);
-    const s = toServicesProps(await getPage<ServicesPageApi>(endpoint.pages.services, 'services', lang), lang, labels.common.learnMore);
+    const raw = await getPage<ServicesPageApi & WithEstimator>(endpoint.pages.services, 'services', lang);
+    const s = toServicesProps(raw, lang, labels.common.learnMore);
 
     return (
         <>
@@ -45,6 +48,7 @@ export default async function ServicesPage({ params }: Props) {
                 </Container>
             </section>
             {s.quote?.image && <PhotoQuoteBand title={s.quote.title} body={s.quote.body} action={s.quote.action} image={s.quote.image} />}
+            <EstimatorBlock lang={lang} estimator={raw.estimator} testimonial={raw.testimonial} />
         </>
     );
 }

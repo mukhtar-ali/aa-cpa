@@ -70,9 +70,9 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 
 ## Phase 8: User Story 3 — Estimator & quote (P2)
 
-- [ ] T035 [US3] Tests then `WEB/src/mappers/estimator.ts` and Server Actions `WEB/src/actions/estimator.ts` (`estimate`, `requestQuote`; track `estimate_completed` and `quote_requested`)
-- [ ] T036 [US3] Client glue `WEB/src/components/EstimatorClient.tsx` binding DS `Estimator` to the actions; `EstimatorSection` on home, about, services, service detail, sectors, articles (Figma Page 1); fallback CTA when estimator not approved
-- [ ] T037 [US3] Playwright `e2e/specs/web/estimator.spec.ts` (approved flow + quote lead; not-approved fallback)
+- [X] T035 [US3] Tests then `WEB/src/mappers/estimator.ts` and Server Actions `WEB/src/actions/estimator.ts` (`estimate`, `requestQuote`; track `estimate_completed` and `quote_requested`)
+- [X] T036 [US3] Client glue `WEB/src/components/EstimatorClient.tsx` binding DS `Estimator` to the actions; `EstimatorSection` on home, about, services, service detail, sectors, articles (Figma Page 1); fallback CTA when estimator not approved (service detail shows the call to action: its API payload has no estimator or testimonial)
+- [ ] T037 [US3] Playwright `e2e/specs/web/estimator.spec.ts` (approved flow + quote lead; not-approved fallback) (written, not yet run)
 
 ## Phase 9: User Story 6 — Freshness & preview (P2)
 

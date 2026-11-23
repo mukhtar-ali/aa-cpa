@@ -158,5 +158,31 @@
         "experience": "Experience",
         "closes": "Closes",
         "jobsHeading": "Jobs"
+    },
+    "estimator": {
+        "heading": "Not ready to talk yet? Get a number in 60 seconds",
+        "intro": "Answer four questions for an indicative estimate, with no commitment.",
+        "cardTitle": "Get an indicative estimate",
+        "cardIntro": "Answer the questions below.",
+        "progress": "Question {n} of {total}",
+        "next": "Next",
+        "back": "Back",
+        "start": "Start estimate",
+        "result": "Your estimated range",
+        "disclaimer": "The result is an estimate only and not a commitment.",
+        "restart": "Start over",
+        "invalid": "Enter a valid answer",
+        "error": "Something went wrong, please try again",
+        "quote": "Request a formal quote",
+        "name": "Full name",
+        "mobile": "Mobile number",
+        "email": "Email",
+        "consent": "I agree to be contacted",
+        "submit": "Send request",
+        "success": "Thank you, we will contact you soon.",
+        "rating": "5 of 5",
+        "fallbackTitle": "Tell us about your scope",
+        "fallbackBody": "Send us your company details and we will prepare a suitable proposal.",
+        "fallbackCta": "Contact us"
     }
 }

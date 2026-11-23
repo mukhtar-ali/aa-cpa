@@ -9,6 +9,8 @@ import { tags } from '@/src/lib/api/endpoints';
 import { FilterLinks } from '@/src/components/FilterLinks';
 import { getLabels, isLang } from '@/src/lib/i18n/dictionaries';
 import { buildMetadata } from '@/src/lib/seo/page-metadata';
+import { EstimatorBlock } from '@/src/components/EstimatorBlock';
+import { type WithEstimator } from '@/src/mappers/estimator';
 import { parsePage, toArticlesProps, type ArticlesPageApi } from '@/src/mappers/articles';
 import { toPageSeo } from '@/src/mappers/seo';
 
@@ -18,7 +20,7 @@ type Props = { params: Promise<{ lang: string }>; searchParams: Promise<{ catego
 export const dynamic = 'force-dynamic';
 
 const load = (lang: 'ar' | 'en', q: { category?: string; sector?: string; page: number }) =>
-    apiGet<ArticlesPageApi>(endpoint.pages.articles, { lang, tags: [tags.page('articles'), tags.articles], query: { category: q.category, sector: q.sector, page: q.page > 1 ? q.page : undefined } });
+    apiGet<ArticlesPageApi & WithEstimator>(endpoint.pages.articles, { lang, tags: [tags.page('articles'), tags.articles], query: { category: q.category, sector: q.sector, page: q.page > 1 ? q.page : undefined } });
 
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
     const { lang } = await params;
@@ -38,7 +40,8 @@ export default async function ArticlesPage({ params, searchParams }: Props) {
     const labels = getLabels(lang);
     const t = labels.articles;
     const filters = { category: sp.category || undefined, sector: sp.sector || undefined, page: parsePage(sp.page) };
-    const a = toArticlesProps(await load(lang, filters), lang, filters);
+    const raw = await load(lang, filters);
+    const a = toArticlesProps(raw, lang, filters);
     const [lead, ...rest] = a.featured;
 
     return (
@@ -64,6 +67,7 @@ export default async function ArticlesPage({ params, searchParams }: Props) {
                     {a.pageCount > 1 && <Pagination page={a.page} pageCount={a.pageCount} hrefFor={a.hrefForPage} labels={{ nav: t.paginationLabel, previous: t.previous, next: t.next, page: (n) => `${t.pageN} ${n}` }} />}
                 </Container>
             </section>
+            <EstimatorBlock lang={lang} estimator={raw.estimator} testimonial={raw.testimonial} />
         </>
     );
 }
