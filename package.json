@@ -12,6 +12,7 @@
         "test:e2e": "playwright test"
     },
     "devDependencies": {
+        "@axe-core/playwright": "^4.14.0",
         "@playwright/test": "^1.63.0",
         "prettier": "^3.7.4",
         "turbo": "^2.8.3",
@@ -26,9 +27,16 @@
     },
     "pnpm": {
         "supportedArchitectures": {
-            "os": ["current", "linux"],
-            "cpu": ["current"],
-            "libc": ["glibc"]
+            "os": [
+                "current",
+                "linux"
+            ],
+            "cpu": [
+                "current"
+            ],
+            "libc": [
+                "glibc"
+            ]
         },
         "overrides": {
             "@swc/helpers": "^0.5.17"
