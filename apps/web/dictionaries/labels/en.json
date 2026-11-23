@@ -73,5 +73,15 @@
         "audience": "Who it is for",
         "whyUs": "Why us",
         "requestQuote": "Request a quote"
+    },
+    "pages": {
+        "sectorsLabel": "Sectors we serve",
+        "tocTitle": "Contents",
+        "tocLabel": "Table of contents",
+        "updated": "Last updated",
+        "summary": "Summary",
+        "helpTitle": "Have a question?",
+        "helpBody": "Our team can answer any question about this document.",
+        "download": "Download PDF"
     }
 }

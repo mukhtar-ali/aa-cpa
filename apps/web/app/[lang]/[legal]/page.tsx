@@ -1,0 +1,55 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { endpoint } from '@repo/shared';
+import { Container } from '@repo/design-system/layout';
+import { Heading, Text } from '@repo/design-system/primitives';
+import { LegalDocument } from '@repo/design-system/sections';
+import { getPage, tryGetPage } from '@/src/lib/api/pages';
+import { getLabels, isLang, locales } from '@/src/lib/i18n/dictionaries';
+import { buildMetadata } from '@/src/lib/seo/page-metadata';
+import { isLegalKey, LEGAL_KEYS, toLegalProps, type LegalPageApi } from '@/src/mappers/legal';
+import { toPageSeo } from '@/src/mappers/seo';
+
+type Props = { params: Promise<{ lang: string; legal: string }> };
+
+// Only the known legal keys exist at this level; any other single segment is a 404.
+export const dynamicParams = false;
+export const generateStaticParams = () => locales.flatMap((lang) => LEGAL_KEYS.map((legal) => ({ lang, legal })));
+
+const path = (key: string) => `/api/pages/legal/${key}`;
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { lang, legal } = await params;
+    if (!isLang(lang) || !isLegalKey(legal)) return {};
+    const page = await tryGetPage<LegalPageApi>(path(legal), `legal:${legal}`, lang);
+    return buildMetadata({ lang, path: `/${legal}`, seo: toPageSeo(page?.seo), fallbackTitle: page?.hero.title ?? legal });
+}
+
+/** Privacy (525:3854), Terms (525:4136) and Accessibility share the legal layout; the content comes from the CMS. */
+export default async function LegalPage({ params }: Props) {
+    const { lang, legal } = await params;
+    if (!isLang(lang) || !isLegalKey(legal)) notFound();
+    const labels = getLabels(lang);
+    const l = toLegalProps(await getPage<LegalPageApi>(path(legal), `legal:${legal}`, lang), lang);
+    const p = labels.pages;
+
+    return (
+        <>
+            <section className="bg-bg-hero py-section-lg text-text-inverse">
+                <Container className="flex flex-col gap-4 pt-24">
+                    <Heading level={1} tone="inverse">{l.title}</Heading>
+                    {l.subtitle && <Text tone="inverse">{l.subtitle}</Text>}
+                </Container>
+            </section>
+            <section className="bg-bg-surface-ice py-section-lg">
+                <Container>
+                    <LegalDocument
+                        document={l.document}
+                        locale={lang}
+                        labels={{ tocTitle: p.tocTitle, tocLabel: p.tocLabel, updated: p.updated, summary: p.summary, helpTitle: l.questionCard?.title ?? p.helpTitle, helpBody: l.questionCard?.body ?? p.helpBody, download: p.download }}
+                    />
+                </Container>
+            </section>
+        </>
+    );
+}
