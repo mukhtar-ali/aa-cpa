@@ -15,21 +15,21 @@ description: "Task list for 003-public-site-pages (executed by agy; reviewed by 
 
 ## Phase 1: Setup
 
-- [ ] T001 Create worktree branch `003-public-site-pages` from `integration/001-002` (or from `main` once 001 and 002 are merged; `main` alone has no design system); `pnpm install`; confirm 001 and 002 contracts present, `packages/design-system` exists and `Localized` is exported from `@repo/shared`
-- [ ] T002 Add Vitest to `WEB` (`WEB/vitest.config.ts`, `"test"` script) and Playwright project `web` in `playwright.config.ts`
+- [X] T001 Create worktree branch `003-public-site-pages` from `integration/001-002` (or from `main` once 001 and 002 are merged; `main` alone has no design system); `pnpm install`; confirm 001 and 002 contracts present, `packages/design-system` exists and `Localized` is exported from `@repo/shared`
+- [X] T002 Add Vitest to `WEB` (`WEB/vitest.config.ts`, `"test"` script) and Playwright project `web` in `playwright.config.ts`
 - [ ] T003 [P] Add Lighthouse CI config `lighthouserc.json` (every template: home, about, services, service detail, sectors, articles, article, careers, job, contact, privacy/terms/accessibility, 404 — both languages for home; budgets from SC-002) and CI step in `.github/workflows/ci.yml` (shared-file commit)
-- [ ] T004 [P] Update `WEB/next.config.ts`: `serverActions.bodySizeLimit: '6mb'`, `/:lang/news/:path*` → `/:lang/articles/:path*` permanent, image remote patterns from env
+- [X] T004 [P] Update `WEB/next.config.ts`: `serverActions.bodySizeLimit: '6mb'`, `/:lang/news/:path*` → `/:lang/articles/:path*` permanent, image remote patterns from env
 
 ## Phase 2: Foundational
 
-- [ ] T005 Write tests then implement `WEB/src/lib/api/client.ts` (`apiGet`/`apiPost`, timeout, tags, preview header, schema parse, typed errors) and `endpoints.ts`
-- [ ] T006 [P] Write tests then implement `WEB/src/mappers/image.ts` (`ImageField` → `ImageRef`; development-build console warning for non-decorative images missing alt text — FR-014) and `WEB/src/mappers/chrome.ts` (`SiteChromeWeb` → header/footer props incl. locale switch)
-- [ ] T007 [P] Implement chrome-label dictionaries `WEB/dictionaries/{ar,en}.json` + typed loader `WEB/src/lib/i18n/dictionaries.ts` (labels only: menu, close, read more, form labels/errors fallback, empty states)
-- [ ] T008 Update `WEB/proxy.ts` per research R5 (cookie → Accept-Language → `ar`; maintenance mode) with unit tests; the language switcher (T010) sets the `NEXT_LOCALE` cookie (1 year, path `/`) through a small client helper or Server Action, with a unit test and an assertion in the T023 e2e (FR-002 "remembered")
+- [X] T005 Write tests then implement `WEB/src/lib/api/client.ts` (`apiGet`/`apiPost`, timeout, tags, preview header, schema parse, typed errors) and `endpoints.ts`
+- [X] T006 [P] Write tests then implement `WEB/src/mappers/image.ts` (`ImageField` → `ImageRef`; development-build console warning for non-decorative images missing alt text — FR-014) and `WEB/src/mappers/chrome.ts` (`SiteChromeWeb` → header/footer props incl. locale switch)
+- [X] T007 [P] Implement chrome-label dictionaries `WEB/dictionaries/labels/{ar,en}.json` (the legacy `dictionaries/{ar,en}.json` are deleted in T014) + typed loader `WEB/src/lib/i18n/dictionaries.ts` (labels only: menu, close, read more, form labels/errors fallback, empty states)
+- [X] T008 Update `WEB/proxy.ts` per research R5 (cookie → Accept-Language → `ar`; maintenance mode) with unit tests; the language switcher (T010) sets the `NEXT_LOCALE` cookie (1 year, path `/`) through a small client helper or Server Action, with a unit test and an assertion in the T023 e2e (FR-002 "remembered")
 - [ ] T009 [P] Add DS sections `ErrorState`, `EmptyState`, `PreviewBanner`, `FormSuccess`, `SkipLink` in `DS/src/sections/` with stories + tests (001 conventions)
 - [ ] T010 Rewrite `WEB/app/[lang]/layout.tsx`: html lang/dir, fonts, skip link, Header/Footer/MobileNav/WhatsAppFloat from `/api/site/chrome` (WhatsApp button hidden below md while a form field has focus — FR-004), PreviewBanner when draft mode, focus reset on navigation
-- [ ] T011 [P] Implement `WEB/src/lib/seo/page-metadata.ts` (`buildMetadata`) with tests (canonical, alternates ar/en/x-default=ar, OG basics)
-- [ ] T012 [P] Implement `WEB/src/lib/analytics.ts` typed `track()` forwarding to the monitoring endpoint, with tests; wire `page_view` (client route-change listener in the locale layout) and `contact_click{channel}` on header, footer, contact page and WhatsApp float links
+- [X] T011 [P] Implement `WEB/src/lib/seo/page-metadata.ts` (`buildMetadata`) with tests (canonical, alternates ar/en/x-default=ar, OG basics)
+- [ ] T012 [P] Implement `WEB/src/lib/analytics.ts` typed `track()` forwarding to the monitoring endpoint through `MonitoringReporter` (done, with tests; page views are already sent by the reporter); wire `page_view` (client route-change listener in the locale layout) and `contact_click{channel}` on header, footer, contact page and WhatsApp float links
 - [ ] T013 Implement `WEB/app/[lang]/not-found.tsx`, `error.tsx`, `WEB/app/global-error.tsx` using DS `ErrorState`
 
 ## Phase 3: User Story 7 — Starter leftovers removed (P1)
