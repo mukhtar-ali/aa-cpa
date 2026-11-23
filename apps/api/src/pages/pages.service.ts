@@ -561,7 +561,7 @@ export class PagesService {
 
     async getArticlesPage(
         lang: string,
-        query: { category?: string; page?: number; pageSize?: number } = {},
+        query: { category?: string; sector?: string; page?: number; pageSize?: number } = {},
     ) {
         const page = Number(query.page) > 0 ? Number(query.page) : 1;
         const pageSize = Number(query.pageSize) > 0 ? Number(query.pageSize) : 12;
@@ -569,9 +569,10 @@ export class PagesService {
         const where: any = {
             ...publishedNow(),
             ...(query.category ? { category: { slug: query.category } } : {}),
+            ...(query.sector ? { sectors: { some: { sector: { slug: query.sector } } } } : {}),
         };
 
-        const [seo, raw, featuredRows, categories, articleRows, testimonials, estimator] =
+        const [seo, raw, featuredRows, categories, articleRows, total, testimonials, estimator] =
             await Promise.all([
                 this.getSeo('articles', lang),
                 this.getSectionData('page-articles'),
@@ -603,6 +604,7 @@ export class PagesService {
                         services: { include: { service: { include: { translations: true } } } },
                     },
                 }),
+                this.prisma.news.count({ where }),
                 this.getTestimonialsForPlacement('articles', lang),
                 this.getPublicEstimator(lang),
             ]);
@@ -621,6 +623,7 @@ export class PagesService {
                 isCaseStory: Boolean(c.isCaseStory),
             })),
             items: articleRows.map((a: any) => NewsMapper.toSummaryWeb(a, lang as any)),
+            pagination: { page, pageSize, total, totalPages: Math.max(1, Math.ceil(total / pageSize)) },
             testimonial: testimonials[0] ?? null,
             estimator,
         };

@@ -58,11 +58,13 @@ export class PagesController {
         @Req() req: any,
         @Query('lang') lang?: string,
         @Query('category') category?: string,
+        @Query('sector') sector?: string,
         @Query('page') page?: number,
         @Query('pageSize') pageSize?: number,
     ) {
         return this.pagesService.getArticlesPage(this.resolveLang(req, lang), {
             category,
+            sector,
             page,
             pageSize,
         });
