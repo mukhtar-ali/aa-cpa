@@ -53,6 +53,8 @@
         "clients": "Our clients",
         "pauseMarquee": "Pause logo animation",
         "servicesTabs": "Services",
-        "readMore": "Read more"
+        "readMore": "Read more",
+        "breadcrumbs": "Breadcrumb",
+        "getDirections": "Get directions"
     }
 }

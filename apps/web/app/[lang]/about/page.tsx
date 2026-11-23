@@ -1,0 +1,94 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { endpoint } from '@repo/shared';
+import { Container, PageHero } from '@repo/design-system/layout';
+import { Button } from '@repo/design-system/primitives';
+import { LogoMarquee, OfficeCard, PhotoQuoteBand, SectionHeading, Statement } from '@repo/design-system/sections';
+import { getPage, tryGetPage } from '@/src/lib/api/pages';
+import { getLabels, isLang } from '@/src/lib/i18n/dictionaries';
+import { buildMetadata } from '@/src/lib/seo/page-metadata';
+import { toAboutProps, type AboutApi } from '@/src/mappers/about';
+import { toPageSeo } from '@/src/mappers/seo';
+
+type Props = { params: Promise<{ lang: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { lang } = await params;
+    if (!isLang(lang)) return {};
+    const page = await tryGetPage<AboutApi & { seo?: unknown }>(endpoint.pages.about, 'about', lang);
+    return buildMetadata({ lang, path: '/about', seo: toPageSeo(page?.seo), fallbackTitle: page?.hero.title ?? (lang === 'ar' ? 'من نحن' : 'About us') });
+}
+
+/** About (Figma 445:36452): hero, who we are, who signs your file, commitments, offices, partner quote. */
+export default async function AboutPage({ params }: Props) {
+    const { lang } = await params;
+    if (!isLang(lang)) notFound();
+    const labels = getLabels(lang);
+    const a = toAboutProps(await getPage<AboutApi>(endpoint.pages.about, 'about', lang), lang, labels.home.getDirections);
+
+    return (
+        <>
+            {a.hero.image && <PageHero title={a.hero.title} subtitle={a.hero.subtitle} image={a.hero.image} breadcrumbs={a.hero.breadcrumbs} breadcrumbsLabel={labels.home.breadcrumbs} action={a.hero.action} />}
+            <section className="bg-bg-page py-section-lg">
+                <Container className="flex flex-col gap-12">
+                    <Statement>{a.intro.statement}</Statement>
+                    <div className="flex flex-col items-start gap-6 lg:ms-auto lg:max-w-188">
+                        <p className="text-body-lg text-text-body">{a.intro.body}</p>
+                        {a.intro.action && <Button href={a.intro.action.href} variant={a.intro.action.variant ?? 'primary'}>{a.intro.action.label}</Button>}
+                    </div>
+                </Container>
+                {a.marqueeRows.length > 0 && <LogoMarquee className="pt-12" label={labels.home.clients} rows={a.marqueeRows} pauseLabel={labels.home.pauseMarquee} />}
+            </section>
+            {a.signatory && (
+                <section className="bg-bg-surface-ice py-section-lg">
+                    <Container className="grid items-center gap-12 lg:grid-cols-2">
+                        <div className="flex flex-col items-start gap-6">
+                            <SectionHeading eyebrow={a.signatory.eyebrow} title={a.signatory.title} accent={a.signatory.accent} />
+                            {a.signatory.paragraphs.map((p) => (
+                                <p key={p} className="text-body-lg text-text-body">{p}</p>
+                            ))}
+                            {a.signatory.action && <Button href={a.signatory.action.href} variant={a.signatory.action.variant ?? 'primary'}>{a.signatory.action.label}</Button>}
+                        </div>
+                        {a.signatory.image && (
+                            <figure className="flex flex-col overflow-hidden rounded-cta bg-bg-inverse text-text-inverse">
+                                <img src={a.signatory.image.src} alt={a.signatory.image.alt} width={a.signatory.image.width} height={a.signatory.image.height} className="h-auto w-full object-cover" />
+                                {a.signatory.caption && <figcaption className="p-6 text-body-sm">{a.signatory.caption}</figcaption>}
+                            </figure>
+                        )}
+                    </Container>
+                </section>
+            )}
+            <section className="bg-bg-page py-section-lg">
+                <Container className="flex flex-col gap-10">
+                    <SectionHeading title={a.commitments.title} description={a.commitments.subtitle} />
+                    <ol className="flex flex-col">
+                        {a.commitments.items.map((item, i) => (
+                            <li key={item.title} className="flex items-start gap-6 border-b border-solid border-border-subtle py-6">
+                                <span aria-hidden="true" className="text-h2 font-bold text-text-accent">{i + 1}</span>
+                                <div className="flex flex-col gap-2">
+                                    <h3 className="text-h5 font-bold text-text-heading">{item.title}</h3>
+                                    <p className="text-body-lg text-text-body">{item.body}</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ol>
+                </Container>
+            </section>
+            {a.offices.items.length > 0 && (
+                <section className="bg-bg-surface-ice py-section-lg">
+                    <Container className="flex flex-col gap-10">
+                        {a.offices.title && <SectionHeading title={a.offices.title} />}
+                        <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                            {a.offices.items.map((office) => (
+                                <li key={office.city}>
+                                    <OfficeCard office={office} />
+                                </li>
+                            ))}
+                        </ul>
+                    </Container>
+                </section>
+            )}
+            {a.quote?.image && <PhotoQuoteBand title={a.quote.title} body={a.quote.body} action={a.quote.action} image={a.quote.image} />}
+        </>
+    );
+}

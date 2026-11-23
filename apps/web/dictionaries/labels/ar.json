@@ -53,6 +53,8 @@
         "clients": "عملاؤنا",
         "pauseMarquee": "إيقاف حركة الشعارات",
         "servicesTabs": "الخدمات",
-        "readMore": "اقرأ المزيد"
+        "readMore": "اقرأ المزيد",
+        "breadcrumbs": "مسار التنقل",
+        "getDirections": "الاتجاهات"
     }
 }
