@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { publishedNow } from '@/common/visibility';
 import { PrismaService } from '@/prisma/prisma.service';
 import { localize } from '@/common/localize';
+import { sanitizeRichText } from '@/common/sanitize-html.util';
 import { toImageRef } from '@/common/image-field.util';
 import { ServiceMapper } from '@/service/service.mapper';
 import { SectorMapper } from '@/sector/sector.mapper';
@@ -26,7 +27,8 @@ export class PagesService {
     private str(val: unknown, lang: string, fallback = ''): string {
         if (!val) return fallback;
         if (typeof val === 'string') return val;
-        const localized = localize(val, lang as any);
+        // `localize` resolves `{ ar, en }` values at any depth but only inside a container, so wrap the value.
+        const localized = (localize({ value: val }, lang as any) as { value: unknown }).value;
         return typeof localized === 'string' && localized.trim().length > 0
             ? localized
             : fallback;
@@ -779,7 +781,8 @@ export class PagesService {
             ? raw.sections.map((sec: any, idx: number) => ({
                   id: String(sec.id || `sec-${idx + 1}`),
                   title: this.str(sec.title, lang, 'بند'),
-                  body: this.str(sec.body, lang, ''),
+                  // Legal bodies are rendered as HTML on the public site and the generic section editor does not sanitize them.
+                  body: sanitizeRichText(this.str(sec.body, lang, '')),
               }))
             : [];
 
