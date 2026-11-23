@@ -1,3 +1,4 @@
+import { markSanitizedHtml } from '../../lib/sanitized-html';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { LegalDocument } from './LegalDocument';
 
@@ -19,8 +20,8 @@ export const Arabic: Story = {
           updatedAt: '2026-09-01',
           summary: ['نجمع فقط ما نحتاجه لخدمتك.', 'يمكنك طلب حذف بياناتك في أي وقت.'],
           sections: [
-            { id: 'collect', title: 'ما الذي نجمعه', html: '<p>الاسم والبريد الإلكتروني ورقم الجوال.</p>' },
-            { id: 'use', title: 'كيف نستخدمه', html: '<p>للرد على طلبك.</p><ul><li>الرد على الاستفسار</li><li>إعداد عرض السعر</li></ul>' },
+            { id: 'collect', title: 'ما الذي نجمعه', html: markSanitizedHtml('<p>الاسم والبريد الإلكتروني ورقم الجوال.</p>') },
+            { id: 'use', title: 'كيف نستخدمه', html: markSanitizedHtml('<p>للرد على طلبك.</p><ul><li>الرد على الاستفسار</li><li>إعداد عرض السعر</li></ul>') },
           ],
           downloadHref: '#',
         }}

@@ -1,3 +1,4 @@
+import { markSanitizedHtml } from '../../lib/sanitized-html';
 import { describe, expect, it } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { axe } from 'vitest-axe';
@@ -7,8 +8,8 @@ const doc = {
   updatedAt: '2026-09-01',
   summary: ['We collect only what we need.', 'You can ask us to delete your data.'],
   sections: [
-    { id: 'collect', title: 'What we collect', html: '<p>Name, email and mobile number.</p>' },
-    { id: 'use', title: 'How we use it', html: '<p>To answer your request.</p><ul><li>Reply</li></ul>' },
+    { id: 'collect', title: 'What we collect', html: markSanitizedHtml('<p>Name, email and mobile number.</p>') },
+    { id: 'use', title: 'How we use it', html: markSanitizedHtml('<p>To answer your request.</p><ul><li>Reply</li></ul>') },
   ],
   downloadHref: '/files/privacy.pdf',
 };
@@ -19,10 +20,10 @@ describe('LegalDocument', () => {
     render(<LegalDocument document={doc} labels={labels} locale="en" />);
     expect(screen.getByRole('navigation', { name: 'Table of contents' })).toBeInTheDocument();
     const h = screen.getByRole('heading', { level: 2, name: '1. What we collect' });
-    expect(h).toHaveAttribute('id', 'collect');
+    expect(h).toHaveAttribute('id', 'legal-collect');
     expect(screen.getByRole('heading', { level: 2, name: '2. How we use it' })).toBeInTheDocument();
     expect(screen.getByText('Name, email and mobile number.')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'What we collect' })).toHaveAttribute('href', '#collect');
+    expect(screen.getByRole('link', { name: 'What we collect' })).toHaveAttribute('href', '#legal-collect');
   });
 
   it('shows the updated pill with a machine-readable date and the ice summary box with dot bullets', () => {

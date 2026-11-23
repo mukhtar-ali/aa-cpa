@@ -74,4 +74,13 @@ describe('ContactFormLayout', () => {
     );
     expect(await axe(container)).toHaveNoViolations();
   });
+
+  it('a submit that never settles ends in the failure message instead of hanging', async () => {
+    const user = userEvent.setup();
+    render(<ContactFormLayout title="Contact" labels={labels} services={services} submitTimeoutMs={50} onSubmit={() => new Promise<void>(() => {})} />);
+    await fillValid(user);
+    await user.click(screen.getByRole('button', { name: 'Send' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Could not send');
+    expect(screen.getByRole('button', { name: 'Send' })).toBeInTheDocument();
+  });
 });

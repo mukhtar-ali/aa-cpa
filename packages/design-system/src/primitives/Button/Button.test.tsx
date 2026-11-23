@@ -174,4 +174,19 @@ describe('Button', () => {
     );
     expect(await axe(container)).toHaveNoViolations();
   });
+
+  it('a disabled asChild button does not run the child handler and has no href', async () => {
+    const onClick = vi.fn();
+    render(
+      <Button asChild disabled>
+        <a href="/x" onClick={onClick}>
+          Go
+        </a>
+      </Button>,
+    );
+    const el = screen.getByText('Go').closest('a')!;
+    expect(el).not.toHaveAttribute('href');
+    await userEvent.click(el);
+    expect(onClick).not.toHaveBeenCalled();
+  });
 });

@@ -34,11 +34,13 @@ export interface LegalDocumentProps extends Omit<React.HTMLAttributes<HTMLElemen
  * @figma 525:3854, 525:4136
  */
 export const LegalDocument = React.forwardRef<HTMLElement, LegalDocumentProps>(({ document: doc, labels, locale = 'ar', className, ...props }, ref) => {
+  // Section ids come from content: prefix them so they cannot collide with page ids such as "main".
+  const items = React.useMemo(() => doc.sections.map((s, i) => ({ id: `legal-${s.id}`, label: s.title, index: i + 1 })), [doc.sections]);
   const date = formatDate(doc.updatedAt, locale, { day: 'numeric', month: 'long', year: 'numeric' });
   return (
     <section ref={ref} className={cn('grid gap-8 lg:grid-cols-[22.75rem_1fr] lg:items-start', className)} {...props}>
       <div className="flex flex-col gap-6 lg:sticky lg:top-8">
-        <TableOfContents title={labels.tocTitle} label={labels.tocLabel} locale={locale} items={doc.sections.map((s, i) => ({ id: s.id, label: s.title, index: i + 1 }))} />
+        <TableOfContents title={labels.tocTitle} label={labels.tocLabel} locale={locale} items={items} />
         <aside className="flex flex-col gap-3 rounded-cta bg-bg-inverse p-6 text-text-inverse">
           <h2 className="text-h6 font-bold">{labels.helpTitle}</h2>
           <p className="text-body-sm text-text-inverse-muted">{labels.helpBody}</p>
@@ -67,9 +69,9 @@ export const LegalDocument = React.forwardRef<HTMLElement, LegalDocumentProps>((
           </div>
         ) : null}
         {doc.sections.map((section, index) => (
-          <section key={section.id} aria-labelledby={`${section.id}-title`} className="flex flex-col gap-4">
-            <h2 id={section.id} className="text-h3 font-bold text-text-heading">
-              <span id={`${section.id}-title`}>
+          <section key={section.id} aria-labelledby={`legal-${section.id}-title`} className="flex flex-col gap-4">
+            <h2 id={`legal-${section.id}`} className="text-h3 font-bold text-text-heading">
+              <span id={`legal-${section.id}-title`}>
                 {formatNumber(index + 1, locale)}. {section.title}
               </span>
             </h2>

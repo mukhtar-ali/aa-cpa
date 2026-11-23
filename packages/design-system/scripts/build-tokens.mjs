@@ -71,6 +71,15 @@ export function validateTokenDoc(data) {
       );
     }
 
+    // The value is written into a CSS declaration and a TypeScript string: reject characters that could end the declaration, open a rule
+    // or comment, or break out of the string, instead of emitting broken or injected code.
+    if (!/^[A-Za-z0-9_\-./ ]+$/.test(item.name)) {
+      throw new Error(`Malformed token at index ${i} ("${item.name}"): "name" may only contain letters, digits, space and _ - . /`);
+    }
+    if (typeof item.value === 'string' && /[;{}\\\r\n<>]|\/\*|\*\//.test(item.value)) {
+      throw new Error(`Malformed token at index ${i} ("${item.name}"): "value" contains a character that is not allowed in a token value (; { } \\ < > newline or a comment).`);
+    }
+
     if (item.a11yOverride) {
       if (!item.figmaValue) {
         throw new Error(

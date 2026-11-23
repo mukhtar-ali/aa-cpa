@@ -1,9 +1,12 @@
+import { HeadingTag, type HeadingLevel } from '../../lib/heading-tag';
 import * as React from 'react';
 import { cn } from '../../lib/cn';
 import { Icon } from '../../icons';
 import type { SectorSummary } from '../../types';
 
 export interface SectorIndexProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
+  /** Heading level of the card title (default 3), so the card fits the page's heading outline. */
+  headingLevel?: HeadingLevel;
   sectors: SectorSummary[];
   /** Accessible name of the list, for example "Sectors we serve". */
   label: string;
@@ -15,12 +18,12 @@ export interface SectorIndexProps extends Omit<React.HTMLAttributes<HTMLElement>
  *
  * @figma 547:4555
  */
-export const SectorIndex = React.forwardRef<HTMLUListElement, SectorIndexProps & React.HTMLAttributes<HTMLUListElement>>(({ sectors, label, className, ...props }, ref) => (
+export const SectorIndex = React.forwardRef<HTMLUListElement, SectorIndexProps & React.HTMLAttributes<HTMLUListElement>>(({ sectors, label, headingLevel = 3, className, ...props }, ref) => (
   <ul ref={ref} aria-label={label} className={cn('flex flex-col border-t border-solid border-border-subtle', className)} {...(props as React.HTMLAttributes<HTMLUListElement>)}>
     {sectors.map((sector) => {
       const body = (
         <>
-          <h3 className="text-h4 font-bold text-text-heading md:flex-1">{sector.title}</h3>
+          <HeadingTag level={headingLevel} className="text-h4 font-bold text-text-heading md:flex-1">{sector.title}</HeadingTag>
           <p className="text-body-lg text-text-body md:w-130 md:shrink-0">{sector.summary}</p>
           {sector.href ? <Icon name="arrow" size={20} className="shrink-0 text-text-heading" /> : null}
         </>

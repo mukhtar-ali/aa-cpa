@@ -4,4 +4,7 @@ export { useReducedMotion } from './use-reduced-motion';
 export { Slot } from './slot';
 export { isEmail, isSaudiMobile, normalizeDigits } from './validators';
 export { safeHref } from './safe-href';
+export { withTimeout } from './with-timeout';
+export { markSanitizedHtml } from './sanitized-html';
+export { warnMissingBreadcrumbLabel } from './dev-warn';
 export { contactHref } from './contact-links';

@@ -58,4 +58,17 @@ describe('DesignSystemProvider', () => {
     );
     spy.mockRestore();
   });
+
+  it('warns in development when its direction differs from <html dir>', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    document.documentElement.dir = 'ltr';
+    render(
+      <DesignSystemProvider locale="ar">
+        <span>x</span>
+      </DesignSystemProvider>,
+    );
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('differs from <html dir'));
+    document.documentElement.dir = '';
+    warn.mockRestore();
+  });
 });

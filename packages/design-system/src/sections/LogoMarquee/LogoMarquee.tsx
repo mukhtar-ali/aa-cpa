@@ -45,13 +45,13 @@ export function LogoMarquee({ label, rows, pauseLabel, duration = 60, className,
         <div key={index} className="relative overflow-hidden">
           <div className="ds-marquee-track flex w-max" data-paused={paused} data-reverse={index % 2 === 1} style={{ ['--ds-marquee-duration' as string]: `${duration}s` }}>
             <ul className="flex gap-5 pe-5">
-              {row.map((logo) => (
-                <LogoCell key={logo.name} logo={logo} decorative={false} />
+              {row.map((logo, logoIndex) => (
+                <LogoCell key={`${logo.name}-${logoIndex}`} logo={logo} decorative={false} />
               ))}
             </ul>
             <ul aria-hidden="true" className="flex gap-5 pe-5">
-              {row.map((logo) => (
-                <LogoCell key={logo.name} logo={logo} decorative />
+              {row.map((logo, logoIndex) => (
+                <LogoCell key={`${logo.name}-${logoIndex}`} logo={logo} decorative />
               ))}
             </ul>
           </div>

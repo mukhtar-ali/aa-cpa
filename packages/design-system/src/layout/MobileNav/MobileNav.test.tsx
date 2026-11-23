@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { MobileNav } from './MobileNav';
@@ -98,5 +98,13 @@ describe('MobileNav', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Menu' }));
     await screen.findByRole('dialog');
     expect(await axe(document.body)).toHaveNoViolations();
+  });
+
+  it('clicking the language link closes the sheet', async () => {
+    setup();
+    await userEvent.click(screen.getByRole('button', { name: 'Menu' }));
+    await screen.findByRole('dialog');
+    await userEvent.click(screen.getByRole('link', { name: 'العربية' }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
   });
 });

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../lib/cn';
+import { warnMissingBreadcrumbLabel } from '../../lib/dev-warn';
 import { Button } from '../../primitives/Button';
 import { Breadcrumbs } from '../../primitives/Breadcrumbs';
 import { Heading } from '../../primitives/Heading';
@@ -27,6 +28,7 @@ export interface PageHeroProps extends Omit<React.HTMLAttributes<HTMLElement>, '
 export const PageHero = React.forwardRef<HTMLElement, PageHeroProps>(
   ({ title, subtitle, image, breadcrumbs, breadcrumbsLabel, action, className, ...props }, ref) => (
     <section ref={ref} className={cn('relative isolate overflow-hidden bg-bg-hero text-text-inverse', className)} {...props}>
+      {warnMissingBreadcrumbLabel(breadcrumbs, breadcrumbsLabel, 'PageHero')}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
         {/* plain <img>: the library is framework-agnostic; apps decide on next/image */}
         <img src={image.src} alt="" width={image.width} height={image.height} className="size-full object-cover" />

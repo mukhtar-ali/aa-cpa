@@ -151,4 +151,13 @@ describe('build-tokens generator', () => {
     expect(fs.existsSync(path.join(cliOutDir, 'styles/tokens.css'))).toBe(true);
     expect(fs.existsSync(path.join(cliOutDir, 'lib/tokens.ts'))).toBe(true);
   }, 30_000); // spawns node; slow on the /mnt drive
+
+  it('rejects a token value or name that could inject CSS or break the TypeScript string', () => {
+    const base = { name: 'bg/page', value: '#fff', type: 'COLOR' };
+    for (const value of ['red; } body { display:none', 'a{b}', 'x\\y', 'a\nb', '/* c */', '</style>']) {
+      expect(() => validateTokenDoc({ variables: [{ ...base, value }] }), value).toThrow(/not allowed/);
+    }
+    expect(() => validateTokenDoc({ variables: [{ ...base, name: 'bg/page; x' }] })).toThrow(/"name" may only contain/);
+    expect(() => validateTokenDoc({ variables: [{ ...base, value: "rgba(0, 0, 0, 0.4)" }] })).not.toThrow();
+  });
 });

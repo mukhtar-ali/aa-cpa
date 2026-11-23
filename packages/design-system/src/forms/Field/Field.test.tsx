@@ -39,7 +39,7 @@ describe('Field with TextInput', () => {
     expect(input).not.toHaveAttribute('aria-invalid');
   });
 
-  it('error sets aria-invalid, is described by the error and replaces the help text', () => {
+  it('error sets aria-invalid and is described by the error and the help text', () => {
     render(
       <Field id="email" label="Email" help="We never share it" error="Enter a valid email">
         <TextInput />
@@ -47,8 +47,8 @@ describe('Field with TextInput', () => {
     );
     const input = screen.getByLabelText('Email');
     expect(input).toHaveAttribute('aria-invalid', 'true');
-    expect(input).toHaveAccessibleDescription('Enter a valid email');
-    expect(screen.queryByText('We never share it')).toBeNull();
+    expect(input).toHaveAccessibleDescription('We never share it Enter a valid email');
+    expect(screen.getByText('We never share it')).toBeInTheDocument();
     expect(screen.getByText('Enter a valid email')).toHaveClass('text-status-error', 'text-body-xs');
   });
 
@@ -128,5 +128,26 @@ describe('controls', () => {
       </div>,
     );
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('keeps the help text and its describedby id when an error is shown', () => {
+    render(
+      <Field id="mobile" label="Mobile" help="Start with 05" error="Invalid mobile">
+        <input />
+      </Field>,
+    );
+    const input = screen.getByLabelText('Mobile');
+    expect(screen.getByText('Start with 05')).toBeInTheDocument();
+    expect(input).toHaveAttribute('aria-describedby', 'mobile-help mobile-error');
+  });
+
+  it('announce={false} keeps the error text but drops role=alert (a summary announces it)', () => {
+    render(
+      <Field id="n" label="Name" error="Required" announce={false}>
+        <input />
+      </Field>,
+    );
+    expect(screen.getByText('Required')).not.toHaveAttribute('role');
+    expect(screen.getByLabelText('Name')).toHaveAttribute('aria-invalid', 'true');
   });
 });

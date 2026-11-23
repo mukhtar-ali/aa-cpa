@@ -133,4 +133,15 @@ describe('Footer review fixes', () => {
     );
     for (const a of document.querySelectorAll('a')) expect(a.getAttribute('href') ?? '').not.toMatch(/^(javascript|data):/i);
   });
+  it('back-to-top moves focus to the main landmark so the next Tab starts at the top', async () => {
+    window.scrollTo = vi.fn() as unknown as typeof window.scrollTo;
+    render(
+      <>
+        <main id="m">content</main>
+        <Footer {...props} />
+      </>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Back to top' }));
+    expect(screen.getByRole('main')).toHaveFocus();
+  });
 });

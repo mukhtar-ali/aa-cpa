@@ -24,7 +24,7 @@ export interface StatTileProps extends React.HTMLAttributes<HTMLDivElement> {
  */
 export const StatTile = React.forwardRef<HTMLDivElement, StatTileProps>(({ stat, tone = 'dark', locale = 'ar', className, ...props }, ref) => (
   <div ref={ref} className={cn('flex flex-col gap-2', className)} {...props}>
-    <p className="bg-linear-to-b from-gradient-start to-gradient-end-text-large bg-clip-text text-h2 font-bold text-transparent">{formatStat(stat, locale)}</p>
+    <p className="bg-linear-to-b from-gradient-start to-gradient-end-text-large bg-clip-text text-h2 font-bold text-transparent"><bdi dir="ltr">{formatStat(stat, locale)}</bdi></p>
     <p className={cn('text-body-lg', tone === 'dark' ? 'text-text-inverse' : 'text-text-body')}>{stat.label}</p>
   </div>
 ));
@@ -53,7 +53,7 @@ export const StatsStrip = React.forwardRef<HTMLUListElement, StatsStripProps>(({
     {...props}
   >
     {stats.map((stat, index) => (
-      <li key={stat.label} className={cn(index > 0 && 'lg:border-s lg:border-solid lg:ps-8', index > 0 && (tone === 'dark' ? 'lg:border-pine-700' : 'lg:border-border-decor'))}>
+      <li key={`${stat.label}-${index}`} className={cn(index > 0 && 'lg:border-s lg:border-solid lg:ps-8', index > 0 && (tone === 'dark' ? 'lg:border-pine-700' : 'lg:border-border-decor'))}>
         <StatTile stat={stat} tone={tone} locale={locale} />
       </li>
     ))}

@@ -131,8 +131,10 @@ export default async function RootLayout({
     // These IDs are embedded in inline <script> code. They come from an admin-editable CMS field, so
     // re-validate them here (values stored before the API enforced the format may still be bad) and
     // only ever emit them as JSON string literals / encoded URL components. Invalid IDs are skipped.
-    const gtmId = seo?.googleTagManagerId && GTM_ID_REGEX.test(seo.googleTagManagerId) ? seo.googleTagManagerId : undefined;
-    const gaId = seo?.googleAnalyticsId && GA_ID_REGEX.test(seo.googleAnalyticsId) ? seo.googleAnalyticsId : undefined;
+    // Environments that serve the design-system reference pages (staging, local) are not production traffic: no analytics hits from them.
+    const analyticsEnabled = process.env.ENABLE_REFERENCE_PAGES !== 'true';
+    const gtmId = analyticsEnabled && seo?.googleTagManagerId && GTM_ID_REGEX.test(seo.googleTagManagerId) ? seo.googleTagManagerId : undefined;
+    const gaId = analyticsEnabled && seo?.googleAnalyticsId && GA_ID_REGEX.test(seo.googleAnalyticsId) ? seo.googleAnalyticsId : undefined;
 
     return (
         <html lang={lang} dir={dir} className={`${inter.variable} ${cairoLatin.variable} ${cairoArabic.variable} ${almaraiLatin.variable} ${almaraiArabic.variable}`}>
@@ -178,7 +180,7 @@ export default async function RootLayout({
                         />
                     </noscript>
                 )}
-                <FBPixel />
+                {analyticsEnabled && <FBPixel />}
                 <MonitoringReporter />
                 <ToastContainer position="top-center" rtl={dir === 'rtl'} />
                 <ChromeSwitch header={<CustomHeader projects={headerProjects} />} footer={<CustomFooter info={websiteInfo} />}>

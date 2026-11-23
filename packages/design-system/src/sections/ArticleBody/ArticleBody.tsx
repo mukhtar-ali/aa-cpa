@@ -21,8 +21,8 @@ export const ArticleBody = React.forwardRef<HTMLElement, ArticleBodyProps>(({ ta
     <div className="ds-prose">{children}</div>
     {tags && tags.length > 0 ? (
       <ul aria-label={tagsLabel} className="flex flex-wrap gap-3">
-        {tags.map((tag) => (
-          <li key={tag}>
+        {tags.map((tag, tagIndex) => (
+          <li key={`${tag}-${tagIndex}`}>
             <Chip>{tag}</Chip>
           </li>
         ))}

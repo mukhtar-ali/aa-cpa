@@ -56,7 +56,12 @@ export default function MobileNavSheet({ nav, cta, localeSwitch, menuLabel, clos
               {cta.label}
             </Button>
           </Dialog.Close>
-          {localeSwitch ? <div className="mt-auto flex justify-start">{localeSwitch}</div> : null}
+          {localeSwitch ? (
+            // Clicking the language link closes the sheet (it matters when the link stays on the same page).
+            <div className="mt-auto flex justify-start" onClickCapture={() => onOpenChange(false)}>
+              {localeSwitch}
+            </div>
+          ) : null}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

@@ -1,3 +1,4 @@
+import { HeadingTag, type HeadingLevel } from '../../lib/heading-tag';
 import * as React from 'react';
 import { cn } from '../../lib/cn';
 import { safeHref } from '../../lib/safe-href';
@@ -5,6 +6,8 @@ import { Icon } from '../../icons';
 import type { Office } from '../../types';
 
 export interface OfficeCardProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
+  /** Heading level of the card title (default 3), so the card fits the page's heading outline. */
+  headingLevel?: HeadingLevel;
   office: Office;
 }
 
@@ -14,9 +17,9 @@ export interface OfficeCardProps extends Omit<React.HTMLAttributes<HTMLElement>,
  *
  * @figma 529:4280
  */
-export const OfficeCard = React.forwardRef<HTMLElement, OfficeCardProps>(({ office, className, ...props }, ref) => (
+export const OfficeCard = React.forwardRef<HTMLElement, OfficeCardProps>(({ office, headingLevel = 3, className, ...props }, ref) => (
   <article ref={ref} className={cn('flex min-h-42.5 flex-col gap-2 rounded-cta border border-solid border-border-subtle bg-bg-surface p-6', className)} {...props}>
-    <h3 className="text-h5 font-bold text-text-heading">{office.city}</h3>
+    <HeadingTag level={headingLevel} className="text-h5 font-bold text-text-heading">{office.city}</HeadingTag>
     <address className="text-body-sm text-text-body not-italic">{office.address}</address>
     {safeHref(office.mapHref) && office.mapLabel ? (
       <a href={safeHref(office.mapHref)} className="mt-auto text-body-sm font-bold text-text-accent hover:underline">
