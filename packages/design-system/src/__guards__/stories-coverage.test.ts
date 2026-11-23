@@ -14,6 +14,13 @@ const FIGMA_DESIGN_URL_PATTERN =
 const NO_FIGMA_NODE: ReadonlySet<string> = new Set([
   'VisuallyHidden', // Screen-reader-only utility; no Figma node.
   'DesignSystemProvider', // Context & Radix DirectionProvider utility; no Figma node.
+  // Feature 003 states that are not in the approved Page 1 frames (spec FR-009: designed in code, pending client review).
+  'ErrorState',
+  'EmptyState',
+  'FormSuccess',
+  'PreviewBanner', // Editor-only bar, not part of the public design.
+  'SkipLink', // Accessibility utility, invisible until focused.
+  'StateMessage', // Shared layout of the three state sections.
 ]);
 
 /**
