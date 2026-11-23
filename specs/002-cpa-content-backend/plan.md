@@ -123,7 +123,7 @@ e2e/specs/  04 (projects) removed; 05, 06, 07, 11 adapted to new entities
 ```
 
 **Structure Decision**: Keep the existing one-service-per-action NestJS layout and admin feature folders; add modules
-listed above. No changes to `apps/web` or `packages/design-system` (agy) in this feature.
+listed above. No feature work in `apps/web` or `packages/design-system` (agy). Amended 2026-11-23: removing the real-estate models (FR-050) breaks the legacy `apps/web` pages (see `KNOWN-ISSUES.md`); 003 rewrites them (003 T014 gates `pnpm turbo run build --filter=@repo/web`), and until then the 002 gates build `@repo/api` and `@repo/admin` only. Public Playwright journeys (locale switch, contact form, job apply, estimator, news browsing, admin edit reflected on the web) required by constitution VI are deferred to 003 (SC-005 there).
 
 ## Delivery order (maps to tasks)
 
