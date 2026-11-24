@@ -188,6 +188,13 @@ export class PagesService {
             },
             nav: navLinks,
             cta: this.action(raw.headerCta || raw.cta, lang, 'تواصل معنا', '/contact'),
+            // The switch to the other language: its own name in its own script, and the same-site root of that language. The web app swaps in
+            // the current path (LocaleToggleLink), so this href is only the no-JavaScript fallback.
+            localeSwitch: {
+                current: (lang === 'en' ? 'en' : 'ar') as 'ar' | 'en',
+                label: lang === 'en' ? 'العربية' : 'English',
+                href: `/${lang === 'en' ? 'ar' : 'en'}`,
+            },
             footer: {
                 description: this.str(
                     raw.footer?.description || raw.footerDescription,
@@ -227,9 +234,9 @@ export class PagesService {
                     ),
                     registry: registryList,
                     links: [
-                        { label: lang === 'en' ? 'Privacy Policy' : 'سياسة الخصوصية', href: `/${lang}/legal/privacy` },
-                        { label: lang === 'en' ? 'Terms of Use' : 'شروط الاستخدام', href: `/${lang}/legal/terms` },
-                        { label: lang === 'en' ? 'Accessibility' : 'إمكانية الوصول', href: `/${lang}/legal/accessibility` },
+                        { label: lang === 'en' ? 'Privacy Policy' : 'سياسة الخصوصية', href: `/${lang}/privacy` },
+                        { label: lang === 'en' ? 'Terms of Use' : 'شروط الاستخدام', href: `/${lang}/terms` },
+                        { label: lang === 'en' ? 'Accessibility' : 'إمكانية الوصول', href: `/${lang}/accessibility` },
                     ],
                 },
                 wordmark: this.str(raw.wordmark || raw.footer?.wordmark, lang, 'أحمد بن عبدالله'),

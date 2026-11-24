@@ -32,6 +32,7 @@ import { OutboxModule } from './outbox/outbox.module';
 import { PrivacyModule } from './privacy/privacy.module';
 import { LeadsModule } from './leads/leads.module';
 import { EstimatorModule } from './estimator/estimator.module';
+import { OgModule } from './og/og.module';
 
 @Module({
     imports: [
@@ -78,6 +79,7 @@ import { EstimatorModule } from './estimator/estimator.module';
         PrivacyModule,
         LeadsModule,
         EstimatorModule,
+        OgModule,
     ],
     controllers: [],
     providers: [

@@ -27,17 +27,15 @@ export class GetSectorBySlugService {
 
         if (!sector) {
             // Check slug redirects
-            const redirect = await this.prisma.slugRedirect.findUnique({
+            const redirect = await this.prisma.redirect.findFirst({
                 where: {
-                    entityType_fromSlug: {
-                        entityType: 'sector',
-                        fromSlug: slug,
-                    },
+                    fromPath: `/sectors/${slug}`,
                 },
             });
 
             if (redirect) {
-                return { redirectTo: redirect.toSlug };
+                const targetSlug = redirect.toPath.replace(/^\/sectors\//, '');
+                return { redirectTo: targetSlug };
             }
 
             throw new NotFoundException(`Sector not found with slug: ${slug}`);

@@ -113,5 +113,21 @@ describe('ServiceMapper', () => {
         expect(detail.sectors?.[0].title).toBe('الخدمات المالية');
         expect(detail.faqs).toHaveLength(1);
         expect(detail.faqs?.[0].question).toBe('سؤال 1');
+        expect(detail.seo?.noindex).toBe(false);
+    });
+
+    it('maps to ServiceAdmin with ogImage and noindex', () => {
+        const serviceWithSeo = {
+            ...mockService,
+            ogImage: { url: 'https://example.com/custom-og.jpg', alt: { ar: 'صورة', en: 'Image' }, width: 1200, height: 630 },
+            noindex: true,
+        };
+        const admin = ServiceMapper.toAdmin(serviceWithSeo as any);
+        expect(admin.noindex).toBe(true);
+        expect(admin.ogImage).toEqual(serviceWithSeo.ogImage);
+
+        const detail = ServiceMapper.toDetailWeb(serviceWithSeo as any, 'ar');
+        expect(detail.seo?.ogImage).toBe('https://example.com/custom-og.jpg');
+        expect(detail.seo?.noindex).toBe(true);
     });
 });

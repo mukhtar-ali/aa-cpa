@@ -53,6 +53,10 @@ export enum PermissionEnum {
     AdminPortalCareersDelete = 'admin_portal.careers.delete',
     AdminPortalCareersView = 'admin_portal.careers.view',
 
+    // SEO / Redirects
+    AdminPortalSeoView = 'admin_portal.seo.view',
+    AdminPortalSeoUpdate = 'admin_portal.seo.update',
+
     MonitoringView = 'monitoring.view',
 }
 
@@ -177,5 +181,13 @@ export const PERMISSIONS_UI: PermissionGroupUI[] = [
         group: 'monitoring',
         displayName: 'System Monitoring',
         permissions: [{ key: PermissionEnum.MonitoringView, displayName: 'View Monitoring' }],
+    },
+    {
+        group: 'admin_portal_seo',
+        displayName: 'Admin Portal - SEO & Redirects',
+        permissions: [
+            { key: PermissionEnum.AdminPortalSeoView, displayName: 'View SEO & Redirects' },
+            { key: PermissionEnum.AdminPortalSeoUpdate, displayName: 'Update SEO & Redirects' },
+        ],
     },
 ];

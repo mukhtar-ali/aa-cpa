@@ -29,6 +29,7 @@ import { Route as AuthenticatedSiteContentIndexRouteImport } from './routes/_aut
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedServicesIndexRouteImport } from './routes/_authenticated/services/index'
 import { Route as AuthenticatedSectorsIndexRouteImport } from './routes/_authenticated/sectors/index'
+import { Route as AuthenticatedRedirectsIndexRouteImport } from './routes/_authenticated/redirects/index'
 import { Route as AuthenticatedNewsIndexRouteImport } from './routes/_authenticated/news/index'
 import { Route as AuthenticatedMonitoringIndexRouteImport } from './routes/_authenticated/monitoring/index'
 import { Route as AuthenticatedLeadsIndexRouteImport } from './routes/_authenticated/leads/index'
@@ -154,6 +155,12 @@ const AuthenticatedSectorsIndexRoute =
   AuthenticatedSectorsIndexRouteImport.update({
     id: '/sectors/',
     path: '/sectors/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedRedirectsIndexRoute =
+  AuthenticatedRedirectsIndexRouteImport.update({
+    id: '/redirects/',
+    path: '/redirects/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedNewsIndexRoute = AuthenticatedNewsIndexRouteImport.update({
@@ -322,6 +329,7 @@ export interface FileRoutesByFullPath {
   '/leads/': typeof AuthenticatedLeadsIndexRoute
   '/monitoring/': typeof AuthenticatedMonitoringIndexRoute
   '/news/': typeof AuthenticatedNewsIndexRoute
+  '/redirects/': typeof AuthenticatedRedirectsIndexRoute
   '/sectors/': typeof AuthenticatedSectorsIndexRoute
   '/services/': typeof AuthenticatedServicesIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
@@ -363,6 +371,7 @@ export interface FileRoutesByTo {
   '/leads': typeof AuthenticatedLeadsIndexRoute
   '/monitoring': typeof AuthenticatedMonitoringIndexRoute
   '/news': typeof AuthenticatedNewsIndexRoute
+  '/redirects': typeof AuthenticatedRedirectsIndexRoute
   '/sectors': typeof AuthenticatedSectorsIndexRoute
   '/services': typeof AuthenticatedServicesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
@@ -408,6 +417,7 @@ export interface FileRoutesById {
   '/_authenticated/leads/': typeof AuthenticatedLeadsIndexRoute
   '/_authenticated/monitoring/': typeof AuthenticatedMonitoringIndexRoute
   '/_authenticated/news/': typeof AuthenticatedNewsIndexRoute
+  '/_authenticated/redirects/': typeof AuthenticatedRedirectsIndexRoute
   '/_authenticated/sectors/': typeof AuthenticatedSectorsIndexRoute
   '/_authenticated/services/': typeof AuthenticatedServicesIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
@@ -453,6 +463,7 @@ export interface FileRouteTypes {
     | '/leads/'
     | '/monitoring/'
     | '/news/'
+    | '/redirects/'
     | '/sectors/'
     | '/services/'
     | '/settings/'
@@ -494,6 +505,7 @@ export interface FileRouteTypes {
     | '/leads'
     | '/monitoring'
     | '/news'
+    | '/redirects'
     | '/sectors'
     | '/services'
     | '/settings'
@@ -538,6 +550,7 @@ export interface FileRouteTypes {
     | '/_authenticated/leads/'
     | '/_authenticated/monitoring/'
     | '/_authenticated/news/'
+    | '/_authenticated/redirects/'
     | '/_authenticated/sectors/'
     | '/_authenticated/services/'
     | '/_authenticated/settings/'
@@ -700,6 +713,13 @@ declare module '@tanstack/react-router' {
       path: '/sectors'
       fullPath: '/sectors/'
       preLoaderRoute: typeof AuthenticatedSectorsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/redirects/': {
+      id: '/_authenticated/redirects/'
+      path: '/redirects'
+      fullPath: '/redirects/'
+      preLoaderRoute: typeof AuthenticatedRedirectsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/news/': {
@@ -923,6 +943,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedLeadsIndexRoute: typeof AuthenticatedLeadsIndexRoute
   AuthenticatedMonitoringIndexRoute: typeof AuthenticatedMonitoringIndexRoute
   AuthenticatedNewsIndexRoute: typeof AuthenticatedNewsIndexRoute
+  AuthenticatedRedirectsIndexRoute: typeof AuthenticatedRedirectsIndexRoute
   AuthenticatedSectorsIndexRoute: typeof AuthenticatedSectorsIndexRoute
   AuthenticatedServicesIndexRoute: typeof AuthenticatedServicesIndexRoute
   AuthenticatedSiteContentIndexRoute: typeof AuthenticatedSiteContentIndexRoute
@@ -949,6 +970,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedLeadsIndexRoute: AuthenticatedLeadsIndexRoute,
   AuthenticatedMonitoringIndexRoute: AuthenticatedMonitoringIndexRoute,
   AuthenticatedNewsIndexRoute: AuthenticatedNewsIndexRoute,
+  AuthenticatedRedirectsIndexRoute: AuthenticatedRedirectsIndexRoute,
   AuthenticatedSectorsIndexRoute: AuthenticatedSectorsIndexRoute,
   AuthenticatedServicesIndexRoute: AuthenticatedServicesIndexRoute,
   AuthenticatedSiteContentIndexRoute: AuthenticatedSiteContentIndexRoute,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Eye, Loader2 } from 'lucide-react'
 import { SectorFormSchema, type SectorAdmin, type SectorForm } from '@repo/shared'
 import { Button } from '@/components/ui/button'
@@ -20,6 +20,7 @@ import {
   PublishToggle,
   TranslationStatusBadge,
   computeTranslationStatus,
+  type ImageFieldValue,
 } from '@/components/cms'
 
 export interface SectorFormDialogProps {
@@ -88,13 +89,17 @@ export function SectorFormDialog({
   const [values, setValues] = useState<SectorForm>(() => getDefaultSectorForm(currentRow))
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  useEffect(() => {
+  // Reset the form whenever the dialog opens or switches row. Done while rendering (React's documented way to adjust state to new props)
+  // rather than in an effect, which would render the stale form first.
+  const [seen, setSeen] = useState<{ open: boolean; row: typeof currentRow }>({ open: false, row: undefined })
+  if (seen.open !== open || seen.row !== currentRow) {
+    setSeen({ open, row: currentRow })
     if (open) {
       setValues(getDefaultSectorForm(currentRow))
       setErrors({})
       setLang('ar')
     }
-  }, [open, currentRow])
+  }
 
   const hasArabicRequired = Boolean(values.title.ar?.trim() && values.summary.ar?.trim())
   const translationStatus = computeTranslationStatus([values.title, values.summary])
@@ -234,8 +239,8 @@ export function SectorFormDialog({
 
           <ImageField
             label='Featured Band Image'
-            value={values.bandImage as any}
-            onChange={(bandImage) => setValues((prev) => ({ ...prev, bandImage: bandImage as any }))}
+            value={values.bandImage as ImageFieldValue | null | undefined}
+            onChange={(bandImage) => setValues((prev) => ({ ...prev, bandImage: bandImage as SectorForm['bandImage'] }))}
           />
         </form>
 

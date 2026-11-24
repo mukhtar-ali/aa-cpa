@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { urlValidation } from './base.schema';
 import {
     ImageFieldSchema,
     ImageRefSchema,
@@ -49,6 +50,8 @@ export const ServiceFormSchema = z.object({
     metaTitle: MultiLanguageFieldSchema.optional(),
     metaDescription: MultiLanguageFieldSchema.optional(),
     keywords: MultiLanguageFieldSchema.optional(),
+    ogImage: z.union([urlValidation, ImageFieldSchema, z.literal('')]).optional().nullable(),
+    noindex: z.boolean().default(false).optional(),
     sectorIds: z.array(z.string()).default([]),
     faqIds: z.array(z.string()).default([]),
 });

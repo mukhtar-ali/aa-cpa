@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Eye, Loader2, Plus, Trash2 } from 'lucide-react'
 import { ServiceFormSchema, type ServiceAdmin, type ServiceForm } from '@repo/shared'
 import { Button } from '@/components/ui/button'
@@ -13,12 +13,16 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { LanguageTabs, type LanguageCode } from '@/components/language-tabs'
+import { Switch } from '@/components/ui/switch'
+import { SearchSnippetPreview } from '@/components/cms/search-snippet-preview'
+import { ogImageUrl } from '@/lib/og-image'
 import {
   BilingualField,
   ImageField,
   PublishToggle,
   TranslationStatusBadge,
   computeTranslationStatus,
+  type ImageFieldValue,
 } from '@/components/cms'
 
 export interface ServiceFormDialogProps {
@@ -54,6 +58,8 @@ export function getDefaultServiceForm(row?: ServiceAdmin | null): ServiceForm {
       metaTitle: emptyBilingual(),
       metaDescription: emptyBilingual(),
       keywords: emptyBilingual(),
+      ogImage: null,
+      noindex: false,
       sectorIds: [],
       faqIds: [],
     }
@@ -79,6 +85,8 @@ export function getDefaultServiceForm(row?: ServiceAdmin | null): ServiceForm {
     metaTitle: row.metaTitle ?? emptyBilingual(),
     metaDescription: row.metaDescription ?? emptyBilingual(),
     keywords: row.keywords ?? emptyBilingual(),
+    ogImage: (row as { ogImage?: never } | null | undefined)?.ogImage ?? null,
+    noindex: (row as { noindex?: boolean } | null | undefined)?.noindex ?? false,
     sectorIds: row.sectorIds ?? [],
     faqIds: row.faqIds ?? [],
   }
@@ -97,13 +105,17 @@ export function ServiceFormDialog({
   const [values, setValues] = useState<ServiceForm>(() => getDefaultServiceForm(currentRow))
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  useEffect(() => {
+  // Reset the form whenever the dialog opens or switches row. Done while rendering (React's documented way to adjust state to new props)
+  // rather than in an effect, which would render the stale form first.
+  const [seen, setSeen] = useState<{ open: boolean; row: typeof currentRow }>({ open: false, row: undefined })
+  if (seen.open !== open || seen.row !== currentRow) {
+    setSeen({ open, row: currentRow })
     if (open) {
       setValues(getDefaultServiceForm(currentRow))
       setErrors({})
       setLang('ar')
     }
-  }, [open, currentRow])
+  }
 
   const hasArabicRequired = Boolean(values.title.ar?.trim() && values.summary.ar?.trim())
   const translationStatus = computeTranslationStatus([values.title, values.summary])
@@ -270,8 +282,8 @@ export function ServiceFormDialog({
 
           <ImageField
             label='Service Image'
-            value={values.image as any}
-            onChange={(image) => setValues((prev) => ({ ...prev, image: image as any }))}
+            value={values.image as ImageFieldValue | null | undefined}
+            onChange={(image) => setValues((prev) => ({ ...prev, image: image as ServiceForm['image'] }))}
           />
 
           {/* Methodology Editor */}
@@ -367,6 +379,72 @@ export function ServiceFormDialog({
                 />
               </div>
             ))}
+          </div>
+
+          {/* SEO & Search Snippet Preview */}
+          <div className='space-y-4 rounded-lg border p-4 bg-muted/20'>
+            <Label className='text-sm font-semibold'>SEO & Social Search Preview</Label>
+            <SearchSnippetPreview
+              title={values.metaTitle?.[lang] || values.title?.[lang] || ''}
+              description={values.metaDescription?.[lang] || values.summary?.[lang] || ''}
+              slug={values.slug || ''}
+              pathPrefix='services'
+              lang={lang}
+              noindex={values.noindex}
+            />
+
+            <BilingualField
+              name='metaTitle'
+              label='Meta Title'
+              activeLanguage={lang}
+              value={values.metaTitle || emptyBilingual()}
+              onChange={(metaTitle) => setValues((prev) => ({ ...prev, metaTitle }))}
+            />
+
+            <BilingualField
+              name='metaDescription'
+              label='Meta Description'
+              type='textarea'
+              activeLanguage={lang}
+              value={values.metaDescription || emptyBilingual()}
+              onChange={(metaDescription) => setValues((prev) => ({ ...prev, metaDescription }))}
+            />
+
+            <BilingualField
+              name='keywords'
+              label='Keywords'
+              activeLanguage={lang}
+              value={values.keywords || emptyBilingual()}
+              onChange={(keywords) => setValues((prev) => ({ ...prev, keywords }))}
+            />
+
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+              <div className='space-y-2'>
+                <Label htmlFor='service-og-image'>Custom OG Image URL</Label>
+                <Input
+                  id='service-og-image'
+                  placeholder='https://...'
+                  value={ogImageUrl(values.ogImage)}
+                  onChange={(e) => setValues((prev) => ({ ...prev, ogImage: e.target.value }))}
+                />
+              </div>
+
+              <div className='flex items-center justify-between rounded-md border p-3 bg-card'>
+                <div className='space-y-0.5'>
+                  <Label htmlFor='service-noindex' className='text-sm font-medium'>
+                    noindex (Hide from Search)
+                  </Label>
+                  <p className='text-xs text-muted-foreground'>
+                    Tell search engines not to index this service.
+                  </p>
+                </div>
+                <Switch
+                  id='service-noindex'
+                  checked={values.noindex ?? false}
+                  onCheckedChange={(noindex) => setValues((prev) => ({ ...prev, noindex }))}
+                />
+              </div>
+            </div>
           </div>
         </form>
 

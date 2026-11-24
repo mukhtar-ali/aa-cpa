@@ -3,8 +3,11 @@
 #   docker build -f apps/api/Dockerfile -t starter-api .
 
 FROM node:22-bookworm-slim AS base
+# fontconfig + Noto fonts: the Open Graph image renderer (src/og, sharp/librsvg) draws text with SYSTEM fonts, and the slim image
+# has none, which would render every title as empty boxes. Noto Naskh/Sans Arabic cover Arabic shaping; Noto Sans covers Latin.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends openssl ca-certificates curl \
+    && apt-get install -y --no-install-recommends openssl ca-certificates curl fontconfig fonts-noto-core \
+    && fc-cache -f \
     && rm -rf /var/lib/apt/lists/*
 ENV COREPACK_HOME="/usr/local/share/corepack"
 RUN corepack enable && corepack prepare pnpm@9.0.0 --activate

@@ -27,20 +27,26 @@ export class UpdateServiceService {
 
         // If slug changed, write redirect
         if (current.slug !== data.slug) {
-            await this.prisma.slugRedirect.upsert({
-                where: {
-                    entityType_fromSlug: {
-                        entityType: 'service',
-                        fromSlug: current.slug,
-                    },
-                },
+            const fromPath = `/services/${current.slug}`;
+            const toPath = `/services/${data.slug}`;
+
+            await this.prisma.redirect.updateMany({
+                where: { toPath: fromPath },
+                data: { toPath },
+            });
+
+            await this.prisma.redirect.upsert({
+                where: { fromPath },
                 update: {
-                    toSlug: data.slug,
+                    toPath,
+                    type: 'permanent',
+                    source: 'slug_change',
                 },
                 create: {
-                    entityType: 'service',
-                    fromSlug: current.slug,
-                    toSlug: data.slug,
+                    fromPath,
+                    toPath,
+                    type: 'permanent',
+                    source: 'slug_change',
                 },
             });
         }
@@ -60,7 +66,9 @@ export class UpdateServiceService {
                 publishedAt: data.isPublished
                     ? current.publishedAt || (data.publishedAt ? new Date(data.publishedAt) : new Date())
                     : null,
-            },
+                ogImage: data.ogImage as any,
+                noindex: data.noindex ?? false,
+            } as any,
         });
 
         // Upsert Arabic translation

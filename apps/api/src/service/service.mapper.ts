@@ -96,6 +96,8 @@ export class ServiceMapper {
                 metaTitle: tr.metaTitle || undefined,
                 metaDescription: tr.metaDescription || undefined,
                 keywords: tr.keywords || undefined,
+                ogImage: (service.ogImage?.url || service.ogImage) || undefined,
+                noindex: service.noindex ?? false,
             },
         };
     }
@@ -122,6 +124,8 @@ export class ServiceMapper {
             order: service.order ?? 0,
             isPublished: service.isPublished ?? false,
             publishedAt: service.publishedAt || null,
+            ogImage: service.ogImage || null,
+            noindex: service.noindex ?? false,
             createdAt: service.createdAt,
             updatedAt: service.updatedAt,
             title: { ar: arTr?.title || '', en: enTr?.title || '' },

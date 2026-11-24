@@ -1,12 +1,16 @@
 import { z } from 'zod';
 import {
     ActionRefSchema,
+    ConsentTextsSchema,
     EmailSettingsSchema,
+    GlobalSeoSchema,
     GlobalSeoSettingsSchema,
     ImageFieldSchema,
+    ImageLicenseSchema,
     ImageRefSchema,
     LinkRefSchema,
     MultiLanguageFieldSchema,
+    OrganizationSeoSchema,
     PublicFormGuardSchema,
     RequiredTitleSchema,
     SaudiMobileSchema,
@@ -27,5 +31,10 @@ export type PublicFormGuardModel = z.infer<typeof PublicFormGuardSchema>;
 export type WebsiteInfoSectionModel = z.infer<typeof WebsiteInfoSectionSchema>;
 export type WebsiteInfoSectionModelWeb = Localized<WebsiteInfoSectionModel>;
 export type GlobalSeoSettingsModel = z.infer<typeof GlobalSeoSettingsSchema>;
+export type GlobalSeoModel = GlobalSeoSettingsModel;
 export type GlobalSeoSettingsModelWeb = Localized<GlobalSeoSettingsModel>;
+export type GlobalSeoModelWeb = GlobalSeoSettingsModelWeb;
+export type OrganizationSeoModel = z.infer<typeof OrganizationSeoSchema>;
+export type ConsentTextsModel = z.infer<typeof ConsentTextsSchema>;
+export type ImageLicenseModel = z.infer<typeof ImageLicenseSchema>;
 export type EmailSettingsModel = z.infer<typeof EmailSettingsSchema>;

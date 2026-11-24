@@ -1,22 +1,23 @@
 import { api } from '@/lib/api'
+import { unwrapEntity, unwrapList } from '@/lib/api-error'
 import { endpoint, type ServiceAdmin, type ServiceForm } from '@repo/shared'
 
 export const servicesApi = {
   list: async (): Promise<ServiceAdmin[]> => {
-    const res = await api.get<any>(endpoint.adminServices.list)
-    return Array.isArray(res.data) ? res.data : (res.data?.items ?? [])
+    const res = await api.get<unknown>(endpoint.adminServices.list)
+    return unwrapList<ServiceAdmin>(res.data)
   },
   getById: async (id: string): Promise<ServiceAdmin> => {
-    const res = await api.get<any>(endpoint.adminServices.getById(id))
-    return (res.data as any)?.service ?? res.data
+    const res = await api.get<unknown>(endpoint.adminServices.getById(id))
+    return unwrapEntity<ServiceAdmin>(res.data, 'service')
   },
   create: async (data: ServiceForm): Promise<ServiceAdmin> => {
     const res = await api.post<{ service: ServiceAdmin } | ServiceAdmin>(endpoint.adminServices.create, data)
-    return (res.data as any)?.service ?? res.data
+    return unwrapEntity<ServiceAdmin>(res.data, 'service')
   },
   update: async (id: string, data: ServiceForm): Promise<ServiceAdmin> => {
     const res = await api.put<{ service: ServiceAdmin } | ServiceAdmin>(endpoint.adminServices.update(id), data)
-    return (res.data as any)?.service ?? res.data
+    return unwrapEntity<ServiceAdmin>(res.data, 'service')
   },
   delete: async (id: string): Promise<void> => {
     await api.delete(endpoint.adminServices.delete(id))

@@ -144,6 +144,13 @@ export class NewsMapper {
             toc,
             tags: parsedTags,
             related,
+            seo: {
+                metaTitle: tr.metaTitle || undefined,
+                metaDescription: tr.metaDescription || undefined,
+                keywords: tr.keywords || undefined,
+                ogImage: (news.ogImage?.url || news.ogImage) || undefined,
+                noindex: news.noindex ?? false,
+            },
         };
     }
 
@@ -170,6 +177,8 @@ export class NewsMapper {
             isPublished: news.isPublished,
             isFeatured: news.isFeatured,
             publishedAt: news.publishedAt,
+            ogImage: news.ogImage || null,
+            noindex: news.noindex ?? false,
             tocEnabled: arTr.tocEnabled ?? true,
             sectorIds: (news.sectors || []).map((s: any) => s.sectorId || s.id),
             serviceIds: (news.services || []).map((s: any) => s.serviceId || s.id),

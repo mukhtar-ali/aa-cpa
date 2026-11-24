@@ -1,4 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { apiErrorMessage } from '@/lib/api-error'
 import { toast } from 'sonner'
 import type { ServiceForm } from '@repo/shared'
 import {
@@ -27,8 +28,8 @@ export function useCreateAdminService() {
       queryClient.invalidateQueries({ queryKey: ['admin-services'] })
       toast.success('Service created successfully')
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || 'Failed to create service')
+    onError: (err: unknown) => {
+      toast.error(apiErrorMessage(err, 'Failed to create service'))
     },
   })
 }
@@ -41,8 +42,8 @@ export function useUpdateAdminService() {
       queryClient.invalidateQueries({ queryKey: ['admin-services'] })
       toast.success('Service updated successfully')
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || 'Failed to update service')
+    onError: (err: unknown) => {
+      toast.error(apiErrorMessage(err, 'Failed to update service'))
     },
   })
 }
@@ -55,8 +56,8 @@ export function useDeleteAdminService() {
       queryClient.invalidateQueries({ queryKey: ['admin-services'] })
       toast.success('Service deleted successfully')
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || 'Cannot delete referenced service')
+    onError: (err: unknown) => {
+      toast.error(apiErrorMessage(err, 'Cannot delete referenced service'))
     },
   })
 }
@@ -70,8 +71,8 @@ export function usePublishAdminService() {
       queryClient.invalidateQueries({ queryKey: ['admin-services'] })
       toast.success(vars.isPublished ? 'Service published' : 'Service moved to draft')
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || 'Failed to update publish state')
+    onError: (err: unknown) => {
+      toast.error(apiErrorMessage(err, 'Failed to update publish state'))
     },
   })
 }

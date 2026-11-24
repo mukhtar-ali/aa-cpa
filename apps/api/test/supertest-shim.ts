@@ -80,7 +80,7 @@ export class TestRequest implements PromiseLike<SupertestResponse> {
                 formData.append(k, v);
             }
             for (const f of this.files) {
-                const blob = new Blob([f.buffer]);
+                const blob = new Blob([new Uint8Array(f.buffer)]);
                 formData.append(f.name, blob, f.filename);
             }
             body = formData;

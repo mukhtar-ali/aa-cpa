@@ -28,20 +28,26 @@ export class UpdateJobService {
             }
 
             if (existing.slug) {
-                await this.prisma.slugRedirect.upsert({
-                    where: {
-                        entityType_fromSlug: {
-                            entityType: 'job',
-                            fromSlug: existing.slug,
-                        },
-                    },
+                const fromPath = `/careers/${existing.slug}`;
+                const toPath = `/careers/${data.slug}`;
+
+                await this.prisma.redirect.updateMany({
+                    where: { toPath: fromPath },
+                    data: { toPath },
+                });
+
+                await this.prisma.redirect.upsert({
+                    where: { fromPath },
                     create: {
-                        entityType: 'job',
-                        fromSlug: existing.slug,
-                        toSlug: data.slug,
+                        fromPath,
+                        toPath,
+                        type: 'permanent',
+                        source: 'slug_change',
                     },
                     update: {
-                        toSlug: data.slug,
+                        toPath,
+                        type: 'permanent',
+                        source: 'slug_change',
                     },
                 });
             }
@@ -75,11 +81,13 @@ export class UpdateJobService {
                 order: (data as any).order !== undefined ? (data as any).order : existing.order,
                 isPublished: willBePublished,
                 publishedAt: willBePublished && !existing.isPublished ? new Date() : existing.publishedAt,
+                ogImage: data.ogImage !== undefined ? (data.ogImage as any) : undefined,
+                noindex: data.noindex !== undefined ? data.noindex : undefined,
                 translations: {
                     deleteMany: {},
                     create: translations,
                 },
-            },
+            } as any,
             include: {
                 translations: true,
                 department: true,

@@ -66,6 +66,10 @@ describe('Admin Routes Permission Enforcement (E2E)', () => {
         ['GET', '/api/admin/outbox'],
         ['POST', '/api/admin/outbox/out-1/retry'],
         ['POST', '/api/preview/token'],
+        ['GET', '/api/admin/redirects'],
+        ['POST', '/api/admin/redirects'],
+        ['GET', '/api/admin/redirects/export.csv'],
+        ['POST', '/api/admin/redirects/import'],
     ];
 
     it.each(protectedRoutes)(

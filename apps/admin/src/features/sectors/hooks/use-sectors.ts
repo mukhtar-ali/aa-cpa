@@ -1,4 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { apiErrorMessage } from '@/lib/api-error'
 import { toast } from 'sonner'
 import type { SectorForm } from '@repo/shared'
 import {
@@ -26,8 +27,8 @@ export function useCreateAdminSector() {
       queryClient.invalidateQueries({ queryKey: ['admin-sectors'] })
       toast.success('Sector created successfully')
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || 'Failed to create sector')
+    onError: (err: unknown) => {
+      toast.error(apiErrorMessage(err, 'Failed to create sector'))
     },
   })
 }
@@ -40,8 +41,8 @@ export function useUpdateAdminSector() {
       queryClient.invalidateQueries({ queryKey: ['admin-sectors'] })
       toast.success('Sector updated successfully')
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || 'Failed to update sector')
+    onError: (err: unknown) => {
+      toast.error(apiErrorMessage(err, 'Failed to update sector'))
     },
   })
 }
@@ -54,8 +55,8 @@ export function useDeleteAdminSector() {
       queryClient.invalidateQueries({ queryKey: ['admin-sectors'] })
       toast.success('Sector deleted successfully')
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || 'Cannot delete referenced sector')
+    onError: (err: unknown) => {
+      toast.error(apiErrorMessage(err, 'Cannot delete referenced sector'))
     },
   })
 }
@@ -69,8 +70,8 @@ export function usePublishAdminSector() {
       queryClient.invalidateQueries({ queryKey: ['admin-sectors'] })
       toast.success(vars.isPublished ? 'Sector published' : 'Sector moved to draft')
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || 'Failed to update publish state')
+    onError: (err: unknown) => {
+      toast.error(apiErrorMessage(err, 'Failed to update publish state'))
     },
   })
 }

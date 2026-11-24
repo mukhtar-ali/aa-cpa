@@ -80,6 +80,8 @@ export const NewsFormSchema = NewsTranslationSchema.extend({
     tags: z.array(MultiLanguageFieldSchema).default([]),
     publishedAt: z.union([z.string(), z.date()]).optional().nullable(),
     tocEnabled: z.boolean().default(true),
+    ogImage: z.union([urlValidation, ImageFieldSchema, z.literal('')]).optional().nullable(),
+    noindex: z.boolean().default(false).optional(),
     sectorIds: z.array(z.string()).default([]),
     serviceIds: z.array(z.string()).default([]),
 });
@@ -111,6 +113,8 @@ export const getDefaultNewsForm = (): z.infer<typeof NewsFormSchema> => ({
     isFeatured: false,
     slug: undefined,
     readingMinutes: undefined,
+    ogImage: '',
+    noindex: false,
     tags: [],
     publishedAt: undefined,
     tocEnabled: true,
@@ -140,6 +144,7 @@ export const ArticleDetailWebSchema = ArticleSummaryWebSchema.extend({
     toc: z.array(TocItemSchema).optional(),
     tags: z.array(z.string()).optional(),
     related: z.array(ArticleSummaryWebSchema).optional(),
+    seo: z.any().optional(),
     isFallback: z.boolean().optional(),
 });
 

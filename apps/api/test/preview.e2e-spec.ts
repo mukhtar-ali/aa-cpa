@@ -43,8 +43,9 @@ describe('Preview Token & Draft Access (E2E)', () => {
                 return Promise.resolve(null);
             }),
         },
-        slugRedirect: {
+        redirect: {
             findUnique: jest.fn().mockResolvedValue(null),
+            findFirst: jest.fn().mockResolvedValue(null),
         },
         section: {
             findUnique: jest.fn().mockResolvedValue(null),

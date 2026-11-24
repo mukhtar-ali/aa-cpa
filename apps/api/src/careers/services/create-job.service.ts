@@ -66,8 +66,10 @@ export class CreateJobService {
                 order: (data as any).order ?? 0,
                 isPublished,
                 publishedAt: isPublished ? ((data as any).publishedAt ? new Date((data as any).publishedAt) : new Date()) : null,
+                ogImage: (data.ogImage as any) || null,
+                noindex: data.noindex ?? false,
                 translations: { create: translations },
-            },
+            } as any,
             include: {
                 translations: true,
                 department: true,

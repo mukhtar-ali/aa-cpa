@@ -31,8 +31,11 @@ describe('News Actions & Filters', () => {
                 update: jest.fn(),
                 count: jest.fn(),
             },
-            slugRedirect: {
+            redirect: {
                 findUnique: jest.fn(),
+                findFirst: jest.fn(),
+                upsert: jest.fn(),
+                updateMany: jest.fn(),
             },
             $transaction: jest.fn((cbOrArr) => (Array.isArray(cbOrArr) ? Promise.all(cbOrArr) : cbOrArr(mockPrisma))),
         };

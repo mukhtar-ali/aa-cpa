@@ -92,8 +92,9 @@ describe('Jobs API (E2E)', () => {
             findUnique: jest.fn().mockResolvedValue(mockDepartment),
             count: jest.fn().mockResolvedValue(1),
         },
-        slugRedirect: {
+        redirect: {
             findUnique: jest.fn().mockResolvedValue(null),
+            findFirst: jest.fn().mockResolvedValue(null),
         },
     };
 

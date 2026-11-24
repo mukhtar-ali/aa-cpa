@@ -117,7 +117,11 @@ export function PageSeoForm({ pageKey }: { pageKey: string }) {
                     <FormItem>
                       <FormLabel>Open Graph Image</FormLabel>
                       <FormControl>
-                        <Input placeholder='https://...' {...field} value={field.value ?? ''} />
+                        <Input
+                          placeholder='https://...'
+                          {...field}
+                          value={typeof field.value === 'string' ? field.value : (field.value?.url ?? '')}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

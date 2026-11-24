@@ -31,20 +31,26 @@ export class UpdateSectorService {
                     throw new BadRequestException(`Sector slug "${data.slug}" is already taken.`);
                 }
 
-                await tx.slugRedirect.upsert({
-                    where: {
-                        entityType_fromSlug: {
-                            entityType: 'sector',
-                            fromSlug: existing.slug,
-                        },
-                    },
+                const fromPath = `/sectors/${existing.slug}`;
+                const toPath = `/sectors/${data.slug}`;
+
+                await tx.redirect.updateMany({
+                    where: { toPath: fromPath },
+                    data: { toPath },
+                });
+
+                await tx.redirect.upsert({
+                    where: { fromPath },
                     create: {
-                        entityType: 'sector',
-                        fromSlug: existing.slug,
-                        toSlug: data.slug,
+                        fromPath,
+                        toPath,
+                        type: 'permanent',
+                        source: 'slug_change',
                     },
                     update: {
-                        toSlug: data.slug,
+                        toPath,
+                        type: 'permanent',
+                        source: 'slug_change',
                     },
                 });
             }

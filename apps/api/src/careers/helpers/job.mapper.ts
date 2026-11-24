@@ -105,6 +105,13 @@ export class JobMapper {
             benefits: parseBenefits(job.benefits),
             similarJobs: similar,
             isOpen,
+            seo: {
+                metaTitle: tr.metaTitle || undefined,
+                metaDescription: tr.metaDescription || undefined,
+                keywords: tr.keywords || undefined,
+                ogImage: (job.ogImage?.url || job.ogImage) || undefined,
+                noindex: job.noindex ?? false,
+            },
         };
     }
 
@@ -135,6 +142,8 @@ export class JobMapper {
             order: job.order ?? 0,
             isPublished: job.isPublished,
             publishedAt: job.publishedAt,
+            ogImage: job.ogImage || null,
+            noindex: job.noindex ?? false,
             title: { ar: arTr.title || '', en: enTr.title || '' },
             summary: { ar: arTr.summary || '', en: enTr.summary || '' },
             body: { ar: arTr.body || '', en: enTr.body || '' },

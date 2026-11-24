@@ -30,17 +30,15 @@ export class GetServiceBySlugService {
 
         if (!service) {
             // Check slug redirects
-            const redirect = await this.prisma.slugRedirect.findUnique({
+            const redirect = await this.prisma.redirect.findFirst({
                 where: {
-                    entityType_fromSlug: {
-                        entityType: 'service',
-                        fromSlug: slug,
-                    },
+                    fromPath: `/services/${slug}`,
                 },
             });
 
             if (redirect) {
-                return { redirectTo: redirect.toSlug };
+                const targetSlug = redirect.toPath.replace(/^\/services\//, '');
+                return { redirectTo: targetSlug };
             }
 
             throw new NotFoundException(`Service not found with slug: ${slug}`);

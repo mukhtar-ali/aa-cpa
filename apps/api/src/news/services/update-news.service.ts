@@ -43,20 +43,26 @@ export class UpdateNewsService {
                 }
 
                 if (existing.slug) {
-                    await tx.slugRedirect.upsert({
-                        where: {
-                            entityType_fromSlug: {
-                                entityType: 'article',
-                                fromSlug: existing.slug,
-                            },
-                        },
+                    const fromPath = `/articles/${existing.slug}`;
+                    const toPath = `/articles/${data.slug}`;
+
+                    await tx.redirect.updateMany({
+                        where: { toPath: fromPath },
+                        data: { toPath },
+                    });
+
+                    await tx.redirect.upsert({
+                        where: { fromPath },
                         create: {
-                            entityType: 'article',
-                            fromSlug: existing.slug,
-                            toSlug: data.slug,
+                            fromPath,
+                            toPath,
+                            type: 'permanent',
+                            source: 'slug_change',
                         },
                         update: {
-                            toSlug: data.slug,
+                            toPath,
+                            type: 'permanent',
+                            source: 'slug_change',
                         },
                     });
                 }
@@ -74,11 +80,13 @@ export class UpdateNewsService {
                     isPublished: willBePublished,
                     isFeatured: data.isFeatured !== undefined ? data.isFeatured : existing.isFeatured,
                     publishedAt: willBePublished && !existing.isPublished ? new Date() : existing.publishedAt,
+                    ogImage: data.ogImage !== undefined ? (data.ogImage as any) : undefined,
+                    noindex: data.noindex !== undefined ? data.noindex : undefined,
                     translations: {
                         deleteMany: {},
                         create: translations,
                     },
-                },
+                } as any,
             });
 
             if (data.sectorIds !== undefined) {

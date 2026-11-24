@@ -92,5 +92,21 @@ describe('NewsMapper', () => {
         expect(admin.title.en).toBe('2026 Tax System Updates');
         expect(admin.translationStatus?.ar).toBe('complete');
         expect(admin.translationStatus?.en).toBe('complete');
+        expect(admin.noindex).toBe(false);
+    });
+
+    it('maps to Admin and DetailWeb with custom ogImage and noindex', () => {
+        const newsWithSeo = {
+            ...mockNews,
+            ogImage: 'https://example.com/article-og.png',
+            noindex: true,
+        };
+        const admin = NewsMapper.toAdmin(newsWithSeo);
+        expect(admin.noindex).toBe(true);
+        expect(admin.ogImage).toBe('https://example.com/article-og.png');
+
+        const detail = NewsMapper.toDetailWeb(newsWithSeo, 'ar');
+        expect(detail.seo?.ogImage).toBe('https://example.com/article-og.png');
+        expect(detail.seo?.noindex).toBe(true);
     });
 });

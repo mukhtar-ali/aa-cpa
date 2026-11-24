@@ -7,6 +7,11 @@ export interface ImageFieldValue {
   width?: number
   height?: number
   alt: MultiLangValue
+  license?: {
+    source: string
+    reference?: string
+    expiresAt?: string
+  }
 }
 
 export interface ImageFieldProps {
@@ -30,6 +35,7 @@ export function ImageField({
       ar: value?.alt?.ar ?? '',
       en: value?.alt?.en ?? '',
     },
+    license: value?.license,
   }
 
   return (
@@ -93,6 +99,24 @@ export function ImageField({
           })
         }
       />
+      <div className='space-y-1'>
+        <Label className='text-xs'>License / source</Label>
+        <Input
+          aria-label={`${label} License / source`}
+          data-testid={`${namePrefix}-license`}
+          value={current.license?.source ?? ''}
+          placeholder='e.g. Getty Images, Unsplash, internal photo'
+          onChange={(e) => {
+            const source = e.target.value
+            onChange({
+              ...current,
+              license: source.trim()
+                ? { ...current.license, source }
+                : undefined,
+            })
+          }}
+        />
+      </div>
     </div>
   )
 }

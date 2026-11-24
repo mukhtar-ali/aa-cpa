@@ -43,6 +43,8 @@ export class CreateServiceService {
                 order,
                 isPublished: data.isPublished,
                 publishedAt: data.isPublished ? (data.publishedAt ? new Date(data.publishedAt) : new Date()) : null,
+                ogImage: data.ogImage as any,
+                noindex: data.noindex ?? false,
                 translations: {
                     create: [
                         {
@@ -76,7 +78,7 @@ export class CreateServiceService {
                           create: data.sectorIds.map((sectorId) => ({ sectorId })),
                       }
                     : undefined,
-            },
+            } as any,
             include: {
                 translations: true,
                 sectors: true,
