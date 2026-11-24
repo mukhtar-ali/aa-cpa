@@ -72,3 +72,14 @@ describe('toChromeProps', () => {
         expect(props.localeSwitch?.href).toBe('/en/services');
     });
 });
+
+describe('safeLink', () => {
+    it('keeps normal links and neutralises script schemes, however they are disguised', async () => {
+        const { safeLink, localizeHref } = await import('./href');
+        expect(safeLink('/about')).toBe('/about');
+        expect(safeLink('https://x.test/a')).toBe('https://x.test/a');
+        expect(safeLink('mailto:a@b.sa')).toBe('mailto:a@b.sa');
+        for (const bad of ['javascript:alert(1)', ' JaVaScRiPt:alert(1)', 'java\tscript:alert(1)', 'data:text/html,<script>', 'vbscript:x']) expect(safeLink(bad)).toBe('#');
+        expect(localizeHref('en', 'javascript:alert(1)')).toBe('#');
+    });
+});

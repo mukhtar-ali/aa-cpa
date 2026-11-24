@@ -1,7 +1,7 @@
 import type { ActionRef, ImageRef, LinkRef } from '@repo/design-system/types';
 import type { Lang } from '@/src/lib/i18n/dictionaries';
 import { toActionRef } from './actions';
-import { localizeHref } from './href';
+import { localizeHref, safeLink } from './href';
 import { toImageRef, type ImageLike } from './image';
 
 export interface HeroApi {
@@ -26,7 +26,7 @@ export function toPageHero(hero: HeroApi, lang: Lang): PageHeroModel {
         title: hero.title,
         subtitle: hero.subtitle,
         image: toImageRef(hero.image, { decorative: true }),
-        breadcrumbs: hero.breadcrumbs?.map((b) => ({ label: b.label, href: b.external ? b.href : localizeHref(lang, b.href) })),
+        breadcrumbs: hero.breadcrumbs?.map((b) => ({ label: b.label, href: b.external ? safeLink(b.href) : localizeHref(lang, b.href) })),
         action: hero.action ? toActionRef(hero.action, lang) : undefined,
     };
 }
