@@ -12,8 +12,8 @@ description: "Task list for 004-seo-compliance-launch (code/IaC by agy; client/P
 - [ ] T002 [CLIENT] Provide/approve analytics accounts (GA4 property, GTM container, Meta pixel if any) and Search Console access
 - [ ] T003 [CLIENT] Legal advisor drafts/approves privacy policy and terms (we supply drafts from Figma copy); confirm policy version `1.0`
 - [ ] T004 [CLIENT] Give access to the existing website, its Search Console/analytics, and current DNS zone export (incl. MX/SPF/DKIM); choose transactional email provider and sender addresses
-- [X] T004a Legacy URL inventory per research R4b: crawl script `tests/legacy/crawl.sh`, merge sources, mapping `docs/launch/legacy-redirects.csv` for client review
-- [X] T004b Playwright `e2e/specs/seo/legacy-redirects.spec.ts` reading the CSV: every legacy URL → 308 → 200 on staging and production
+- [X] T004a Legacy URL inventory per research R4b (tooling done; the CSV stays header-only until T004 gives access to the old site, and T038 is blocked until it is non-empty and client-approved): crawl script `tests/legacy/crawl.sh`, merge sources, mapping `docs/launch/legacy-redirects.csv` for client review
+- [X] T004b (spec written; it cannot prove anything until the CSV has rows) Playwright `e2e/specs/seo/legacy-redirects.spec.ts` reading the CSV: every legacy URL → 308 → 200 on staging and production
 - [ ] T005 [CLIENT] Licensed photos, team portraits, client-logo permissions, credential logos; staff list with roles
 
 ## Phase 2: User Story 4 — Infrastructure (P1) (needed for staging of 003)

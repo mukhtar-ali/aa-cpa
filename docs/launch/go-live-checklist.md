@@ -16,12 +16,14 @@ Tick with date and initials. Every unticked box blocks go-live unless the client
 - [ ] Unique title/description, canonical, hreflang (ar, en, x-default→ar) on every template; staging host is `noindex`, production is not.
 - [ ] Rich Results Test passes: Organization/AccountingService, Service, Article, JobPosting, FAQPage, BreadcrumbList (`reviews/seo-validation.md`).
 - [ ] OG image renders Arabic correctly (check one page in the Facebook/LinkedIn debugger).
-- [ ] `robots.txt` and `sitemap.xml` correct on production; legacy redirect map imported and verified (all 308 → 200).
+- [ ] `docs/launch/legacy-redirects.csv` has rows (it is header-only until the client gives access to the old site, T004), is client-approved, imported, and `legacy-redirects.spec.ts` passes on staging (all 308 → 200). Do not go live while it is empty.
+- [ ] `robots.txt` and `sitemap.xml` correct on production.
 - [ ] Search Console properties verified and sitemap submitted (done at cutover).
 
 ## C. Privacy, analytics, security (DEV)
 - [ ] Consent: no third-party request before consent; category gating, withdrawal and version bump verified (`consent.spec.ts` + manual).
 - [ ] GA4 events verified in DebugView: `lead_submitted`, `quote_requested`, `job_applied`, `contact_click`; no personal data in payloads.
+- [ ] Admin host sends `Strict-Transport-Security` in production (`ADMIN_HSTS` set in the production env; `curl -sI https://<admin domain>`).
 - [ ] Security headers A+ (securityheaders.com), TLS A+ (SSL Labs), CSP enforced after a clean report-only week.
 - [ ] `pnpm audit --prod` and Trivy: no high/critical; ZAP baseline: no high; `docs/launch/security-review.md` complete with findings fixed or accepted.
 - [ ] No default or seed credentials; secrets rotated from staging values; `.env` files `chmod 600`; Swagger off.

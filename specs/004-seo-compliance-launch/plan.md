@@ -32,7 +32,7 @@ assertions) and SEO tags; Rich Results/hreflang validators (manual + scripted); 
 | I Figma | PASS | Banner/preferences/accessibility-statement UI designed in 001 language, client-reviewed |
 | II Design system | PASS | Consent UI added to DS first |
 | III Bilingual | PASS | All SEO, JSON-LD, OG images, banners in AR/EN |
-| IV A11y | PASS | Banner focus management, final audit + statement (FR-022) |
+| IV A11y | PASS for code (axe clean on every page, both languages); the screen-reader audit (T033) and the published statement (FR-022) are still open and gate T038 | Banner focus management, final audit + statement (FR-022) |
 | V Contracts | PASS | Redirect + OG endpoints added to `@repo/shared` |
 | VI Tests | PASS | Unit + Playwright + scans + load + restore drill |
 | VII Perf/SEO | PASS | Core of this feature |

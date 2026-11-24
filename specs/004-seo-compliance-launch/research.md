@@ -93,3 +93,14 @@
   entity with ar/en completeness, missing alt text, placeholder markers (`[PLACEHOLDER]`, lorem, "شعار الجهة"),
   draft estimator, unlicensed image flags (admin `licenseNote` field on images). Admin guide as Markdown → PDF in AR/EN
   in `docs/admin-guide/`.
+
+## R10. Decisions recorded after the coverage analysis (2026-11-24)
+
+- **Queue (FR-043):** the 002 outbox stays; Redis/BullMQ is not adopted. `deploy/vps/monitor/host-checks.sh` alerts on pending and failed outbox rows.
+- **Maps (FR-030):** the contact page has no map embed, so the CSP carries no map origin. If a map is added later, add its origin to `frame-src` and a test in `security-headers.test.ts`.
+- **Two different versions:** the *consent* version (`seo-global.consentVersion`) invalidates the stored cookie banner choice; the *policy* version (T003, `1.0`) is recorded on every form-consent record. They are independent. Today one CMS field feeds the cookie version only.
+- **robots (FR-003):** admin and API are kept out of search by the `X-Robots-Tag: noindex, nofollow` header in the Caddyfile (robots.txt only lists the paths of the public host).
+- **Admin HSTS (FR-030):** sent by Caddy through `ADMIN_HSTS` (production only); the web app and the API send their own.
+- **Event properties (US3):** `page` and URL come from GTM's built-in `page_location`; `service_id`, `lang` and the other properties ride on the event itself. `contact_click` and `quote_requested` carry no `page` field on purpose.
+- **Lighthouse / CDN (SC-004):** budgets live in `lighthouserc.json`; a CDN is optional and is decided with T001.
+- **Uploads backup (FR-041):** `restic-backup.sh` archives the `api_uploads` volume. With S3 storage that archive is empty, so enable bucket versioning or replication instead.
