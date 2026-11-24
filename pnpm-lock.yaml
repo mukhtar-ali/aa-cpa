@@ -311,6 +311,9 @@ importers:
       pino-http:
         specifier: ^10.5.0
         version: 10.5.0
+      prisma:
+        specifier: ^6.0.0
+        version: 6.19.3(magicast@0.5.5)(typescript@5.9.3)
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -323,6 +326,15 @@ importers:
       sharp:
         specifier: ^0.35.5
         version: 0.35.5(@types/node@20.19.41)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@swc/core@1.15.40(@swc/helpers@0.5.23))(@types/node@20.19.41)(typescript@5.9.3)
+      tsconfig-paths:
+        specifier: ^4.2.0
+        version: 4.2.0
+      typescript:
+        specifier: ^5
+        version: 5.9.3
       zod:
         specifier: '>=4.6.6'
         version: 4.6.7
@@ -381,21 +393,9 @@ importers:
       pino-pretty:
         specifier: ^13.0.0
         version: 13.1.3
-      prisma:
-        specifier: ^6.0.0
-        version: 6.19.3(magicast@0.5.5)(typescript@5.9.3)
       ts-jest:
         specifier: ^29.4.15
         version: 29.4.15(@babel/core@7.29.7)(@jest/transform@30.5.2)(@jest/types@30.5.1)(babel-jest@30.5.2(@babel/core@7.29.7))(jest-util@30.5.1)(jest@30.5.2(@types/node@20.19.41)(ts-node@10.9.2(@swc/core@1.15.40(@swc/helpers@0.5.23))(@types/node@20.19.41)(typescript@5.9.3)))(typescript@5.9.3)
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.15.40(@swc/helpers@0.5.23))(@types/node@20.19.41)(typescript@5.9.3)
-      tsconfig-paths:
-        specifier: ^4.2.0
-        version: 4.2.0
-      typescript:
-        specifier: ^5
-        version: 5.9.3
 
   apps/web:
     dependencies:
