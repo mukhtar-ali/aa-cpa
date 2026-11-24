@@ -38,3 +38,10 @@ Branch `003-public-site-pages` (worktree `aa-cpa-003`), based on `integration/00
 
 | Page | 1512 | 768 | 1024 | 360 | Notes |
 | --- | --- | --- | --- | --- | --- |
+
+## Review round (2026-11-24)
+
+Debate review (claude + agy) raised one finding (upload route buffered the body before the size check): fixed. Later passes could not read the
+diff (reviewer sessions have no shell), so the page components and mappers have no second-model review. My own security read fixed:
+unsanitized legal HTML (API), CMS `{ar,en}` text never resolving (API), `javascript:`/`data:` links from CMS content (web), and the
+client IP taken from the forgeable first `X-Forwarded-For` entry (now `X-Real-IP`, else the last entry).

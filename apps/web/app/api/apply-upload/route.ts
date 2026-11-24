@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { forwardApplication, MAX_CV_BYTES } from '@/src/actions/apply-core';
+import { clientIpFrom } from '@/src/lib/client-ip';
 import { isLang } from '@/src/lib/i18n/dictionaries';
 
 export const dynamic = 'force-dynamic';
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
     const data = await request.formData().catch(() => null);
     if (!data) return NextResponse.json({ ok: false, error: 'invalid' }, { status: 400 });
 
-    const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || undefined;
+    const clientIp = clientIpFrom(request.headers);
     const result = await forwardApplication(data, { slug, lang, clientIp });
     if (result.ok) return NextResponse.json({ ok: true }, { status: 201 });
     const status = result.fileError === 'tooLarge' ? 413 : result.fileError === 'wrongType' ? 415 : result.error === 'rateLimited' ? 429 : result.error === 'closed' ? 410 : result.error === 'generic' ? 502 : 400;

@@ -1,6 +1,7 @@
 'use server';
 
 import { headers } from 'next/headers';
+import { clientIpFrom } from '@/src/lib/client-ip';
 import { isLang } from '@/src/lib/i18n/dictionaries';
 import { submitContactCore, type ContactSubmission } from './contact-core';
 import type { FormResult } from './result';
@@ -9,6 +10,6 @@ import type { FormResult } from './result';
 export async function submitContact(lang: string, input: ContactSubmission): Promise<FormResult> {
     if (!isLang(lang)) return { ok: false, error: 'generic' };
     const h = await headers();
-    const clientIp = h.get('x-forwarded-for')?.split(',')[0]?.trim() || h.get('x-real-ip') || undefined;
+    const clientIp = clientIpFrom(h);
     return submitContactCore(input, { lang, clientIp });
 }

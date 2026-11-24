@@ -1,13 +1,14 @@
 'use server';
 
 import { headers } from 'next/headers';
+import { clientIpFrom } from '@/src/lib/client-ip';
 import { isLang } from '@/src/lib/i18n/dictionaries';
 import { estimateCore, requestQuoteCore, type EstimateOutcome, type QuoteSubmission } from './estimator-core';
 import type { FormResult } from './result';
 
 async function clientIp() {
     const h = await headers();
-    return h.get('x-forwarded-for')?.split(',')[0]?.trim() || h.get('x-real-ip') || undefined;
+    return clientIpFrom(h);
 }
 
 /** Server Actions (contract: `estimate`, `requestQuote`). */
