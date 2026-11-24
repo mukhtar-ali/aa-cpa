@@ -92,6 +92,7 @@ jobs:
         # Production mode refuses placeholder secrets, so generate random ones for this run.
         run: |
           cp docs/deploy/env.example .env
+          echo "WEB_SERVER_API_URL=http://api:3001" >> .env
           sed -i "s|^JWT_SECRET=.*|JWT_SECRET=$(openssl rand -hex 32)|; s|^CSRF_SECRET=.*|CSRF_SECRET=$(openssl rand -hex 32)|" .env
 
       - name: Validate compose file

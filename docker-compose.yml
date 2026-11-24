@@ -83,7 +83,9 @@ services:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
         NEXT_PUBLIC_FB_PIXEL_ID: ${NEXT_PUBLIC_FB_PIXEL_ID:-}
-        BASE_URL: ${BASE_URL:-http://localhost:3001}
+        # next.config.ts inlines BASE_URL at build time, so this is what the server-side code calls. Inside the container localhost is
+        # not the API: set WEB_SERVER_API_URL=http://api:3001 for a single-host stack (the CI smoke test does).
+        BASE_URL: ${WEB_SERVER_API_URL:-${BASE_URL:-http://localhost:3001}}
     restart: unless-stopped
     depends_on:
       api:
@@ -92,8 +94,7 @@ services:
     # secrets (JWT_SECRET, database and S3 credentials). It only needs these public values.
     environment:
       NODE_ENV: ${NODE_ENV:-production}
-      # Server-side calls (SSR, proxy redirect lookup) run inside this container, where localhost is not the API: use the service name.
-      BASE_URL: ${WEB_SERVER_API_URL:-http://api:3001}
+      BASE_URL: ${WEB_SERVER_API_URL:-${BASE_URL:-http://localhost:3001}}
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
       NEXT_PUBLIC_FB_PIXEL_ID: ${NEXT_PUBLIC_FB_PIXEL_ID:-}
