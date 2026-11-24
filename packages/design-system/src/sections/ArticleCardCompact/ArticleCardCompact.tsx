@@ -21,7 +21,11 @@ export interface ArticleCardCompactProps extends Omit<React.HTMLAttributes<HTMLE
  */
 export const ArticleCardCompact = React.forwardRef<HTMLElement, ArticleCardCompactProps>(({ article, divider = true, locale = 'ar', headingLevel = 3, className, ...props }, ref) => (
   <article ref={ref} className={cn('relative flex items-start gap-4 pb-5 has-[a:focus-visible]:outline-3 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-solid has-[a:focus-visible]:outline-ring-focus', divider && 'border-b border-solid border-border-inverse', className)} {...props}>
-    <img src={article.image.src} alt={article.image.decorative ? '' : article.image.alt} width={article.image.width} height={article.image.height} className="h-18.75 w-18 shrink-0 rounded-thumb-lg object-cover" />
+    {article.image ? (
+      <img src={article.image.src} alt={article.image.decorative ? '' : article.image.alt} width={article.image.width} height={article.image.height} className="h-18.75 w-18 shrink-0 rounded-thumb-lg object-cover" />
+    ) : (
+      <div aria-hidden="true" className="h-18.75 w-18 shrink-0 rounded-thumb-lg bg-pine-200" />
+    )}
     <div className="flex min-w-0 flex-1 flex-col gap-1.5 pt-0.5">
       <HeadingTag level={headingLevel} className="text-body-md font-bold text-text-inverse">
         <a href={article.href} className="after:absolute after:inset-0">

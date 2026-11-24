@@ -13,6 +13,8 @@ import { buildMetadata } from '@/src/lib/seo/page-metadata';
 import { jobPath, toJobDetailProps, type JobDetailApi } from '@/src/mappers/careers';
 import { localizeHref } from '@/src/mappers/href';
 import { toPageSeo } from '@/src/mappers/seo';
+import { JsonLd } from '@/src/components/JsonLd';
+import { buildBreadcrumbJsonLd, buildJobPostingJsonLd } from '@/src/lib/seo/json-ld';
 
 type Props = { params: Promise<{ lang: string; slug: string }> };
 
@@ -47,8 +49,27 @@ export default async function JobPage({ params }: Props) {
     const j = toJobDetailProps(api, lang);
     const factLabel = t as unknown as Record<string, string>;
 
+    const breadcrumbs = [
+        { label: labels.home.home, href: localizeHref(lang, '/') },
+        { label: t.backToJobs, href: localizeHref(lang, '/careers') },
+        { label: j.title, href: localizeHref(lang, jobPath(slug)) },
+    ];
+    const breadcrumbJsonLd = buildBreadcrumbJsonLd({ items: breadcrumbs });
+    const jobJsonLd = buildJobPostingJsonLd({
+        lang,
+        slug,
+        title: api.title,
+        summary: api.summary,
+        bodyHtml: api.body,
+        postedAt: api.postedAt,
+        closesAt: api.closesAt,
+        contract: api.contract,
+        city: api.city,
+    });
+
     return (
         <>
+            <JsonLd data={[breadcrumbJsonLd, jobJsonLd].filter(Boolean) as Record<string, unknown>[]} />
             <Section tone="hero">
                 <Container className="flex flex-col items-start gap-6 pt-24">
                     <Breadcrumbs

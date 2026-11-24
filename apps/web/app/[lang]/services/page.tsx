@@ -10,6 +10,9 @@ import { toPageSeo } from '@/src/mappers/seo';
 import { EstimatorBlock } from '@/src/components/EstimatorBlock';
 import { type WithEstimator } from '@/src/mappers/estimator';
 import { toServicesProps, type ServicesPageApi } from '@/src/mappers/services';
+import { localizeHref } from '@/src/mappers/href';
+import { JsonLd } from '@/src/components/JsonLd';
+import { buildBreadcrumbJsonLd } from '@/src/lib/seo/json-ld';
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -32,8 +35,15 @@ export default async function ServicesPage({ params }: Props) {
     const raw = await getPage<ServicesPageApi & WithEstimator>(endpoint.pages.services, 'services', lang);
     const s = toServicesProps(raw, lang, labels.common.learnMore);
 
+    const breadcrumbs = [
+        { label: labels.home.home, href: localizeHref(lang, '/') },
+        { label: s.hero.title, href: localizeHref(lang, '/services') },
+    ];
+    const breadcrumbJsonLd = buildBreadcrumbJsonLd({ items: breadcrumbs });
+
     return (
         <>
+            <JsonLd data={breadcrumbJsonLd} />
             {s.hero.image && <PageHero title={s.hero.title} subtitle={s.hero.subtitle} image={s.hero.image} breadcrumbs={s.hero.breadcrumbs} breadcrumbsLabel={labels.home.breadcrumbs} action={s.hero.action} />}
             <Section tone="ice">
                 <Container className="flex flex-col gap-12">

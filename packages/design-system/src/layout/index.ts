@@ -29,3 +29,11 @@ export { WhatsAppFloat, type WhatsAppFloatProps } from './WhatsAppFloat';
 export { UtilityBar, type UtilityBarProps } from './UtilityBar';
 export { Footer, BackToTop, type FooterProps, type BackToTopProps } from './Footer';
 export { PageHero, type PageHeroProps } from './PageHero';
+export { ConsentBanner, type ConsentBannerProps, type ConsentBannerTexts } from './ConsentBanner';
+export {
+  ConsentPreferences,
+  type ConsentPreferencesProps,
+  type ConsentPreferencesTexts,
+  type ConsentCategoryItem,
+} from './ConsentPreferences';
+

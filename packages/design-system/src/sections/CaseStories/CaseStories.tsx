@@ -20,7 +20,11 @@ export interface CaseStoryCardProps extends Omit<React.HTMLAttributes<HTMLElemen
  */
 export const CaseStoryCard = React.forwardRef<HTMLElement, CaseStoryCardProps>(({ story, headingLevel = 3, className, ...props }, ref) => (
   <article ref={ref} className={cn('group relative flex flex-col gap-3.5 has-[a:focus-visible]:outline-3 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-solid has-[a:focus-visible]:outline-ring-focus', className)} {...props}>
-    <img src={story.image.src} alt={story.image.decorative ? '' : story.image.alt} width={story.image.width} height={story.image.height} className="h-62.5 w-full rounded-image object-cover" />
+    {story.image ? (
+      <img src={story.image.src} alt={story.image.decorative ? '' : story.image.alt} width={story.image.width} height={story.image.height} className="h-62.5 w-full rounded-image object-cover" />
+    ) : (
+      <div aria-hidden="true" className="h-62.5 w-full rounded-image bg-pine-200" />
+    )}
     <div className="flex flex-col items-start gap-3">
       <CategoryBadge tone="gradient">{story.sector}</CategoryBadge>
       <HeadingTag level={headingLevel} className="text-h6 font-bold text-text-heading">

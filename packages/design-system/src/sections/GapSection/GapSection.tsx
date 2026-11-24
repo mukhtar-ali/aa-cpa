@@ -12,8 +12,8 @@ export interface GapSectionProps extends Omit<React.HTMLAttributes<HTMLElement>,
   statement: string;
   eyebrow: string;
   body: string;
-  /** Two photos: a small one (220 x 181, 10 px radius) and a tall one (315 x 415). */
-  images: [ImageRef, ImageRef];
+  /** Up to two photos: a small one (220 x 181, 10 px radius) and a tall one (315 x 415). Missing photos are simply left out. */
+  images?: ImageRef[];
 }
 
 /**
@@ -22,7 +22,7 @@ export interface GapSectionProps extends Omit<React.HTMLAttributes<HTMLElement>,
  *
  * @figma 411:3788, 411:3796, 411:3797, 411:3798, 411:3801, 411:3805
  */
-export const GapSection = React.forwardRef<HTMLElement, GapSectionProps>(({ statement, eyebrow, body, images, className, ...props }, ref) => {
+export const GapSection = React.forwardRef<HTMLElement, GapSectionProps>(({ statement, eyebrow, body, images = [], className, ...props }, ref) => {
   const [small, tall] = images;
   return (
     <section ref={ref} className={cn('relative isolate overflow-hidden bg-bg-page py-section-lg text-text-heading', className)} {...props}>
@@ -31,10 +31,12 @@ export const GapSection = React.forwardRef<HTMLElement, GapSectionProps>(({ stat
         <Heading level={2} size="h3" className="bg-linear-to-b from-gradient-start to-gradient-end-text-large bg-clip-text text-transparent lg:col-span-5 lg:col-start-1 lg:row-start-1">
           {statement}
         </Heading>
-        <div className="flex items-start gap-6 lg:col-span-7 lg:col-start-6 lg:row-start-1">
-          <img src={tall.src} alt={tall.decorative ? '' : tall.alt} width={tall.width} height={tall.height} className="aspect-[315/415] w-full object-cover sm:w-1/2" />
-          <img src={small.src} alt={small.decorative ? '' : small.alt} width={small.width} height={small.height} className="hidden aspect-[220/181] w-1/3 rounded-thumb object-cover sm:block" />
-        </div>
+        {tall || small ? (
+          <div className="flex items-start gap-6 lg:col-span-7 lg:col-start-6 lg:row-start-1">
+            {tall ? <img src={tall.src} alt={tall.decorative ? '' : tall.alt} width={tall.width} height={tall.height} className="aspect-[315/415] w-full object-cover sm:w-1/2" /> : null}
+            {small ? <img src={small.src} alt={small.decorative ? '' : small.alt} width={small.width} height={small.height} className="hidden aspect-[220/181] w-1/3 rounded-thumb object-cover sm:block" /> : null}
+          </div>
+        ) : null}
         <div className="flex flex-col gap-4 lg:col-span-4 lg:col-start-1 lg:row-start-2">
           <Eyebrow>{eyebrow}</Eyebrow>
         </div>

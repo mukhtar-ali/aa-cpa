@@ -3,5 +3,10 @@ import { fileURLToPath } from 'node:url';
 
 export default defineConfig({
     resolve: { alias: { '@': fileURLToPath(new URL('.', import.meta.url)) } },
-    test: { environment: 'node', include: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'proxy.test.ts'] },
+    test: {
+        environment: 'node',
+        include: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'proxy.test.ts', 'app/**/*.test.ts'],
+        testTimeout: 20000,
+    },
 });
+

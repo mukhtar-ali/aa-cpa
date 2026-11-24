@@ -7,24 +7,20 @@ import { CtaCards, FaqAccordion, MethodologyList, PerkTile, SectionHeading, Stat
 import { ApiError, apiGet } from '@/src/lib/api/client';
 import { tags } from '@/src/lib/api/endpoints';
 import { EstimatorBlock } from '@/src/components/EstimatorBlock';
-import { getLabels, isLang, locales } from '@/src/lib/i18n/dictionaries';
+import { getLabels, isLang } from '@/src/lib/i18n/dictionaries';
 import { buildMetadata } from '@/src/lib/seo/page-metadata';
 import { localizeHref } from '@/src/mappers/href';
 import { toPageSeo } from '@/src/mappers/seo';
 import { servicePath, toServiceDetailProps, type ServiceDetailApi } from '@/src/mappers/services';
+import { JsonLd } from '@/src/components/JsonLd';
+import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildServiceJsonLd } from '@/src/lib/seo/json-ld';
 
 type Props = { params: Promise<{ lang: string; slug: string }> };
 
 const load = (slug: string, lang: 'ar' | 'en') => apiGet<ServiceDetailApi>(endpoint.services.getBySlug(slug), { lang, tags: [tags.service(slug), tags.services] });
 
-export async function generateStaticParams() {
-    const list = await Promise.all(
-        locales.map((lang) =>
-            apiGet<{ slug: string }[]>(endpoint.services.list, { lang, tags: [tags.services] }).then((items) => items.map((s) => ({ lang, slug: s.slug }))).catch(() => []),
-        ),
-    );
-    return list.flat();
-}
+// Rendered per request like every other page: the CSP nonce (proxy.ts) and APP_ENV are per request, which a prerendered page cannot carry.
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { lang, slug } = await params;
@@ -51,8 +47,26 @@ export default async function ServicePage({ params }: Props) {
 
     const s = toServiceDetailProps(api, lang);
     const t = labels.services;
+
+    const breadcrumbs = [
+        { label: labels.home.home, href: localizeHref(lang, '/') },
+        { label: labels.home.servicesTabs, href: localizeHref(lang, '/services') },
+        { label: s.title, href: localizeHref(lang, servicePath(slug)) },
+    ];
+    const breadcrumbJsonLd = buildBreadcrumbJsonLd({ items: breadcrumbs });
+    const serviceJsonLd = buildServiceJsonLd({
+        lang,
+        slug,
+        title: api.title,
+        summary: api.summary,
+        image: api.image?.src,
+        audience: api.audience,
+    });
+    const faqJsonLd = api.faqs && api.faqs.length > 0 ? buildFaqJsonLd({ lang, items: api.faqs }) : null;
+
     return (
         <>
+            <JsonLd data={[breadcrumbJsonLd, serviceJsonLd, faqJsonLd].filter(Boolean) as Record<string, unknown>[]} />
             {s.image && (
                 <PageHero
                     title={s.title}

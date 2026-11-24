@@ -11,6 +11,8 @@ import { buildMetadata, siteUrl } from '@/src/lib/seo/page-metadata';
 import { articlePath, toArticleDetailProps, type ArticleDetailApi } from '@/src/mappers/articles';
 import { localizeHref } from '@/src/mappers/href';
 import { toPageSeo } from '@/src/mappers/seo';
+import { JsonLd } from '@/src/components/JsonLd';
+import { buildArticleJsonLd, buildBreadcrumbJsonLd } from '@/src/lib/seo/json-ld';
 
 type Props = { params: Promise<{ lang: string; slug: string }> };
 
@@ -54,8 +56,27 @@ export default async function ArticlePage({ params }: Props) {
         </ShareTracker>
     );
 
+    const breadcrumbs = [
+        { label: labels.home.home, href: localizeHref(lang, '/') },
+        { label: t.articles, href: localizeHref(lang, '/articles') },
+        { label: a.title, href: url },
+    ];
+    const breadcrumbJsonLd = buildBreadcrumbJsonLd({ items: breadcrumbs });
+    const coverImage = typeof api.image === 'string' ? api.image : (api.image && 'src' in api.image ? (api.image as { src?: string }).src : undefined);
+    const articleJsonLd = buildArticleJsonLd({
+        lang,
+        slug,
+        title: api.title,
+        excerpt: api.excerpt,
+        date: api.date,
+        image: coverImage,
+        author: api.author ? { name: api.author.name, role: api.author.role } : null,
+        tags: api.tags,
+    });
+
     return (
         <>
+            <JsonLd data={[breadcrumbJsonLd, articleJsonLd].filter(Boolean) as Record<string, unknown>[]} />
             <ArticleHeader
                 breadcrumbs={[
                     { label: labels.home.home, href: localizeHref(lang, '/') },

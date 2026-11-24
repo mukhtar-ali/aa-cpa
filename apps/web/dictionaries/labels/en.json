@@ -49,6 +49,33 @@
         "banner": "Preview mode: you are viewing unpublished content",
         "exit": "Exit preview"
     },
+    "consent": {
+        "title": "Cookies & Privacy",
+        "description": "We use essential cookies to ensure our website functions properly, and optional cookies to analyze traffic and improve marketing. You can choose to accept all, reject non-essential cookies, or manage your preferences.",
+        "acceptAll": "Accept all",
+        "rejectAll": "Reject non-essential",
+        "customize": "Preferences",
+        "cookieSettings": "Cookie settings",
+        "prefsTitle": "Cookie Preferences",
+        "prefsDescription": "Manage your cookie settings according to your privacy preferences. Strictly necessary cookies cannot be disabled.",
+        "save": "Save preferences",
+        "close": "Close",
+        "alwaysActive": "Always active",
+        "categories": {
+            "necessary": {
+                "label": "Strictly Necessary",
+                "description": "Essential cookies required for site security, navigation, language selection, and core functionality."
+            },
+            "analytics": {
+                "label": "Analytics & Performance",
+                "description": "Help us understand visitor engagement, popular pages, and performance to improve user experience."
+            },
+            "marketing": {
+                "label": "Marketing & Advertising",
+                "description": "Allow us to measure campaign performance and deliver relevant announcements."
+            }
+        }
+    },
     "home": {
         "clients": "Our clients",
         "pauseMarquee": "Pause logo animation",
@@ -192,6 +219,18 @@
         "sectors": "Sectors",
         "articles": "Articles",
         "careers": "Careers",
-        "contact": "Contact us"
+        "contact": "Contact us",
+        "descriptions": {
+            "home": "SOCPA-licensed audit, zakat and tax advisory firm in Riyadh, Al-Khobar and Al-Qassim. Clear, practical support for growing Saudi businesses.",
+            "about": "Meet Abdulrahman Al-Shabibshiri Professional Consulting: licensed partners and a member of 3E Accounting, serving Saudi businesses from three offices.",
+            "services": "Audit, zakat and tax, and local content services from licensed professionals, delivered in Arabic and English for Saudi businesses.",
+            "sectors": "Sector expertise across Saudi industries: see how our audit, zakat and tax teams support businesses like yours.",
+            "articles": "Insights on audit, zakat, tax and compliance in Saudi Arabia, written plainly by our licensed partners.",
+            "careers": "Join a licensed audit and advisory firm in Saudi Arabia. See open roles in Riyadh, Al-Khobar and Al-Qassim and apply online.",
+            "contact": "Talk to our team in Riyadh, Al-Khobar or Al-Qassim. Send an enquiry or request a quote for audit, zakat and tax services.",
+            "privacy": "How Abdulrahman Al-Shabibshiri Professional Consulting collects, uses and protects personal data under the Saudi PDPL, and your rights.",
+            "terms": "The terms that apply to using the Abdulrahman Al-Shabibshiri Professional Consulting website.",
+            "accessibility": "Our commitment to an accessible website, the standards we follow and how to tell us about a barrier."
+        }
     }
 }

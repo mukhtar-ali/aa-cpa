@@ -7,12 +7,14 @@ import * as pixel from '@/src/utilities/metaPixel';
 
 interface FBPixelProps {
     pixelId?: string;
+    /** Per-request CSP nonce. */
+    nonce?: string;
 }
 
 // Standard Meta Pixel base code (from Meta's own Events Manager setup instructions) —
 // wujud's equivalent loaded a local `/scripts/pixel.js` that was never actually created
 // in their public/ folder, so theirs 404s if it ever runs. This is the real thing.
-export function FBPixel({ pixelId }: FBPixelProps) {
+export function FBPixel({ pixelId, nonce }: FBPixelProps) {
     const id = pixelId || pixel.FB_PIXEL_ID;
     const [loaded, setLoaded] = useState(false);
     const pathname = usePathname();
@@ -26,7 +28,7 @@ export function FBPixel({ pixelId }: FBPixelProps) {
 
     return (
         <>
-            <Script id="fb-pixel-base" strategy="afterInteractive" onLoad={() => setLoaded(true)}>
+            <Script id="fb-pixel-base" strategy="afterInteractive" nonce={nonce} onLoad={() => setLoaded(true)}>
                 {`
                     !function(f,b,e,v,n,t,s)
                     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?

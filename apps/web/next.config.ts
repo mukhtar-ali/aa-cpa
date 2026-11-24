@@ -45,6 +45,13 @@ const nextConfig: NextConfig = {
     transpilePackages: ['@repo/design-system'],
     // Job applications carry a CV (up to 5 MB in 002) through a Server Action; the default 1 MB would reject it.
     experimental: { serverActions: { bodySizeLimit: '6mb' } },
+    // Hashed build assets never change, so they are cacheable for a year; Next already does this for /_next/static, stated here so a
+    // proxy or CDN in front cannot get it wrong. HTML keeps Next's own revalidation headers.
+    async headers() {
+        return [
+            { source: '/_next/static/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] },
+        ];
+    },
     async redirects() {
         return [{ source: '/:lang(ar|en)/news/:path*', destination: '/:lang/articles/:path*', permanent: true }];
     },
@@ -52,6 +59,9 @@ const nextConfig: NextConfig = {
         BASE_URL: process.env.BASE_URL,
     },
     images: {
+        // Smallest formats first (FR-034); the optimiser serves AVIF/WebP to browsers that accept them and caches the result.
+        formats: ['image/avif', 'image/webp'],
+        minimumCacheTTL: 60 * 60 * 24 * 30,
         remotePatterns: [
             { protocol: 'https', hostname: '**.amazonaws.com' },
             ...(envImagePatterns() ?? []),
