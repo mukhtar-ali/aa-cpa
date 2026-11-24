@@ -15,6 +15,10 @@ permissions:
   contents: read
   security-events: write
 
+env:
+  # .npmrc pins store-dir to a Windows/WSL drive (/mnt/e) for local work; runners have no such path.
+  npm_config_store_dir: ${{ runner.temp }}/pnpm-store
+
 jobs:
   audit:
     name: pnpm audit (production dependencies)
@@ -49,7 +53,7 @@ jobs:
           tags: aacpa/${{ matrix.service }}:scan
           cache-from: type=gha,scope=${{ matrix.service }}
       - name: Scan (fail on fixed HIGH/CRITICAL, OS and libraries)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: aacpa/${{ matrix.service }}:scan
           severity: HIGH,CRITICAL
