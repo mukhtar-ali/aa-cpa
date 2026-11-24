@@ -36,7 +36,9 @@ export class RedirectsController {
 
     /**
      * Called by the web proxy for every redirect it serves (fire and forget); counts are batched in memory and flushed every 30 s.
-     * Public but harmless: it only ever increments the counter of an existing redirect.
+     * Public, and it only ever increments the counter of an existing redirect. Anyone can nudge the hit statistics (the global
+     * throttle only slows that), so treat hits as a hint for retiring legacy URLs, never as proof. A per-IP @Throttle here would
+     * also throttle the web proxy itself, since every hit comes from its one address.
      */
     @Post('/api/redirects/hit')
     @HttpCode(HttpStatus.NO_CONTENT)
