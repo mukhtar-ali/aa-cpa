@@ -57,3 +57,4 @@ package-lock.json
 .locked/
 .pnpm-store
 .node_modules_old*
+tests/legacy/out/
