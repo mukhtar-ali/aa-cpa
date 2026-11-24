@@ -1,0 +1,11 @@
+[Unit]
+Description=Run the AA-CPA backup every night
+
+[Timer]
+# 02:30 server time (Riyadh is UTC+3, traffic is lowest); catch up after downtime.
+OnCalendar=*-*-* 02:30:00
+RandomizedDelaySec=300
+Persistent=true
+
+[Install]
+WantedBy=timers.target
