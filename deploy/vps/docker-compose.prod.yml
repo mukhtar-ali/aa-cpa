@@ -116,6 +116,7 @@ services:
       ADMIN_DOMAIN: ${ADMIN_DOMAIN}
       API_DOMAIN: ${API_DOMAIN}
       WEB_ROBOTS_TAG: ${WEB_ROBOTS_TAG:-index, follow}
+      ADMIN_HSTS: ${ADMIN_HSTS:-max-age=0}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data

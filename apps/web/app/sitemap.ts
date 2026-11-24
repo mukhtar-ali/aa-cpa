@@ -84,7 +84,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         const alternates = buildAlternates(path);
         return LOCALES.map((locale) => ({
             url: `${siteUrl()}/${locale}${path}`,
-            lastModified: new Date(),
             priority: path === '' ? 1 : 0.8,
             alternates,
         }));
