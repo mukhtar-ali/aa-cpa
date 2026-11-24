@@ -103,6 +103,15 @@ jobs:
       - name: Start the stack and wait for health
         run: docker compose up -d --wait --wait-timeout 300
 
+      - name: Seed content and the super admin (throwaway password)
+        run: |
+          docker compose run --rm \
+            -e SUPER_ADMIN_EMAIL=admin@example.com \
+            -e SUPER_ADMIN_USERNAME=super_admin \
+            -e SUPER_ADMIN_FULL_NAME="Super Admin" \
+            -e SUPER_ADMIN_PASSWORD="$SUPER_ADMIN_PASSWORD" \
+            api pnpm seed
+
       - name: Smoke test endpoints
         run: |
           curl -fsS -o /dev/null -w "api health: %{http_code}\n" http://localhost:3001/api/health
@@ -123,15 +132,6 @@ jobs:
           if docker compose exec -T web printenv JWT_SECRET >/dev/null 2>&1; then
             echo "JWT_SECRET leaked into the web container"; exit 1
           fi
-
-      - name: Seed the super admin (throwaway password)
-        run: |
-          docker compose run --rm \
-            -e SUPER_ADMIN_EMAIL=admin@example.com \
-            -e SUPER_ADMIN_USERNAME=super_admin \
-            -e SUPER_ADMIN_FULL_NAME="Super Admin" \
-            -e SUPER_ADMIN_PASSWORD="$SUPER_ADMIN_PASSWORD" \
-            api pnpm seed
 
       - name: Show logs on failure
         if: failure()
