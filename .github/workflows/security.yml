@@ -17,7 +17,7 @@ permissions:
 
 env:
   # .npmrc pins store-dir to a Windows/WSL drive (/mnt/e) for local work; runners have no such path.
-  npm_config_store_dir: ${{ runner.temp }}/pnpm-store
+  npm_config_store_dir: /tmp/pnpm-store
 
 jobs:
   audit:
