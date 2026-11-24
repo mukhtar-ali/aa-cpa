@@ -55,6 +55,9 @@
   used; `connect-src` API, GA endpoints), HSTS (preload after 30 days stable), `X-Content-Type-Options`, `Referrer-Policy:
   strict-origin-when-cross-origin`, `Permissions-Policy` minimal, `frame-ancestors 'none'`. API keeps
   `security-headers.middleware.ts`. Report-only CSP on staging for one week first.
+- **Implementation note (T025)**: per-request nonce + `'strict-dynamic'` as decided (no `unsafe-inline` for scripts; styles stay inline-capable).
+  The layout reads the nonce from `headers()` (set by `proxy.ts`), which keeps every route per-request, as 003 already renders. `CSP_MODE=report-only`
+  (default) or `enforce`; HSTS and `upgrade-insecure-requests` only when `APP_ENV=production`.
 
 ## R7. Infrastructure
 - **Decision** (confirmed 2026-11-18): `docs/DEPLOY_VPS.md` path B — Docker Compose on a VPS, deployed by GitHub

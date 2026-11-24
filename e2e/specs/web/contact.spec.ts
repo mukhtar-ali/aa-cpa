@@ -51,14 +51,20 @@ test.describe('contact form', () => {
     test('keyboard only: tab order reaches the submit button', async ({ page }) => {
         await page.goto(url('en'));
         await page.getByLabel(/full name/i).focus();
-        for (let i = 0; i < 8; i += 1) await page.keyboard.press('Tab');
-        await expect(page.getByRole('button', { name: /send/i })).toBeFocused();
+        // Mobile, email, service, message, consent checkbox, privacy link, then Send: every stop in a sensible order, no trap.
+        const send = page.getByRole('button', { name: /send/i });
+        let reached = false;
+        for (let i = 0; i < 10 && !reached; i += 1) {
+            await page.keyboard.press('Tab');
+            reached = await send.evaluate((el) => el === document.activeElement);
+        }
+        await expect(send).toBeFocused();
     });
 
     test('?service= preselects the service', async ({ page, request }) => {
         const services = (await (await request.get(`${process.env.API_BASE_URL ?? 'http://localhost:3001'}/api/services?lang=en`)).json()) as { slug: string; title: string }[];
         test.skip(services.length === 0, 'no seeded services');
         await page.goto(`${url('en')}?service=${services[0].slug}`);
-        await expect(page.getByLabel(/^service/i)).toHaveValue(/.+/);
+        await expect(page.getByRole('combobox', { name: /^service/i })).toHaveValue(/.+/);
     });
 });

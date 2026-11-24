@@ -5,23 +5,17 @@ import { expect, test } from '@playwright/test';
 test.describe('estimator', () => {
     test.skip(!!process.env.E2E_ESTIMATOR_DRAFT, 'run against the draft config');
 
-    test('answers the questions, shows a range with the disclaimer, then sends a quote request', async ({ page }) => {
+    test('answers the questions, shows a range with the disclaimer, then offers a formal quote', async ({ page }) => {
         await page.goto('/en');
-        const card = page.getByRole('group', { name: /estimate/i }).or(page.locator('section', { hasText: /question 1 of/i })).first();
-        await expect(card).toBeVisible();
-        await page.getByRole('button', { name: /start estimate|next/i }).first().click().catch(() => undefined);
-        // Answer each question with the first sensible input.
-        for (let i = 0; i < 6; i += 1) {
-            const radio = page.getByRole('radio').first();
-            const input = page.getByRole('textbox').first();
-            if (await radio.isVisible().catch(() => false)) await radio.check();
-            else if (await input.isVisible().catch(() => false)) await input.fill('12000000');
-            const next = page.getByRole('button', { name: /next|estimate|get/i }).first();
-            if (await next.isVisible().catch(() => false)) await next.click();
-            if (await page.getByText(/estimate only|not a commitment/i).isVisible().catch(() => false)) break;
+        // Four questions: pick the first option of each and press the step's button ("Start estimate", then "Next", and on the last one
+        // "Your estimated range").
+        for (let i = 0; i < 4; i += 1) {
+            await page.getByRole('radio').first().check();
+            await page.getByRole('button', { name: /^(start estimate|next|your estimated range)$/i }).click();
         }
-        await expect(page.getByText(/SAR|ريال/)).toBeVisible();
-        await expect(page.getByText(/estimate only|not a commitment/i)).toBeVisible();
+        await expect(page.getByText(/SAR\s?[\d,]+\s?[–-]\s?SAR\s?[\d,]+|ريال/).first()).toBeVisible();
+        await expect(page.getByText(/illustrative|not constitute/i).first()).toBeVisible();
+        await expect(page.getByRole('button', { name: /request a formal quote/i })).toBeVisible();
     });
 
     test('quote request shows a confirmation', async ({ page }) => {
