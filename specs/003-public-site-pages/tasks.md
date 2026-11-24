@@ -99,3 +99,7 @@ require 002 US3/US4.
 ## Delegation batches
 
 Batch 1: T001–T016 · Batch 2: T017–T024 · Batch 3: T025–T034 · Batch 4: T035–T044.
+
+## Closing round
+
+Everything left open (tests never run, parity review, sign-off, style gap, no-JS, Turnstile, second-model review, PR) is listed with commands in `reviews/deferred-work.md`. It is deliberately postponed to one round at the end of the project.
