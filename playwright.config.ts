@@ -20,16 +20,16 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      testIgnore: /(design-system|web)\//,
+      testIgnore: /(design-system|web|seo|consent)\//,
       use: { 
         ...devices['Desktop Chrome'],
         channel: 'chrome', // Use the user's installed Google Chrome
       },
     },
     {
-      // Feature 003 public site journeys (needs the API on 3001 and the web app on 3000, seeded).
+      // Feature 003 public site journeys and feature 004 SEO/consent checks (needs the API on 3001 and the web app on 3000, seeded).
       name: 'web',
-      testMatch: /web\/.*\.spec\.ts/,
+      testMatch: /(web|seo|consent)\/.*\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
         channel: 'chrome',

@@ -1,0 +1,35 @@
+name: Lighthouse (staging)
+
+# Feature 004 (SC-004): mobile Lighthouse budgets against the deployed staging site, using the same budgets as
+# lighthouserc.json. Run after a staging deploy; the production run is part of go-live (docs/launch/go-live-checklist.md).
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Deploy to VPS]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lhci:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Point the URL list at staging
+        run: |
+          sed "s#http://localhost:3000#https://${{ vars.VPS_WEB_DOMAIN }}#g" lighthouserc.json > lighthouserc.staging.json
+      - run: npx --yes @lhci/cli@0.15.x autorun --config=lighthouserc.staging.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lhci-staging
+          path: lhci-report

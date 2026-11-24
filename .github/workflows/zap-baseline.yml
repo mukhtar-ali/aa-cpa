@@ -1,0 +1,29 @@
+name: ZAP baseline (staging)
+
+# Feature 004 (FR-032): passive OWASP ZAP scan of the public web site on staging. Never point it at production.
+# Run manually before go-live, and weekly while on staging. Rules to ignore go in .zap/rules.tsv with a reason.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * 2'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  zap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - name: ZAP baseline scan
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: https://${{ vars.VPS_WEB_DOMAIN }}/ar
+          rules_file_name: .zap/rules.tsv
+          cmd_options: '-a'
+          allow_issue_writing: false
+          fail_action: true
