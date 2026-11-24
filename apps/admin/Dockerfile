@@ -35,9 +35,12 @@ RUN pnpm --filter @repo/shared build \
     && pnpm --filter @repo/admin build
 
 # ---------------------------------------------------------------------------
-# Stage 3: runtime — static file serving with nginx:1.27-alpine
+# Stage 3: runtime — static file serving with nginx:1.29-alpine
 # ---------------------------------------------------------------------------
-FROM nginx:1.27-alpine AS runtime
+FROM nginx:1.29-alpine AS runtime
+
+# Pick up the Alpine security fixes published since the nginx image was last built (musl, openssl, curl, libxml2, ...).
+RUN apk upgrade --no-cache
 
 COPY apps/admin/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/apps/admin/dist /usr/share/nginx/html

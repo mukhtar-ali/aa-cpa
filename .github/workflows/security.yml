@@ -58,5 +58,8 @@ jobs:
           image-ref: aacpa/${{ matrix.service }}:scan
           severity: HIGH,CRITICAL
           ignore-unfixed: true
+          # pnpm (corepack) stays in the api image only so operators can run `docker compose run --rm api pnpm seed`; it is a CLI that
+          # nothing reachable from the network executes, and its own pinned dependencies are not application code.
+          skip-dirs: /usr/local/share/corepack
           exit-code: '1'
           format: table
