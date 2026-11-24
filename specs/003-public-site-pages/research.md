@@ -26,6 +26,10 @@
   slugs of services/articles/jobs (published at build; others render on first request), `revalidate = 3600` fallback,
   on-demand invalidation by tag via `POST /api/revalidate` (secret header, body `{ tags: string[] }`). Listing filters
   (`category`, `page`, `department`) render dynamically from cache-tagged fetches.
+  - **Amendment (T017–T022)**: page routes use `dynamic = 'force-dynamic'` instead of build-time prerender, because CI builds the web
+    app without an API and a prerender would fail. The API fetches stay cached and tag-revalidated (`apiGet`), so the API is not hit per
+    visit; only the HTML render is per request. Service detail keeps `generateStaticParams` (empty when the API is down). Revisit if
+    page-level CDN caching is needed (e.g. build against a seeded API in the deploy pipeline).
 - **Rationale**: Fast first byte, < 60 s freshness after publish (SC-004), resilience if the API is down (stale content
   served).
 
@@ -63,10 +67,11 @@
 
 ## R8. Removal of starter leftovers
 
-- **Decision**: Delete `app/[lang]/projects`, `app/[lang]/[slug]` (projects/units), `_components/hero-slider.tsx`,
+- **Decision** (re-based 2026-11-23 on the tree of `integration/001-002`: `projects`, `[slug]` and `units` are already gone there; on `main` or an older base delete them too): Delete leftovers of `app/[lang]/projects`, `app/[lang]/[slug]` (projects/units), `_components/hero-slider.tsx`,
   `src/components/units/*`, `src/components/ui/CustomButton.tsx`, `CustomHeader.tsx`, `CustomFooter.tsx`, legacy
   `src/animations/*` preloader/page transition and the GSAP dependency (removal confirmed 2026-11-18), Inter/Cairo
-  fonts, legacy tokens in `tailwind.css`, `src/lib/server-data.ts` functions for projects; `news` routes become
+  fonts, legacy tokens in `tailwind.css`, `src/lib/server-data.ts` functions for projects; `sitemap.ts` projects/units entries,
+  and rewrite legacy `src/components/careers`, `src/components/contact`, `app/[lang]/careers/*`, `app/[lang]/contact` onto the 002 models; keep `reference/`; `news` routes become
   `articles` with `/news/*` → `/articles/*` permanent redirects in `next.config.ts`.
 
 ## R9. Analytics hook points

@@ -2,8 +2,8 @@
 
 **Branch**: `003-public-site-pages` | **Date**: 2026-11-18 | **Spec**: [spec.md](./spec.md)
 
-**Implementer**: agy (worktree `E:\www\aa-cpa-003`, branch `003-public-site-pages`, created from `main` after 001 and
-002 US1+US2 merge). **Planner/reviewer**: Claude.
+**Implementer**: agy (worktree `E:\www\aa-cpa-003`, branch `003-public-site-pages`, created from `integration/001-002` (or `main` once 001 and
+002 US1+US2 merge)). **Planner/reviewer**: Claude.
 
 ## Summary
 
@@ -30,7 +30,7 @@ against the full stack (seeded DB), `@axe-core/playwright`, Lighthouse CI (`ligh
 
 **Constraints**: constitution II/III/IV; no hard-coded content; no-JS forms; contracts parsed at the seam.
 
-**Scale/Scope**: 12 routes × 2 locales, 3 forms, 4 support endpoints (revalidate, preview, preview exit, health).
+**Scale/Scope**: 12 routes × 2 locales, 3 forms, 5 support endpoints (revalidate, preview, preview exit, health, apply-upload).
 
 ## Constitution Check
 
@@ -42,7 +42,7 @@ against the full stack (seeded DB), `@axe-core/playwright`, Lighthouse CI (`ligh
 | IV A11y | PASS | Focus on route change, skip link, axe in e2e |
 | V Contracts | PASS | R1 schema parsing, R2 mappers |
 | VI Tests | PASS | unit + e2e + Lighthouse CI |
-| VII Perf/SEO | PASS | R3 ISR + tags; R10 metadata function |
+| VII Perf/SEO | PASS (performance); SEO items deferred to 004 | R3 ISR + tags; R10 metadata function |
 | VIII Security | PASS | Server Actions forward to API; secrets server-only; preview no-index |
 
 ## Project Structure
@@ -78,7 +78,7 @@ apps/web/
 │       ├── articles/page.tsx · articles/[slug]/page.tsx
 │       ├── careers/page.tsx · careers/[slug]/page.tsx
 │       ├── contact/page.tsx
-│       ├── privacy/page.tsx · terms/page.tsx
+│       ├── privacy/page.tsx · terms/page.tsx · accessibility/page.tsx
 │       └── reference/home/page.tsx                    # from 001 (kept, guarded)
 ├── src/
 │   ├── lib/api/client.ts, endpoints.ts, errors.ts
