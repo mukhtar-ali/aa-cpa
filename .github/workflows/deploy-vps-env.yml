@@ -44,12 +44,18 @@ jobs:
 
       - name: Image name and tag
         id: meta
+        env:
+          ROLLBACK_TAG: ${{ inputs.rollback_tag }}
         run: |
           owner="${GITHUB_REPOSITORY_OWNER,,}"
           repo="${GITHUB_REPOSITORY#*/}"
           echo "prefix=ghcr.io/${owner}/${repo,,}" >> "$GITHUB_OUTPUT"
-          if [ -n "${{ inputs.rollback_tag }}" ]; then
-            echo "tag=${{ inputs.rollback_tag }}" >> "$GITHUB_OUTPUT"
+          if [ -n "$ROLLBACK_TAG" ]; then
+            # The tag is typed by a person: it must be a plain image tag before it reaches a shell, an output or the VPS.
+            if ! [[ "$ROLLBACK_TAG" =~ ^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$ ]]; then
+              echo "::error::rollback_tag must be an image tag (letters, digits, dot, dash, underscore)"; exit 1
+            fi
+            echo "tag=$ROLLBACK_TAG" >> "$GITHUB_OUTPUT"
           else
             echo "tag=$(git rev-parse --short=12 HEAD)" >> "$GITHUB_OUTPUT"
           fi
