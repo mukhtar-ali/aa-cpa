@@ -1,0 +1,11 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "rootDir": ".",
+        "noEmit": true,
+        "allowJs": true,
+        "paths": { "@/*": ["./src/*"], "supertest": ["./test/supertest-shim.ts"] }
+    },
+    "include": ["src/**/*", "test/**/*", "scripts/**/*", "prisma/**/*.ts"],
+    "exclude": ["node_modules", "dist", "prisma/generated"]
+}

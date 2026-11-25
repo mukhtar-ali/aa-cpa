@@ -29,11 +29,18 @@ export const SaudiMobileSchema = z
     .trim()
     .regex(SaudiMobileRegex, 'Invalid mobile number (must be Saudi 05XXXXXXXX or E.164)');
 
+export const ImageLicenseSchema = z.object({
+    source: z.string(),
+    reference: z.string().optional(),
+    expiresAt: z.string().optional(),
+});
+
 export const ImageFieldSchema = z.object({
     url: z.string().trim().min(1, 'Image URL is required'),
     width: z.number().int().positive('Image width must be positive'),
     height: z.number().int().positive('Image height must be positive'),
     alt: MultiLanguageFieldSchema,
+    license: ImageLicenseSchema.optional(),
 });
 
 export const ImageRefSchema = z.object({
@@ -117,31 +124,6 @@ export const getDefaultWebsiteInfo = () =>
 // the admin form and the web layout all use one definition.
 export const GTM_ID_REGEX = /^GTM-[A-Z0-9]+$/;
 export const GA_ID_REGEX = /^G-[A-Z0-9]+$/;
-
-// Site-wide SEO defaults + tracking — distinct from the per-page `Seo` model (title/
-// description per pageKey): this is the fallback template + analytics IDs that apply
-// everywhere, matching wujud's GlobalSeoSettings.
-export const GlobalSeoSettingsSchema = z.object({
-    metaTitleTemplate: MultiLanguageFieldSchema.optional(),
-    metaDescription: MultiLanguageFieldSchema.optional(),
-    ogImage: urlValidation.optional().or(z.literal('')),
-    keywords: MultiLanguageFieldSchema.optional(),
-    robotsDirective: z.string().default('index, follow'),
-    canonicalBase: urlValidation.optional().or(z.literal('')),
-    googleAnalyticsId: z.string().regex(GA_ID_REGEX, 'Must look like G-XXXXXXXXXX').optional().or(z.literal('')),
-    googleTagManagerId: z.string().regex(GTM_ID_REGEX, 'Must look like GTM-XXXXXXX').optional().or(z.literal('')),
-});
-
-export const getDefaultGlobalSeoSettings = (): z.infer<typeof GlobalSeoSettingsSchema> => ({
-    metaTitleTemplate: getDefaultMultiLanguageField(),
-    metaDescription: getDefaultMultiLanguageField(),
-    ogImage: '',
-    keywords: getDefaultMultiLanguageField(),
-    robotsDirective: 'index, follow',
-    canonicalBase: '',
-    googleAnalyticsId: '',
-    googleTagManagerId: '',
-});
 
 // SMTP configuration, kept out of website-info since it's operational/credential data
 // rather than public site content.

@@ -60,6 +60,9 @@ RUN pnpm --filter @repo/shared build \
     && pnpm --filter @repo/ui build \
     && pnpm --filter @repo/web build
 
+# Ship production dependencies only: the server runs `next start`, so test runners, linters and bundlers stay behind.
+RUN CI=true pnpm prune --prod
+
 # ---------------------------------------------------------------------------
 # Stage 3: runtime — Next.js production server running as non-root user
 # ---------------------------------------------------------------------------
@@ -88,6 +91,9 @@ COPY --from=build --chown=node:node /app/apps/web/next.config.ts ./apps/web/next
 COPY --from=build --chown=node:node /app/apps/web/public ./apps/web/public
 COPY --from=build --chown=node:node /app/apps/web/dictionaries ./apps/web/dictionaries
 COPY --from=build --chown=node:node /app/apps/web/.next ./apps/web/.next
+
+# `next start` needs neither npm nor corepack; removing them drops their bundled dependencies from the image.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/share/corepack
 
 WORKDIR /app/apps/web
 USER node

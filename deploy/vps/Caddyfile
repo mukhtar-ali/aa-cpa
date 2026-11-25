@@ -3,15 +3,22 @@
 
 {$WEB_DOMAIN} {
 	encode gzip zstd
+	# Staging sets WEB_ROBOTS_TAG="noindex, nofollow"; production leaves the default.
+	header X-Robots-Tag "{$WEB_ROBOTS_TAG:index, follow}"
 	reverse_proxy web:3000
 }
 
 {$ADMIN_DOMAIN} {
 	encode gzip zstd
+	# Production sets ADMIN_HSTS="max-age=31536000; includeSubDomains"; staging keeps max-age=0 so a browser never pins the staging host.
+	# (The web app and the API send their own HSTS; the static admin container cannot know the environment.)
+	header Strict-Transport-Security "{$ADMIN_HSTS:max-age=0}"
+	header X-Robots-Tag "noindex, nofollow"
 	reverse_proxy admin:80
 }
 
 {$API_DOMAIN} {
 	encode gzip zstd
+	header X-Robots-Tag "noindex, nofollow"
 	reverse_proxy api:3001
 }

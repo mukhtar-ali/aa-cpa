@@ -12,6 +12,8 @@ import { toHomeProps, type HomeApi } from '@/src/mappers/home';
 import { localizeHref } from '@/src/mappers/href';
 import { toPageSeo } from '@/src/mappers/seo';
 import { buildMetadata } from '@/src/lib/seo/page-metadata';
+import { JsonLd } from '@/src/components/JsonLd';
+import { buildOrganizationJsonLd } from '@/src/lib/seo/json-ld';
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -44,8 +46,11 @@ export default async function HomePage({ params }: Props) {
     const h = toHomeProps(api, lang);
     if (!h.hero.image) return <EmptyState title={labels.states.emptyTitle} body={labels.states.emptyBody} />;
 
+    const orgJsonLd = buildOrganizationJsonLd({ lang });
+
     return (
         <>
+            <JsonLd data={orgJsonLd} />
             <div className="relative bg-bg-hero">
                 <HomeHero title={h.hero.title} body={h.hero.body} actions={h.hero.actions} image={h.hero.image} />
             </div>

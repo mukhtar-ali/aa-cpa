@@ -11,6 +11,9 @@ import { ContactForm } from '@/src/components/ContactForm';
 import { toChromeProps } from '@/src/mappers/chrome';
 import { toContactProps, type ContactPageApi } from '@/src/mappers/contact';
 import { toPageSeo } from '@/src/mappers/seo';
+import { localizeHref } from '@/src/mappers/href';
+import { JsonLd } from '@/src/components/JsonLd';
+import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildOrganizationJsonLd } from '@/src/lib/seo/json-ld';
 
 type Props = { params: Promise<{ lang: string }>; searchParams: Promise<{ service?: string }> };
 
@@ -34,8 +37,32 @@ export default async function ContactPage({ params, searchParams }: Props) {
     const [page, chrome] = await Promise.all([getPage<ContactPageApi>(endpoint.pages.contact, 'contact', lang), getChrome(lang)]);
     const c = toContactProps(page, lang, labels.home.getDirections, chrome ? toChromeProps(chrome, lang).footer.contacts : []);
 
+    const breadcrumbs = [
+        { label: labels.home.home, href: localizeHref(lang, '/') },
+        { label: c.hero.title, href: localizeHref(lang, '/contact') },
+    ];
+    const breadcrumbJsonLd = buildBreadcrumbJsonLd({ items: breadcrumbs });
+    const phoneChannel = chrome?.footer?.contacts?.find((ct) => ct.type === 'phone');
+    const hoursChannel = chrome?.footer?.contacts?.find((ct) => ct.type === 'hours');
+    const orgJsonLd = buildOrganizationJsonLd({
+        lang,
+        telephone: phoneChannel?.value,
+        openingHoursSpecification: hoursChannel?.value,
+        sameAs: chrome?.footer?.socials?.map((s) => s.href),
+        offices: c.offices.items.map((o) => ({
+            city: o.city,
+            address: o.address,
+            telephone: phoneChannel?.value,
+            openingHoursSpecification: hoursChannel?.value,
+            isHeadquarters: o.isHeadquarters,
+            coordinates: o.coordinates,
+        })),
+    });
+    const faqJsonLd = page.faq?.items && page.faq.items.length > 0 ? buildFaqJsonLd({ lang, items: page.faq.items }) : null;
+
     return (
         <>
+            <JsonLd data={[breadcrumbJsonLd, orgJsonLd, faqJsonLd].filter(Boolean) as Record<string, unknown>[]} />
             {c.hero.image && <PageHero title={c.hero.title} subtitle={c.hero.subtitle} image={c.hero.image} breadcrumbs={c.hero.breadcrumbs} breadcrumbsLabel={labels.home.breadcrumbs} action={c.hero.action} />}
             <Section tone="page" data-contact-location="contact">
                 <Container className="grid gap-12 lg:grid-cols-2">

@@ -21,6 +21,9 @@ const NO_FIGMA_NODE: ReadonlySet<string> = new Set([
   'PreviewBanner', // Editor-only bar, not part of the public design.
   'SkipLink', // Accessibility utility, invisible until focused.
   'StateMessage', // Shared layout of the three state sections.
+  // Feature 004: consent UI is not in the approved Page 1 frames; designed in code on the existing tokens, pending client review (research R5).
+  'ConsentBanner',
+  'ConsentPreferences',
 ]);
 
 /**

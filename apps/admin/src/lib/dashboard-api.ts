@@ -32,7 +32,45 @@ export interface DashboardStats {
   recentContent: Record<DashboardContentType, DashboardContentItem[]>
 }
 
+export interface LeadStatsBySourceItem {
+  source: string
+  count: number
+}
+
+export interface LeadStatsByServiceItem {
+  serviceId?: string | null
+  name: string
+  count: number
+}
+
+export interface LeadStatsByPathItem {
+  path: string
+  count: number
+}
+
+export interface EstimatorCompletionDailyItem {
+  date: string
+  count: number
+}
+
+export interface LeadStats {
+  bySource: LeadStatsBySourceItem[]
+  byService: LeadStatsByServiceItem[]
+  byPath: LeadStatsByPathItem[]
+  estimatorCompletions: EstimatorCompletionDailyItem[]
+}
+
 export async function getDashboardStats() {
   const res = await api.get<DashboardStats>(endpoint.dashboard.stats)
+  return res.data
+}
+
+export async function getLeadStats(params?: { from?: string; to?: string }) {
+  const searchParams = new URLSearchParams()
+  if (params?.from) searchParams.set('from', params.from)
+  if (params?.to) searchParams.set('to', params.to)
+  const qs = searchParams.toString()
+  const url = qs ? `${endpoint.dashboard.leadStats}?${qs}` : endpoint.dashboard.leadStats
+  const res = await api.get<LeadStats>(url)
   return res.data
 }

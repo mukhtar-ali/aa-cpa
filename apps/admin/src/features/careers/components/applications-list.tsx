@@ -62,7 +62,7 @@ export function ApplicationsList({ items, isLoading }: ApplicationsListProps) {
     <div className='space-y-2'>
       {items.map((application) => {
         const resumeUrl =
-          (application as any).resumeUrl ||
+          (application as { resumeUrl?: string }).resumeUrl ||
           (application.resumeKey ? `/api/jobs/applications/${application.id}/resume` : null)
 
         return (

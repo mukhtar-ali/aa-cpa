@@ -96,6 +96,26 @@ export const endpoint = {
     },
     dashboard: {
         stats: '/api/dashboard/stats',
+        leadStats: '/api/dashboard/lead-stats',
+    },
+
+    redirects: {
+        map: '/api/redirects/map',
+        hit: '/api/redirects/hit',
+    },
+    og: {
+        render: '/api/og',
+        get: (query: { type: string; key: string; lang?: string }) =>
+            `/api/og?type=${encodeURIComponent(query.type)}&key=${encodeURIComponent(query.key)}&lang=${encodeURIComponent(query.lang ?? 'ar')}`,
+    },
+    adminRedirects: {
+        list: '/api/admin/redirects',
+        getById: (id: string) => `/api/admin/redirects/${id}`,
+        create: '/api/admin/redirects',
+        update: (id: string) => `/api/admin/redirects/${id}`,
+        delete: (id: string) => `/api/admin/redirects/${id}`,
+        import: '/api/admin/redirects/import',
+        exportCsv: '/api/admin/redirects/export.csv',
     },
 
     // -----------------------------------------------------------------

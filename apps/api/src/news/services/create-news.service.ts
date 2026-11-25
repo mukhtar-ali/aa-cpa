@@ -64,8 +64,10 @@ export class CreateNewsService {
                     isPublished,
                     isFeatured: data.isFeatured ?? false,
                     publishedAt: isPublished ? (data.publishedAt ? new Date(data.publishedAt) : new Date()) : null,
+                    ogImage: (data.ogImage as any) || null,
+                    noindex: data.noindex ?? false,
                     translations: { create: translations },
-                },
+                } as any,
             });
 
             if (data.sectorIds?.length) {

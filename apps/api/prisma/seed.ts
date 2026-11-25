@@ -328,7 +328,8 @@ async function seedContent() {
                 data: {
                     name: l.name,
                     logo: l.logo as any,
-                    url: l.url,
+                    // The seed logos carry no link; the field is optional.
+                    url: (l as { url?: string }).url ?? null,
                     row: l.row,
                     order: l.order,
                     isPublished: l.isPublished,

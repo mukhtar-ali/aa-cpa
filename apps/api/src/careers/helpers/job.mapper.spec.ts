@@ -103,4 +103,19 @@ describe('JobMapper', () => {
         expect(summary.title).toBe('مراجع أول - تدقيق خارجي');
         expect((summary as any).isFallback).toBe(true);
     });
+
+    it('maps to Admin and DetailWeb with ogImage and noindex', () => {
+        const jobWithSeo = {
+            ...mockJob,
+            ogImage: 'https://example.com/job-og.jpg',
+            noindex: true,
+        };
+        const admin = JobMapper.toAdmin(jobWithSeo);
+        expect(admin.noindex).toBe(true);
+        expect(admin.ogImage).toBe('https://example.com/job-og.jpg');
+
+        const detail = JobMapper.toDetailWeb(jobWithSeo, 'ar');
+        expect(detail.seo?.ogImage).toBe('https://example.com/job-og.jpg');
+        expect(detail.seo?.noindex).toBe(true);
+    });
 });

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { LeadStatsModel, LeadStatsQueryModel } from '@repo/shared';
 import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
@@ -183,5 +184,155 @@ export class DashboardService {
         });
         const byDay = new Map(rollups.map((r) => [r.periodKey, r.count]));
         return days.map((date) => ({ date, count: byDay.get(date) ?? 0 }));
+    }
+
+    async getLeadStats(query: LeadStatsQueryModel, lang: string = 'ar'): Promise<LeadStatsModel> {
+        let toDate = query.to ? new Date(query.to) : new Date();
+        if (query.to && query.to.length === 10) {
+            toDate = new Date(`${query.to}T23:59:59.999Z`);
+        }
+        let fromDate = query.from
+            ? new Date(query.from)
+            : new Date(toDate.getTime() - 30 * 24 * 60 * 60 * 1000);
+        if (query.from && query.from.length === 10) {
+            fromDate = new Date(`${query.from}T00:00:00.000Z`);
+        } else if (!query.from) {
+            fromDate.setHours(0, 0, 0, 0);
+        }
+
+        const [contacts, jobAppsCount, estimatorEvents] = await Promise.all([
+            this.prisma.contact.findMany({
+                where: {
+                    isDeleted: false,
+                    createdAt: {
+                        gte: fromDate,
+                        lte: toDate,
+                    },
+                },
+                select: {
+                    source: true,
+                    serviceId: true,
+                    landingPath: true,
+                },
+            }),
+            this.prisma.jobApplication.count({
+                where: {
+                    createdAt: {
+                        gte: fromDate,
+                        lte: toDate,
+                    },
+                },
+            }),
+            this.prisma.monitoringEvent.findMany({
+                where: {
+                    name: 'estimator.completed',
+                    timestamp: {
+                        gte: fromDate,
+                        lte: toDate,
+                    },
+                },
+                select: {
+                    timestamp: true,
+                },
+            }),
+        ]);
+
+        // 1. bySource aggregation
+        const sourceCounts = new Map<string, number>();
+        for (const c of contacts) {
+            const s = c.source || 'contact';
+            sourceCounts.set(s, (sourceCounts.get(s) ?? 0) + 1);
+        }
+        if (jobAppsCount > 0 || sourceCounts.size > 0) {
+            sourceCounts.set('careers', jobAppsCount);
+        }
+        const bySource = Array.from(sourceCounts.entries())
+            .map(([source, count]) => ({ source, count }))
+            .sort((a, b) => b.count - a.count);
+
+        // 2. byService aggregation
+        const serviceCounts = new Map<string | null, number>();
+        for (const c of contacts) {
+            const sId = c.serviceId ?? null;
+            serviceCounts.set(sId, (serviceCounts.get(sId) ?? 0) + 1);
+        }
+
+        const serviceIds = Array.from(serviceCounts.keys()).filter((id): id is string => Boolean(id));
+        let servicesWithTranslations: Array<{ id: string; slug: string; translations: Array<{ language: string; title: string }> }> = [];
+        if (serviceIds.length > 0 && this.prisma.service) {
+            servicesWithTranslations = await this.prisma.service.findMany({
+                where: { id: { in: serviceIds } },
+                select: {
+                    id: true,
+                    slug: true,
+                    translations: {
+                        select: { language: true, title: true },
+                    },
+                },
+            });
+        }
+        const serviceMap = new Map(servicesWithTranslations.map((s) => [s.id, s]));
+
+        const byService = Array.from(serviceCounts.entries())
+            .map(([serviceId, count]) => {
+                if (!serviceId) {
+                    return {
+                        serviceId: null,
+                        name: lang === 'en' ? 'General / Other' : 'عام / أخرى',
+                        count,
+                    };
+                }
+                const s = serviceMap.get(serviceId);
+                const title =
+                    s?.translations?.find((t) => t.language === lang)?.title ??
+                    s?.translations?.[0]?.title ??
+                    s?.slug ??
+                    (lang === 'en' ? 'Unknown service' : 'خدمة غير معروفة');
+                return {
+                    serviceId,
+                    name: title,
+                    count,
+                };
+            })
+            .sort((a, b) => b.count - a.count);
+
+        // 3. byPath aggregation
+        const pathCounts = new Map<string, number>();
+        for (const c of contacts) {
+            const p = c.landingPath?.trim() || '/';
+            pathCounts.set(p, (pathCounts.get(p) ?? 0) + 1);
+        }
+        const byPath = Array.from(pathCounts.entries())
+            .map(([path, count]) => ({ path, count }))
+            .sort((a, b) => b.count - a.count);
+
+        // 4. estimatorCompletions aggregation per day
+        const dayCounts = new Map<string, number>();
+        for (const ev of estimatorEvents) {
+            const dayKey = ev.timestamp.toISOString().slice(0, 10);
+            dayCounts.set(dayKey, (dayCounts.get(dayKey) ?? 0) + 1);
+        }
+
+        const estimatorCompletions: Array<{ date: string; count: number }> = [];
+        const cur = new Date(fromDate);
+        cur.setHours(0, 0, 0, 0);
+        const end = new Date(toDate);
+        end.setHours(0, 0, 0, 0);
+
+        while (cur.getTime() <= end.getTime()) {
+            const dateStr = cur.toISOString().slice(0, 10);
+            estimatorCompletions.push({
+                date: dateStr,
+                count: dayCounts.get(dateStr) ?? 0,
+            });
+            cur.setDate(cur.getDate() + 1);
+        }
+
+        return {
+            bySource,
+            byService,
+            byPath,
+            estimatorCompletions,
+        };
     }
 }

@@ -22,7 +22,8 @@ export function LocaleToggleLink({ target, label, accessibleLabel }: Props) {
             href={switchedPath(pathname, target)}
             label={label}
             targetLang={target}
-            accessibleLabel={accessibleLabel}
+            // WCAG 2.5.3 (label in name): the accessible name must contain the visible text, so it is "<visible> (<what it does>)".
+            accessibleLabel={`${label} (${accessibleLabel})`}
             onClick={(event) => {
                 const search = window.location.search;
                 if (search && !event.currentTarget.href.includes('?')) event.currentTarget.href += search;

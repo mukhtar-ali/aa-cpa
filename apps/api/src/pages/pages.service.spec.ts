@@ -402,6 +402,18 @@ describe('PagesService', () => {
         expect(parsed.success).toBe(true);
     });
 
+    it('offers the switch to the other language in both languages', async () => {
+        expect((await service.getSiteChrome('ar')).localeSwitch).toEqual({ current: 'ar', label: 'English', href: '/en' });
+        expect((await service.getSiteChrome('en')).localeSwitch).toEqual({ current: 'en', label: 'العربية', href: '/ar' });
+    });
+
+    it('footer legal links point at the real public routes (/privacy, /terms, /accessibility), not a /legal prefix', async () => {
+        for (const lang of ['ar', 'en']) {
+            const chrome = await service.getSiteChrome(lang);
+            expect(chrome.footer.legal.links.map((l) => l.href)).toEqual([`/${lang}/privacy`, `/${lang}/terms`, `/${lang}/accessibility`]);
+        }
+    });
+
     it('returns home page matching HomePageWebSchema with estimator', async () => {
         const res = await service.getHomePage('ar');
         const parsed = HomePageWebSchema.safeParse(res);

@@ -9,7 +9,9 @@ describe('AuthorCard', () => {
   it('is a complementary card with avatar, bold name, muted role and bio', () => {
     render(<AuthorCard author={author} />);
     expect(screen.getByRole('complementary')).toHaveClass('rounded-cta', 'border-border-subtle', 'bg-bg-surface');
-    expect(screen.getByRole('img', { name: 'Team' })).toBeInTheDocument();
+    // The avatar sits next to the visible name, so it is decorative (empty alt) and the name is not read twice.
+    expect(screen.queryByRole('img')).toBeNull();
+    expect(document.querySelector('img')).toHaveAttribute('alt', '');
     expect(screen.getByText('Al-Shabibshiri team')).toHaveClass('font-bold', 'text-body-md');
     expect(screen.getByText('Licensed partners')).toHaveClass('text-text-muted', 'text-body-sm');
     expect(screen.getByText(author.bio)).toHaveClass('text-text-body');
@@ -17,7 +19,8 @@ describe('AuthorCard', () => {
 
   it('falls back to initials and omits role and bio when absent', () => {
     render(<AuthorCard author={{ name: 'Sara Ali' }} />);
-    expect(screen.getByRole('img', { name: 'Sara Ali' })).toHaveTextContent('SA');
+    expect(screen.queryByRole('img')).toBeNull();
+    expect(screen.getByText('SA')).toHaveAttribute('aria-hidden', 'true');
     expect(screen.queryByText('Licensed partners')).toBeNull();
   });
 

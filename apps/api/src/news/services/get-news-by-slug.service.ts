@@ -25,17 +25,15 @@ export class GetNewsBySlugService {
         });
 
         if (!news) {
-            const redirect = await this.prisma.slugRedirect.findUnique({
+            const redirect = await this.prisma.redirect.findFirst({
                 where: {
-                    entityType_fromSlug: {
-                        entityType: 'article',
-                        fromSlug: slug,
-                    },
+                    fromPath: `/articles/${slug}`,
                 },
             });
 
             if (redirect) {
-                return { redirectTo: redirect.toSlug };
+                const targetSlug = redirect.toPath.replace(/^\/articles\//, '');
+                return { redirectTo: targetSlug };
             }
 
             throw new NotFoundException(`Article not found: ${slug}`);

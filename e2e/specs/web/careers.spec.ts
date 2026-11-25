@@ -1,7 +1,12 @@
 import { expect, test } from '@playwright/test';
 
 // US4. Needs the API (seeded with an open job, ideally a closed one) and the web app running (project "web").
-const pdf = (size = 2048) => ({ name: 'cv.pdf', mimeType: 'application/pdf', buffer: Buffer.alloc(size, 1) });
+// The API checks the file's real signature, so the fixture starts with a genuine PDF header and trailer (padded to the wanted size).
+const pdf = (size = 2048) => {
+    const head = Buffer.from('%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\n');
+    const tail = Buffer.from('\ntrailer\n<< /Root 1 0 R >>\n%%EOF\n');
+    return { name: 'cv.pdf', mimeType: 'application/pdf', buffer: Buffer.concat([head, Buffer.alloc(Math.max(0, size - head.length - tail.length), 0x20), tail]) };
+};
 
 async function openFirstJob(page: import('@playwright/test').Page) {
     await page.goto('/en/careers');

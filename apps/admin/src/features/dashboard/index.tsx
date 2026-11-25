@@ -13,6 +13,7 @@ import { Analytics } from './components/analytics'
 import { ActivityTimeline } from './components/activity-timeline'
 import { ContentOverview } from './components/content-overview'
 import { ContentPipeline } from './components/content-pipeline'
+import { LeadsOverview } from './components/leads-overview'
 import { PendingActions } from './components/pending-actions'
 import { QuickActionCards } from './components/quick-action-cards'
 import { useDashboardStats } from './hooks/use-dashboard-stats'
@@ -60,6 +61,7 @@ export function Dashboard() {
                 <PendingActions stats={stats} isLoading={isLoadingStats} />
               </div>
             </div>
+            <LeadsOverview />
             <ActivityTimeline items={stats?.recentActivity ?? []} isLoading={isLoadingStats} />
           </TabsContent>
 

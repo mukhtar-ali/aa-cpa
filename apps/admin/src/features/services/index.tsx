@@ -10,6 +10,7 @@ import {
   PublishToggle,
   SortableList,
   TranslationStatusBadge,
+  type ImageFieldValue,
 } from '@/components/cms'
 
 export interface ServicesFeatureProps {
@@ -121,7 +122,7 @@ export function Services({
             <ImageField
               label='Service Card Image'
               namePrefix='service-image'
-              value={form.image as any}
+              value={form.image as ImageFieldValue | null | undefined}
               onChange={(image) =>
                 setForm({
                   ...form,

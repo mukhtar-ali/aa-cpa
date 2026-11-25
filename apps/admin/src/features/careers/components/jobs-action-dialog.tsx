@@ -27,6 +27,8 @@ import { Switch } from '@/components/ui/switch'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { RichTextEditor } from '@/components/rich-text/rich-text-editor'
 import { LANGUAGES, LanguageTabs } from '@/components/language-tabs'
+import { SearchSnippetPreview } from '@/components/cms/search-snippet-preview'
+import { ogImageUrl } from '@/lib/og-image'
 import { BilingualField } from '@/components/cms'
 import { getAdminJobDepartments, getAdminOffices } from '@/lib/reference-api'
 import { useCreateJob, useUpdateJob } from '../hooks/use-jobs'
@@ -47,6 +49,8 @@ const EMPLOYMENT_TYPES = [
 
 function toFormValues(job?: JobModel | null): JobFormModel {
   if (!job) return getDefaultJobForm()
+  // The admin list model does not declare every field the form edits (the API returns them); read them loosely.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const anyJob = job as any
   return {
     title: job.title,
@@ -68,6 +72,8 @@ function toFormValues(job?: JobModel | null): JobFormModel {
     order: anyJob.order ?? 0,
     isPublished: job.isPublished,
     publishedAt: anyJob.publishedAt ?? null,
+    ogImage: ogImageUrl(anyJob.ogImage),
+    noindex: anyJob.noindex ?? false,
     slug: job.slug,
   }
 }
@@ -139,6 +145,15 @@ export function JobsActionDialog({ open, onOpenChange, currentRow }: JobsActionD
             <form id='job-form' onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
               <LanguageTabs value={lang} onValueChange={setLang} />
 
+              <SearchSnippetPreview
+                title={form.watch(`metaTitle.${lang}`) || form.watch(`title.${lang}`) || ''}
+                description={form.watch(`metaDescription.${lang}`) || form.watch(`summary.${lang}`) || ''}
+                slug={form.watch('slug') || ''}
+                pathPrefix='careers'
+                lang={lang}
+                noindex={form.watch('noindex')}
+              />
+
               {LANGUAGES.map((l) => (
                 <div key={l.code} className={l.code === lang ? 'space-y-4' : 'hidden'}>
                   <FormField
@@ -205,6 +220,51 @@ export function JobsActionDialog({ open, onOpenChange, currentRow }: JobsActionD
                       </FormItem>
                     )}
                   />
+
+                  <div className='rounded-md border p-3 bg-muted/20'>
+                    <p className='mb-2 text-xs font-medium text-muted-foreground'>SEO ({l.label})</p>
+                    <div className='space-y-3'>
+                      <FormField
+                        control={form.control}
+                        name={`metaTitle.${l.code}`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Meta Title</FormLabel>
+                            <FormControl>
+                              <Input dir={l.code === 'ar' ? 'rtl' : 'ltr'} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`metaDescription.${l.code}`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Meta Description</FormLabel>
+                            <FormControl>
+                              <Textarea dir={l.code === 'ar' ? 'rtl' : 'ltr'} rows={2} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`keywords.${l.code}`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Keywords</FormLabel>
+                            <FormControl>
+                              <Input dir={l.code === 'ar' ? 'rtl' : 'ltr'} placeholder='comma, separated' {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
                 </div>
               ))}
 
@@ -456,16 +516,48 @@ export function JobsActionDialog({ open, onOpenChange, currentRow }: JobsActionD
 
               <FormField
                 control={form.control}
-                name='isPublished'
+                name='ogImage'
                 render={({ field }) => (
-                  <FormItem className='flex flex-row items-center gap-2'>
-                    <FormLabel className='mb-0'>Published</FormLabel>
+                  <FormItem>
+                    <FormLabel>Custom Open Graph Image URL</FormLabel>
                     <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      <Input
+                        placeholder='https://...'
+                        value={ogImageUrl(field.value)}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
+
+              <div className='flex flex-wrap items-center gap-8'>
+                <FormField
+                  control={form.control}
+                  name='isPublished'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-row items-center gap-2'>
+                      <FormLabel className='mb-0'>Published</FormLabel>
+                      <FormControl>
+                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='noindex'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-row items-center gap-2'>
+                      <FormLabel className='mb-0'>noindex (Hide from Search)</FormLabel>
+                      <FormControl>
+                        <Switch checked={field.value ?? false} onCheckedChange={field.onChange} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
             </form>
           </Form>
         </div>

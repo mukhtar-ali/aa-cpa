@@ -29,6 +29,7 @@ import {
     Layers,
     Bell,
     Shield,
+    ArrowRightLeft,
 } from 'lucide-react'
 import { PermissionEnum } from '@repo/shared'
 import { type SidebarData } from '../types'
@@ -173,6 +174,12 @@ export const sidebarData: SidebarData = {
                     url: '/contact-page',
                     icon: Phone,
                     permission: PermissionEnum.AdminPortalManageContent,
+                },
+                {
+                    title: 'Redirects',
+                    url: '/redirects',
+                    icon: ArrowRightLeft,
+                    permission: PermissionEnum.AdminPortalSeoView,
                 },
             ],
         },

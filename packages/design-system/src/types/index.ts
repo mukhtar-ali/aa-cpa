@@ -109,7 +109,7 @@ export interface CaseStory {
   title: string;
   sector: string;
   service?: string;
-  image: ImageRef;
+  image?: ImageRef;
   href: Href;
   ctaLabel: string;
 }
@@ -127,7 +127,7 @@ export interface ArticleSummary {
   category: string;
   date: IsoDate;
   readingMinutes?: number;
-  image: ImageRef;
+  image?: ImageRef;
   href: Href;
   excerpt?: string;
   author?: Author;

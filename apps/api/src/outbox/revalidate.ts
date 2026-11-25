@@ -8,7 +8,8 @@ export type RevalidateEntityKind =
     | 'article'
     | 'job'
     | 'reference'
-    | 'section';
+    | 'section'
+    | 'redirects';
 
 export function tagsForEntity(kind: RevalidateEntityKind, slugOrKey?: string): string[] {
     const tags = new Set<string>();
@@ -46,6 +47,10 @@ export function tagsForEntity(kind: RevalidateEntityKind, slugOrKey?: string): s
             tags.add('page:sectors');
             tags.add('page:contact');
             tags.add('site:chrome');
+            break;
+        case 'redirects':
+            // The web proxy caches the redirect map under this tag (apps/web/src/lib/redirects.ts).
+            tags.add('redirects');
             break;
         case 'section':
             tags.add('sections');

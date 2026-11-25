@@ -1,0 +1,12 @@
+[Unit]
+Description=AA-CPA nightly backup (MySQL + uploads to restic)
+Wants=network-online.target docker.service
+After=network-online.target docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/aacpa/restic-backup.sh
+Nice=10
+IOSchedulingClass=idle
+# Run as a user that may use Docker; secrets are read from /etc/aacpa/backup.env by the script.
+User=deploy

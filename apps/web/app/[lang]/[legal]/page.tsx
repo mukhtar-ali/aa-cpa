@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { endpoint } from '@repo/shared';
 import { Container, Section } from '@repo/design-system/layout';
 import { Heading, Text } from '@repo/design-system/primitives';
 import { LegalDocument } from '@repo/design-system/sections';
@@ -9,6 +8,9 @@ import { getLabels, isLang } from '@/src/lib/i18n/dictionaries';
 import { buildMetadata } from '@/src/lib/seo/page-metadata';
 import { isLegalKey, toLegalProps, type LegalPageApi } from '@/src/mappers/legal';
 import { toPageSeo } from '@/src/mappers/seo';
+import { localizeHref } from '@/src/mappers/href';
+import { JsonLd } from '@/src/components/JsonLd';
+import { buildBreadcrumbJsonLd } from '@/src/lib/seo/json-ld';
 
 type Props = { params: Promise<{ lang: string; legal: string }> };
 
@@ -25,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { lang, legal } = await params;
     if (!isLang(lang) || !isLegalKey(legal)) return {};
     const page = await tryGetPage<LegalPageApi>(path(legal), `legal:${legal}`, lang);
-    return buildMetadata({ lang, path: `/${legal}`, seo: toPageSeo(page?.seo), fallbackTitle: page?.hero.title ?? legal });
+    return buildMetadata({ lang, path: `/${legal}`, seo: toPageSeo(page?.seo), fallbackTitle: getLabels(lang).meta[legal] });
 }
 
 /** Privacy (525:3854), Terms (525:4136) and Accessibility share the legal layout; the content comes from the CMS. */
@@ -36,8 +38,15 @@ export default async function LegalPage({ params }: Props) {
     const l = toLegalProps(await getPage<LegalPageApi>(path(legal), `legal:${legal}`, lang), lang);
     const p = labels.pages;
 
+    const breadcrumbs = [
+        { label: labels.home.home, href: localizeHref(lang, '/') },
+        { label: l.title, href: localizeHref(lang, `/${legal}`) },
+    ];
+    const breadcrumbJsonLd = buildBreadcrumbJsonLd({ items: breadcrumbs });
+
     return (
         <>
+            <JsonLd data={breadcrumbJsonLd} />
             <Section tone="hero">
                 <Container className="flex flex-col gap-4 pt-24">
                     <Heading level={1} tone="inverse">{l.title}</Heading>

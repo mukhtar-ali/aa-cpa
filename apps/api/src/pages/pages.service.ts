@@ -13,7 +13,7 @@ import { customEnv } from '@/config/custom-env';
 
 const DEFAULT_IMAGE_REF = {
     src: '/uploads/placeholder.webp',
-    alt: 'أحمد بن عبدالله للمحاسبة القانونية',
+    alt: '',
     width: 1200,
     height: 800,
 };
@@ -173,7 +173,7 @@ export class PagesService {
         return {
             logo: {
                 href: '/',
-                label: this.str(raw.wordmark || raw.footer?.wordmark, lang, 'أحمد بن عبدالله للمحاسبة القانونية'),
+                label: this.str(raw.wordmark || raw.footer?.wordmark, lang, 'عبدالرحمن الشبيبشيري للاستشارات المهنية'),
             },
             utility: {
                 license: this.str(utilityRaw.license || utilityRaw.licence, lang, 'ترخيص مهني رقم 118'),
@@ -188,6 +188,13 @@ export class PagesService {
             },
             nav: navLinks,
             cta: this.action(raw.headerCta || raw.cta, lang, 'تواصل معنا', '/contact'),
+            // The switch to the other language: its own name in its own script, and the same-site root of that language. The web app swaps in
+            // the current path (LocaleToggleLink), so this href is only the no-JavaScript fallback.
+            localeSwitch: {
+                current: (lang === 'en' ? 'en' : 'ar') as 'ar' | 'en',
+                label: lang === 'en' ? 'العربية' : 'English',
+                href: `/${lang === 'en' ? 'ar' : 'en'}`,
+            },
             footer: {
                 description: this.str(
                     raw.footer?.description || raw.footerDescription,
@@ -227,12 +234,12 @@ export class PagesService {
                     ),
                     registry: registryList,
                     links: [
-                        { label: lang === 'en' ? 'Privacy Policy' : 'سياسة الخصوصية', href: `/${lang}/legal/privacy` },
-                        { label: lang === 'en' ? 'Terms of Use' : 'شروط الاستخدام', href: `/${lang}/legal/terms` },
-                        { label: lang === 'en' ? 'Accessibility' : 'إمكانية الوصول', href: `/${lang}/legal/accessibility` },
+                        { label: lang === 'en' ? 'Privacy Policy' : 'سياسة الخصوصية', href: `/${lang}/privacy` },
+                        { label: lang === 'en' ? 'Terms of Use' : 'شروط الاستخدام', href: `/${lang}/terms` },
+                        { label: lang === 'en' ? 'Accessibility' : 'إمكانية الوصول', href: `/${lang}/accessibility` },
                     ],
                 },
-                wordmark: this.str(raw.wordmark || raw.footer?.wordmark, lang, 'أحمد بن عبدالله'),
+                wordmark: this.str(raw.wordmark || raw.footer?.wordmark, lang, 'عبدالرحمن الشبيبشيري للاستشارات المهنية'),
                 offices: offices.map((o: any) => ReferenceMapper.officeToWeb(o, lang as any)),
             },
         };
@@ -428,7 +435,7 @@ export class PagesService {
                 ? {
                       signatoryBlock: {
                           eyebrow: this.str(sigRaw.eyebrow, lang, 'الشريك المدير'),
-                          title: this.str(sigRaw.title, lang, 'أحمد بن عبدالله'),
+                          title: this.str(sigRaw.title, lang, 'عبدالرحمن الشبيبشيري للاستشارات المهنية'),
                           ...(sigRaw.accent ? { accent: this.str(sigRaw.accent, lang) } : {}),
                           paragraphs: Array.isArray(sigRaw.paragraphs)
                               ? sigRaw.paragraphs.map((p: any) => this.str(p, lang))

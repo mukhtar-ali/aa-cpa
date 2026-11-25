@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import nodemailer from 'nodemailer';
+import nodemailer, { type Transporter } from 'nodemailer';
 import { decryptSecret, SMTP_PASS_PURPOSE } from '@/common/secret-box';
 import { customEnv } from '@/config/custom-env';
 import { PrismaService } from '@/prisma/prisma.service';
@@ -48,7 +48,7 @@ export class EmailService {
      * fresh per send rather than cached — SMTP connection setup is cheap, and this
      * guarantees a settings change in the admin takes effect immediately.
      */
-    private async getTransporter(): Promise<{ transporter: nodemailer.Transporter; from: string }> {
+    private async getTransporter(): Promise<{ transporter: Transporter; from: string }> {
         const section = await this.prisma.section.findUnique({ where: { type: EMAIL_SETTINGS_SECTION_TYPE } });
         const settings = (section?.data as EmailSettingsData | undefined) ?? {};
 

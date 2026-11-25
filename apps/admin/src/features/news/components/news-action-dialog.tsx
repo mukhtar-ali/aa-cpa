@@ -28,6 +28,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ImageUploadField } from '@/components/upload/image-upload-field'
 import { RichTextEditor } from '@/components/rich-text/rich-text-editor'
 import { LANGUAGES, LanguageTabs } from '@/components/language-tabs'
+import { SearchSnippetPreview } from '@/components/cms/search-snippet-preview'
+import { ogImageUrl } from '@/lib/og-image'
 import { getAdminArticleCategories, getAdminAuthors } from '@/lib/reference-api'
 import { useCreateNews, useUpdateNews } from '../hooks/use-news'
 
@@ -39,6 +41,8 @@ type NewsActionDialogProps = {
 
 function toFormValues(news?: NewsModel | null): NewsFormModel {
   if (!news) return getDefaultNewsForm()
+  // The admin list model does not declare every field the form edits (the API returns them); read them loosely.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const anyNews = news as any
   return {
     title: news.title,
@@ -59,6 +63,8 @@ function toFormValues(news?: NewsModel | null): NewsFormModel {
     tag: news.tag ?? 'news',
     isPublished: news.isPublished,
     isFeatured: news.isFeatured,
+    ogImage: ogImageUrl(anyNews.ogImage),
+    noindex: anyNews.noindex ?? false,
     slug: news.slug,
   }
 }
@@ -127,6 +133,15 @@ export function NewsActionDialog({ open, onOpenChange, currentRow }: NewsActionD
           <Form {...form}>
             <form id='news-form' onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
               <LanguageTabs value={lang} onValueChange={setLang} />
+
+            <SearchSnippetPreview
+              title={form.watch(`metaTitle.${lang}`) || form.watch(`title.${lang}`) || ''}
+              description={form.watch(`metaDescription.${lang}`) || form.watch(`excerpt.${lang}`) || ''}
+              slug={form.watch('slug') || ''}
+              pathPrefix='articles'
+              lang={lang}
+              noindex={form.watch('noindex')}
+            />
 
               {LANGUAGES.map((l) => (
                 <div key={l.code} className={l.code === lang ? 'space-y-4' : 'hidden'}>
@@ -311,6 +326,39 @@ export function NewsActionDialog({ open, onOpenChange, currentRow }: NewsActionD
                         />
                       </FormControl>
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='ogImage'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Custom Open Graph Image URL</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder='https://...'
+                          value={ogImageUrl(field.value)}
+                          onChange={(e) => field.onChange(e.target.value)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className='flex flex-wrap items-center gap-8'>
+                <FormField
+                  control={form.control}
+                  name='noindex'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-row items-center gap-2'>
+                      <FormLabel className='mb-0'>noindex (Hide from Search)</FormLabel>
+                      <FormControl>
+                        <Switch checked={field.value ?? false} onCheckedChange={field.onChange} />
+                      </FormControl>
                     </FormItem>
                   )}
                 />

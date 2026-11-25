@@ -27,9 +27,12 @@ describe('Service Actions', () => {
                 deleteMany: jest.fn(),
                 createMany: jest.fn(),
             },
-            slugRedirect: {
+            redirect: {
+                findFirst: jest.fn(),
                 findUnique: jest.fn(),
                 upsert: jest.fn(),
+                updateMany: jest.fn(),
+                deleteMany: jest.fn(),
             },
             contact: {
                 count: jest.fn().mockResolvedValue(0),
@@ -70,18 +73,17 @@ describe('Service Actions', () => {
     describe('GetServiceBySlugService', () => {
         it('throws NotFoundException when service does not exist and no redirect exists', async () => {
             mockPrisma.service.findFirst.mockResolvedValue(null);
-            mockPrisma.slugRedirect.findUnique.mockResolvedValue(null);
+            mockPrisma.redirect.findFirst.mockResolvedValue(null);
 
             const service = new GetServiceBySlugService(mockPrisma);
             await expect(service.getBySlugWeb('unknown', 'ar')).rejects.toThrow(NotFoundException);
         });
 
-        it('returns redirect when slug exists in SlugRedirect table', async () => {
+        it('returns redirect when slug exists in Redirect table', async () => {
             mockPrisma.service.findFirst.mockResolvedValue(null);
-            mockPrisma.slugRedirect.findUnique.mockResolvedValue({
-                entityType: 'service',
-                fromSlug: 'old-audit',
-                toSlug: 'external-audit',
+            mockPrisma.redirect.findFirst.mockResolvedValue({
+                fromPath: '/services/old-audit',
+                toPath: '/services/external-audit',
             });
 
             const service = new GetServiceBySlugService(mockPrisma);
@@ -154,7 +156,7 @@ describe('Service Actions', () => {
     });
 
     describe('UpdateServiceService', () => {
-        it('writes to SlugRedirect table when slug changes', async () => {
+        it('writes to Redirect table when slug changes', async () => {
             mockPrisma.service.findUnique.mockResolvedValue({
                 id: 's-1',
                 slug: 'old-slug',
@@ -172,18 +174,13 @@ describe('Service Actions', () => {
                 summary: { ar: 'ملخص', en: 'Summary' },
             } as any);
 
-            expect(mockPrisma.slugRedirect.upsert).toHaveBeenCalledWith(
+            expect(mockPrisma.redirect.upsert).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    where: {
-                        entityType_fromSlug: {
-                            entityType: 'service',
-                            fromSlug: 'old-slug',
-                        },
-                    },
+                    where: { fromPath: '/services/old-slug' },
                     create: expect.objectContaining({
-                        entityType: 'service',
-                        fromSlug: 'old-slug',
-                        toSlug: 'new-slug',
+                        fromPath: '/services/old-slug',
+                        toPath: '/services/new-slug',
+                        source: 'slug_change',
                     }),
                 }),
             );

@@ -19,6 +19,8 @@ permissions:
   contents: read
 
 env:
+  # .npmrc pins store-dir to a Windows/WSL drive (/mnt/e) for local work; runners have no such path.
+  npm_config_store_dir: /tmp/pnpm-store
   # Dummy values so builds that read public env vars don't fail.
   NEXT_PUBLIC_API_URL: http://localhost:3001
   NEXT_PUBLIC_SITE_URL: http://localhost:3000
@@ -90,6 +92,7 @@ jobs:
         # Production mode refuses placeholder secrets, so generate random ones for this run.
         run: |
           cp docs/deploy/env.example .env
+          echo "WEB_SERVER_API_URL=http://api:3001" >> .env
           sed -i "s|^JWT_SECRET=.*|JWT_SECRET=$(openssl rand -hex 32)|; s|^CSRF_SECRET=.*|CSRF_SECRET=$(openssl rand -hex 32)|" .env
 
       - name: Validate compose file
@@ -100,6 +103,15 @@ jobs:
 
       - name: Start the stack and wait for health
         run: docker compose up -d --wait --wait-timeout 300
+
+      - name: Seed content and the super admin (throwaway password)
+        run: |
+          docker compose run --rm \
+            -e SUPER_ADMIN_EMAIL=admin@example.com \
+            -e SUPER_ADMIN_USERNAME=super_admin \
+            -e SUPER_ADMIN_FULL_NAME="Super Admin" \
+            -e SUPER_ADMIN_PASSWORD="$SUPER_ADMIN_PASSWORD" \
+            api pnpm seed
 
       - name: Smoke test endpoints
         run: |
@@ -121,15 +133,6 @@ jobs:
           if docker compose exec -T web printenv JWT_SECRET >/dev/null 2>&1; then
             echo "JWT_SECRET leaked into the web container"; exit 1
           fi
-
-      - name: Seed the super admin (throwaway password)
-        run: |
-          docker compose run --rm \
-            -e SUPER_ADMIN_EMAIL=admin@example.com \
-            -e SUPER_ADMIN_USERNAME=super_admin \
-            -e SUPER_ADMIN_FULL_NAME="Super Admin" \
-            -e SUPER_ADMIN_PASSWORD="$SUPER_ADMIN_PASSWORD" \
-            api pnpm seed
 
       - name: Show logs on failure
         if: failure()

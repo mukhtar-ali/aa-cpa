@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
     getDefaultMultiLanguageField,
+    ImageFieldSchema,
     MultiLanguageFieldSchema,
     PublicFormGuardSchema,
     RequiredTitleSchema,
@@ -8,7 +9,7 @@ import {
     SlugSchema,
 } from './common.schema';
 import { csvList, PaginationParamsSchema, queryBoolean } from './pagination.schema';
-import { emailValidation } from './base.schema';
+import { emailValidation, urlValidation } from './base.schema';
 
 export const EmploymentTypeSchema = z.enum([
     'full_time',
@@ -66,6 +67,8 @@ export const JobFormSchema = JobTranslationSchema.extend({
     order: z.number().int().default(0),
     isPublished: z.boolean().default(false),
     publishedAt: z.union([z.string(), z.date()]).optional().nullable(),
+    ogImage: z.union([urlValidation, ImageFieldSchema, z.literal('')]).optional().nullable(),
+    noindex: z.boolean().default(false).optional(),
 });
 
 export const getDefaultJobForm = (): z.infer<typeof JobFormSchema> => ({
@@ -89,6 +92,8 @@ export const getDefaultJobForm = (): z.infer<typeof JobFormSchema> => ({
     order: 0,
     isPublished: false,
     publishedAt: null,
+    ogImage: '',
+    noindex: false,
 });
 
 export const JobAdminSchema = JobFormSchema.extend({
@@ -133,6 +138,7 @@ export const JobDetailWebSchema = JobSummaryWebSchema.extend({
         .optional(),
     similarJobs: z.array(JobSummaryWebSchema).optional(),
     isOpen: z.boolean().default(true),
+    seo: z.any().optional(),
     isFallback: z.boolean().optional(),
 });
 

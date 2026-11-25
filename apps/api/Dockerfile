@@ -3,8 +3,11 @@
 #   docker build -f apps/api/Dockerfile -t starter-api .
 
 FROM node:22-bookworm-slim AS base
+# fontconfig + Noto fonts: the Open Graph image renderer (src/og, sharp/librsvg) draws text with SYSTEM fonts, and the slim image
+# has none, which would render every title as empty boxes. Noto Naskh/Sans Arabic cover Arabic shaping; Noto Sans covers Latin.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends openssl ca-certificates curl \
+    && apt-get install -y --no-install-recommends openssl ca-certificates curl fontconfig fonts-noto-core \
+    && fc-cache -f \
     && rm -rf /var/lib/apt/lists/*
 ENV COREPACK_HOME="/usr/local/share/corepack"
 RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
@@ -39,6 +42,10 @@ COPY apps/api ./apps/api
 RUN pnpm --filter @repo/shared build \
     && pnpm --filter @repo/api build
 
+# Ship production dependencies only. prisma, ts-node, typescript and tsconfig-paths are runtime tools here (migrate deploy and
+# `pnpm seed`), so they are regular dependencies; test runners, linters and bundlers (vitest, esbuild, faker, eslint) stay behind.
+RUN CI=true pnpm prune --prod
+
 # ---------------------------------------------------------------------------
 # Stage 3: runtime — minimal Debian/glibc image running as non-root user
 # ---------------------------------------------------------------------------
@@ -72,6 +79,9 @@ RUN sed -i 's/\r$//' /app/apps/api/docker-entrypoint.sh \
 
 # Local-disk uploads (STORAGE_DRIVER=local, the default without S3 credentials) are written here; mount a volume on it.
 RUN mkdir -p /app/apps/api/storage && chown node:node /app/apps/api/storage
+
+# npm is never used at runtime (pnpm comes from corepack); removing it drops its bundled dependencies from the image.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
 
 WORKDIR /app/apps/api
 USER node

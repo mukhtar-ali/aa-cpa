@@ -25,3 +25,5 @@ export * from './sector.model';
 export * from './reference.model';
 export * from './estimator.model';
 export * from './settings.model';
+export * from './redirect.model';
+export * from './og.model';

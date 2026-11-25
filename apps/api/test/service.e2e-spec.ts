@@ -66,8 +66,9 @@ describe('Services API (E2E)', () => {
             }),
             count: jest.fn().mockResolvedValue(1),
         },
-        slugRedirect: {
+        redirect: {
             findUnique: jest.fn().mockResolvedValue(null),
+            findFirst: jest.fn().mockResolvedValue(null),
         },
         contact: {
             count: jest.fn().mockResolvedValue(0),

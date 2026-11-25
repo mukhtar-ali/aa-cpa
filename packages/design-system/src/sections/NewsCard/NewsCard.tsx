@@ -27,13 +27,17 @@ export interface NewsCardProps extends Omit<React.HTMLAttributes<HTMLElement>, '
  */
 export const NewsCard = React.forwardRef<HTMLElement, NewsCardProps>(({ article, readMoreLabel, locale = 'ar', badgeTone = 'gold', headingLevel = 3, className, ...props }, ref) => (
   <article ref={ref} className={cn('group relative flex flex-col gap-3.5 has-[a:focus-visible]:outline-3 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-solid has-[a:focus-visible]:outline-ring-focus', className)} {...props}>
-    <img
-      src={article.image.src}
-      alt={article.image.decorative ? '' : article.image.alt}
-      width={article.image.width}
-      height={article.image.height}
-      className="h-62.5 w-full rounded-image object-cover"
-    />
+    {article.image ? (
+      <img
+        src={article.image.src}
+        alt={article.image.decorative ? '' : article.image.alt}
+        width={article.image.width}
+        height={article.image.height}
+        className="h-62.5 w-full rounded-image object-cover"
+      />
+    ) : (
+      <div aria-hidden="true" className="h-62.5 w-full rounded-image bg-pine-200" />
+    )}
     <div className="flex flex-col items-start gap-3">
       <CategoryBadge tone={badgeTone}>{article.category}</CategoryBadge>
       <HeadingTag level={headingLevel} className="text-h6 font-bold text-text-heading">

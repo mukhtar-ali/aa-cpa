@@ -11,6 +11,9 @@ import { EstimatorBlock } from '@/src/components/EstimatorBlock';
 import { type WithEstimator } from '@/src/mappers/estimator';
 import { toAboutProps, type AboutApi } from '@/src/mappers/about';
 import { toPageSeo } from '@/src/mappers/seo';
+import { localizeHref } from '@/src/mappers/href';
+import { JsonLd } from '@/src/components/JsonLd';
+import { buildBreadcrumbJsonLd, buildOrganizationJsonLd } from '@/src/lib/seo/json-ld';
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -33,8 +36,24 @@ export default async function AboutPage({ params }: Props) {
     const raw = await getPage<AboutApi & WithEstimator>(endpoint.pages.about, 'about', lang);
     const a = toAboutProps(raw, lang, labels.home.getDirections);
 
+    const breadcrumbs = [
+        { label: labels.home.home, href: localizeHref(lang, '/') },
+        { label: a.hero.title, href: localizeHref(lang, '/about') },
+    ];
+    const breadcrumbJsonLd = buildBreadcrumbJsonLd({ items: breadcrumbs });
+    const orgJsonLd = buildOrganizationJsonLd({
+        lang,
+        offices: (raw.offices ?? []).map((o) => ({
+            city: o.city,
+            address: o.address,
+            isHeadquarters: o.isHeadquarters,
+            coordinates: o.coordinates,
+        })),
+    });
+
     return (
         <>
+            <JsonLd data={[orgJsonLd, breadcrumbJsonLd].filter(Boolean) as Record<string, unknown>[]} />
             {a.hero.image && <PageHero title={a.hero.title} subtitle={a.hero.subtitle} image={a.hero.image} breadcrumbs={a.hero.breadcrumbs} breadcrumbsLabel={labels.home.breadcrumbs} action={a.hero.action} />}
             <Section tone="page">
                 <Container className="flex flex-col gap-12">

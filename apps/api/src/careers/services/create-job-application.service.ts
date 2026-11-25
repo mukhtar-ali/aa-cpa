@@ -219,8 +219,8 @@ export class CreateJobApplicationService {
                     payload: {
                         subject:
                             lang === 'en'
-                                ? `Application received for ${jobTitle} — Ahmad Abdullah CPA`
-                                : `تم استلام طلب التوظيف لوظيفة ${jobTitle} — مكتب أحمد بن عبدالله`,
+                                ? `Application received for ${jobTitle} — Abdulrahman Al-Shabibshiri Professional Consulting`
+                                : `تم استلام طلب التوظيف لوظيفة ${jobTitle} — عبدالرحمن الشبيبشيري للاستشارات المهنية`,
                         fullName: created.fullName,
                         jobTitle,
                     },

@@ -1,0 +1,185 @@
+name: Deploy one environment (reusable)
+
+# Called by deploy-vps.yml for `staging` and `production`. The GitHub environment holds that stack's own secrets and
+# variables (same names in both): VPS_HOST, VPS_USER, VPS_SSH_KEY, VPS_KNOWN_HOSTS; VPS_WEB_DOMAIN, VPS_ADMIN_DOMAIN,
+# VPS_API_DOMAIN, VPS_APP_DIR, optional VPS_FB_PIXEL_ID. Production has "required reviewers" = the manual approval.
+# Public URLs are baked into the web/admin bundles, so images are built per environment, tagged with the commit SHA.
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      ref:
+        description: Commit to build and deploy
+        required: true
+        type: string
+      rollback_tag:
+        description: When set, skip the build and redeploy this existing SHA tag
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  deploy:
+    name: ${{ inputs.rollback_tag != '' && 'Roll back' || 'Deploy' }} ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: ${{ inputs.environment }}
+    concurrency:
+      group: deploy-vps-${{ inputs.environment }}
+      cancel-in-progress: false
+    env:
+      TARGET: ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+      APP_DIR: ${{ vars.VPS_APP_DIR || 'app' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Image name and tag
+        id: meta
+        env:
+          ROLLBACK_TAG: ${{ inputs.rollback_tag }}
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          repo="${GITHUB_REPOSITORY#*/}"
+          echo "prefix=ghcr.io/${owner}/${repo,,}" >> "$GITHUB_OUTPUT"
+          if [ -n "$ROLLBACK_TAG" ]; then
+            # The tag is typed by a person: it must be a plain image tag before it reaches a shell, an output or the VPS.
+            if ! [[ "$ROLLBACK_TAG" =~ ^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$ ]]; then
+              echo "::error::rollback_tag must be an image tag (letters, digits, dot, dash, underscore)"; exit 1
+            fi
+            echo "tag=$ROLLBACK_TAG" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=$(git rev-parse --short=12 HEAD)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: docker/setup-buildx-action@v3
+        if: inputs.rollback_tag == ''
+
+      - uses: docker/login-action@v3
+        if: inputs.rollback_tag == ''
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push api
+        if: inputs.rollback_tag == ''
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.prefix }}/api:${{ steps.meta.outputs.tag }}
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+
+      - name: Build and push admin
+        if: inputs.rollback_tag == ''
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/admin/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.prefix }}/admin:${{ steps.meta.outputs.tag }}
+          build-args: |
+            VITE_API_URL=https://${{ vars.VPS_API_DOMAIN }}
+          cache-from: type=gha,scope=admin
+          cache-to: type=gha,mode=max,scope=admin
+
+      - name: Build and push web
+        if: inputs.rollback_tag == ''
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/web/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.prefix }}/web:${{ steps.meta.outputs.tag }}
+          build-args: |
+            NEXT_PUBLIC_API_URL=https://${{ vars.VPS_API_DOMAIN }}
+            NEXT_PUBLIC_SITE_URL=https://${{ vars.VPS_WEB_DOMAIN }}
+            BASE_URL=https://${{ vars.VPS_API_DOMAIN }}
+            NEXT_PUBLIC_FB_PIXEL_ID=${{ vars.VPS_FB_PIXEL_ID }}
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web
+
+      - name: Prepare SSH
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          # Pinned host key (ssh-keyscan on your own machine) instead of trusting whatever answers on first connect.
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Copy the stack files
+        run: |
+          ssh -i ~/.ssh/deploy_key "$TARGET" "mkdir -p '$APP_DIR/backup' '$APP_DIR/monitor'"
+          scp -i ~/.ssh/deploy_key deploy/vps/docker-compose.prod.yml "$TARGET:$APP_DIR/docker-compose.yml"
+          scp -i ~/.ssh/deploy_key deploy/vps/Caddyfile "$TARGET:$APP_DIR/"
+          scp -i ~/.ssh/deploy_key deploy/vps/backup/* "$TARGET:$APP_DIR/backup/"
+          scp -i ~/.ssh/deploy_key deploy/vps/monitor/* "$TARGET:$APP_DIR/monitor/"
+
+      - name: Pull the images and restart
+        id: restart
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+          PREFIX: ${{ steps.meta.outputs.prefix }}
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # The registry token is sent over stdin (never on a command line) and is only valid for this run.
+          printf '%s' "$GHCR_TOKEN" | ssh -i ~/.ssh/deploy_key "$TARGET" \
+            "docker login ghcr.io -u '$GHCR_USER' --password-stdin"
+          ssh -i ~/.ssh/deploy_key "$TARGET" bash -s -- "$APP_DIR" "$TAG" "$PREFIX" <<'REMOTE'
+          set -euo pipefail
+          cd "$1"
+          test -f .env || { echo "Missing $1/.env on the server (see docs/DEPLOY_VPS.md)"; exit 1; }
+          # Remember what was running so a failed health gate can restore it.
+          previous="$(grep -E '^IMAGE_TAG=' .env | cut -d= -f2- || true)"
+          [ -n "$previous" ] && [ "$previous" != "$2" ] && echo "$previous" > .previous_tag || true
+          grep -v -E '^(IMAGE_TAG|IMAGE_PREFIX)=' .env > .env.tmp || true
+          { cat .env.tmp; echo "IMAGE_PREFIX=$3"; echo "IMAGE_TAG=$2"; } > .env && rm .env.tmp
+          docker compose pull
+          docker compose up -d --remove-orphans
+          docker image prune -f >/dev/null
+          docker compose ps
+          REMOTE
+
+      - name: Health gate
+        id: health
+        env:
+          WEB_DOMAIN: ${{ vars.VPS_WEB_DOMAIN }}
+          ADMIN_DOMAIN: ${{ vars.VPS_ADMIN_DOMAIN }}
+          API_DOMAIN: ${{ vars.VPS_API_DOMAIN }}
+        run: bash deploy/vps/healthcheck.sh "${{ steps.meta.outputs.tag }}"
+
+      # Automatic rollback: the new tag never became healthy, put the previous one back and prove it is serving.
+      - name: Roll back to the previous tag
+        if: failure() && steps.restart.conclusion == 'success' && inputs.rollback_tag == ''
+        env:
+          WEB_DOMAIN: ${{ vars.VPS_WEB_DOMAIN }}
+          ADMIN_DOMAIN: ${{ vars.VPS_ADMIN_DOMAIN }}
+          API_DOMAIN: ${{ vars.VPS_API_DOMAIN }}
+        run: |
+          previous="$(ssh -i ~/.ssh/deploy_key "$TARGET" "cat '$APP_DIR/.previous_tag' 2>/dev/null || true")"
+          if [ -z "$previous" ]; then echo "No previous tag recorded; manual rollback needed" >&2; exit 1; fi
+          echo "Rolling back to $previous"
+          ssh -i ~/.ssh/deploy_key "$TARGET" bash -s -- "$APP_DIR" "$previous" <<'REMOTE'
+          set -euo pipefail
+          cd "$1"
+          grep -v -E '^IMAGE_TAG=' .env > .env.tmp || true
+          { cat .env.tmp; echo "IMAGE_TAG=$2"; } > .env && rm .env.tmp
+          docker compose up -d --remove-orphans
+          REMOTE
+          bash deploy/vps/healthcheck.sh "$previous"
+          echo "::error::Deploy of ${{ steps.meta.outputs.tag }} failed its health gate; rolled back to $previous"
+          exit 1

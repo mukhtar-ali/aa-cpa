@@ -7,6 +7,7 @@ import {
   PublishToggle,
   SortableList,
   ImageField,
+  SearchSnippetPreview,
 } from '../index'
 import { LANGUAGES } from '@/components/language-tabs'
 
@@ -94,13 +95,14 @@ describe('Admin CMS Kit', () => {
     expect(html).toContain('Move item 2 down')
   })
 
-  it('ImageField renders bilingual alt text inputs when image url is set', () => {
+  it('ImageField renders bilingual alt text inputs and license note input', () => {
     const html = renderToStaticMarkup(
       <ImageField
         label='Cover Image'
         value={{
           url: '/uploads/cover.jpg',
           alt: { ar: 'صورة الغلاف', en: 'Cover image' },
+          license: { source: 'Getty Images' },
         }}
         onChange={() => {}}
       />
@@ -108,5 +110,25 @@ describe('Admin CMS Kit', () => {
     expect(html).toContain('Cover Image')
     expect(html).toContain('صورة الغلاف')
     expect(html).toContain('Cover image')
+    expect(html).toContain('License / source')
+    expect(html).toContain('Getty Images')
+  })
+
+  it('SearchSnippetPreview renders title, description, character counters and noindex badge', () => {
+    const html = renderToStaticMarkup(
+      <SearchSnippetPreview
+        title='خدمات التدقيق الخارجي في الرياض'
+        description='نقدم خدمات تدقيق مالي معتمدة من الهيئة السعودية للمراجعين والمحاسبين لجميع الشركات المساهمة والمقفلة في المملكة.'
+        slug='external-audit'
+        pathPrefix='services'
+        lang='ar'
+        noindex={true}
+      />
+    )
+    expect(html).toContain('خدمات التدقيق الخارجي في الرياض')
+    expect(html).toContain('Google Search Snippet Preview (AR)')
+    expect(html).toContain('noindex (Hidden from Search)')
+    expect(html).toContain('/ 60')
+    expect(html).toContain('/ 120–160')
   })
 })

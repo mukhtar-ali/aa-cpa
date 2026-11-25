@@ -9,7 +9,10 @@ import { tags } from '@/src/lib/api/endpoints';
 import { getLabels, isLang } from '@/src/lib/i18n/dictionaries';
 import { buildMetadata } from '@/src/lib/seo/page-metadata';
 import { toCareersProps, type CareersPageApi } from '@/src/mappers/careers';
+import { localizeHref } from '@/src/mappers/href';
 import { toPageSeo } from '@/src/mappers/seo';
+import { JsonLd } from '@/src/components/JsonLd';
+import { buildBreadcrumbJsonLd } from '@/src/lib/seo/json-ld';
 
 type Props = { params: Promise<{ lang: string }>; searchParams: Promise<{ department?: string }> };
 
@@ -36,8 +39,15 @@ export default async function CareersPage({ params, searchParams }: Props) {
     const t = labels.careers;
     const c = toCareersProps(await load(lang, department || undefined), lang, department || undefined);
 
+    const breadcrumbs = [
+        { label: labels.home.home, href: localizeHref(lang, '/') },
+        { label: c.hero.title, href: localizeHref(lang, '/careers') },
+    ];
+    const breadcrumbJsonLd = buildBreadcrumbJsonLd({ items: breadcrumbs });
+
     return (
         <>
+            <JsonLd data={breadcrumbJsonLd} />
             {c.hero.image && <PageHero title={c.hero.title} subtitle={c.hero.subtitle} image={c.hero.image} breadcrumbs={c.hero.breadcrumbs} breadcrumbsLabel={labels.home.breadcrumbs} action={c.hero.action} />}
             {c.perks.items.length > 0 && (
                 <Section tone="page">

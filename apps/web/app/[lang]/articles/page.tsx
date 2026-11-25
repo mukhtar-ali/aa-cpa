@@ -13,6 +13,9 @@ import { EstimatorBlock } from '@/src/components/EstimatorBlock';
 import { type WithEstimator } from '@/src/mappers/estimator';
 import { parsePage, toArticlesProps, type ArticlesPageApi } from '@/src/mappers/articles';
 import { toPageSeo } from '@/src/mappers/seo';
+import { localizeHref } from '@/src/mappers/href';
+import { JsonLd } from '@/src/components/JsonLd';
+import { buildBreadcrumbJsonLd } from '@/src/lib/seo/json-ld';
 
 type Props = { params: Promise<{ lang: string }>; searchParams: Promise<{ category?: string; sector?: string; page?: string }> };
 
@@ -44,8 +47,15 @@ export default async function ArticlesPage({ params, searchParams }: Props) {
     const a = toArticlesProps(raw, lang, filters);
     const [lead, ...rest] = a.featured;
 
+    const breadcrumbs = [
+        { label: labels.home.home, href: localizeHref(lang, '/') },
+        { label: a.hero.title, href: localizeHref(lang, '/articles') },
+    ];
+    const breadcrumbJsonLd = buildBreadcrumbJsonLd({ items: breadcrumbs });
+
     return (
         <>
+            <JsonLd data={breadcrumbJsonLd} />
             {a.hero.image && <PageHero title={a.hero.title} subtitle={a.hero.subtitle} image={a.hero.image} breadcrumbs={a.hero.breadcrumbs} breadcrumbsLabel={labels.home.breadcrumbs} action={a.hero.action} />}
             {lead && (
                 <Section tone="page">

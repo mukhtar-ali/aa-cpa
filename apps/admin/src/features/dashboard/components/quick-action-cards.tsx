@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
-import { FileText, MessageSquare, Phone, Users } from 'lucide-react'
+import { FileText, MessageSquare, Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

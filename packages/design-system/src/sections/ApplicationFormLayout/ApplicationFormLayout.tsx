@@ -92,7 +92,12 @@ export function ApplicationFormLayout({ title, labels, uploadMessages, onSubmit,
     }
   };
 
-  const summaryItems = (Object.entries(errors) as Array<[keyof Errors, string]>).map(([id, message]) => ({ id: `application-${id}`, message }));
+  const summaryItems = (Object.entries(errors) as Array<[keyof Errors, string]>).map(([id, message]) => {
+    // Name the field in the summary ("Full name: This field is required"), otherwise several identical messages are
+    // indistinguishable for a screen-reader user who hears only the summary.
+    const fieldLabel = (labels as unknown as Record<string, unknown>)[id];
+    return { id: `application-${id}`, message: typeof fieldLabel === 'string' && fieldLabel ? `${fieldLabel}: ${message}` : message };
+  });
 
   return (
     <section className={cn('grid gap-12 lg:grid-cols-12 lg:gap-x-6', className)} {...props}>

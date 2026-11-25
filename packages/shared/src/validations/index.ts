@@ -23,3 +23,6 @@ export * from './sector.schema';
 export * from './reference.schema';
 export * from './estimator.schema';
 export * from './settings.schema';
+export * from './redirect.schema';
+export * from './og.schema';
+export * from './dashboard.schema';

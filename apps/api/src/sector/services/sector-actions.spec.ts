@@ -30,9 +30,13 @@ describe('Sector Actions', () => {
             articleSector: {
                 count: jest.fn().mockResolvedValue(0),
             },
-            slugRedirect: {
+            redirect: {
+                findFirst: jest.fn(),
                 findUnique: jest.fn(),
                 create: jest.fn(),
+                upsert: jest.fn(),
+                updateMany: jest.fn(),
+                deleteMany: jest.fn(),
             },
             $transaction: jest.fn((cbOrArray) => {
                 if (Array.isArray(cbOrArray)) return Promise.all(cbOrArray);
@@ -89,7 +93,10 @@ describe('Sector Actions', () => {
         it('returns redirectTo when slug was redirected', async () => {
             const service = new GetSectorBySlugService(mockPrisma);
             mockPrisma.sector.findFirst.mockResolvedValue(null);
-            mockPrisma.slugRedirect.findUnique.mockResolvedValue({ toSlug: 'banking' });
+            mockPrisma.redirect.findFirst.mockResolvedValue({
+                fromPath: '/sectors/old-banking',
+                toPath: '/sectors/banking',
+            });
 
             const result = await service.getBySlugWeb('old-banking', 'ar');
             expect(result).toEqual({ redirectTo: 'banking' });
@@ -98,7 +105,7 @@ describe('Sector Actions', () => {
         it('throws NotFoundException when slug does not exist', async () => {
             const service = new GetSectorBySlugService(mockPrisma);
             mockPrisma.sector.findFirst.mockResolvedValue(null);
-            mockPrisma.slugRedirect.findUnique.mockResolvedValue(null);
+            mockPrisma.redirect.findFirst.mockResolvedValue(null);
 
             await expect(service.getBySlugWeb('unknown', 'ar')).rejects.toThrow(NotFoundException);
         });
