@@ -99,6 +99,16 @@ export function ConsentPreferences({
     }
   }, [open, value.analytics, value.marketing]);
 
+  // The element that had focus when the dialog opened, so Escape / Close returns there even when the opener did not pass
+  // `returnFocusRef` (the footer "Cookie settings" link). Captured while rendering the closed -> open transition, before Radix
+  // moves focus into the dialog.
+  const openerRef = React.useRef<HTMLElement | null>(null);
+  const wasOpenRef = React.useRef(false);
+  if (open && !wasOpenRef.current && typeof document !== 'undefined') {
+    openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  }
+  wasOpenRef.current = open;
+
   const handleSave = () => {
     onSave(selected);
     onOpenChange(false);
@@ -133,13 +143,16 @@ export function ConsentPreferences({
         <Dialog.Content
           aria-describedby={texts.description ? 'consent-prefs-desc' : undefined}
           onCloseAutoFocus={(e) => {
-            if (returnFocusRef?.current) {
+            const target = returnFocusRef?.current ?? (openerRef.current?.isConnected ? openerRef.current : null);
+            if (target) {
               e.preventDefault();
-              returnFocusRef.current.focus();
+              target.focus();
             }
           }}
           className={cn(
-            'fixed top-1/2 start-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2',
+            // Centred with auto inline margins, not start-1/2 + translate-x: a negative translate moves the box the wrong way in RTL
+            // and pushes it off-screen (the close button and the save button were unreachable in Arabic on a phone).
+            'fixed inset-x-4 top-1/2 z-50 mx-auto w-auto max-w-lg -translate-y-1/2',
             'max-h-[90vh] overflow-y-auto rounded-card bg-bg-page p-6 shadow-float outline-none sm:p-8',
           )}
         >

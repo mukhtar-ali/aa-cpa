@@ -15,7 +15,8 @@ import { LocaleToggleLink } from '@/src/components/chrome/LocaleToggleLink';
 import { PreviewBannerGate } from '@/src/components/chrome/PreviewBannerGate';
 import { RouteFocus } from '@/src/components/chrome/RouteFocus';
 import { WhatsAppFloatGate } from '@/src/components/chrome/WhatsAppFloatGate';
-import { dirOf, getLabels, isLang, locales } from '@/src/lib/i18n/dictionaries';
+import { defaultLocale, dirOf, getLabels, isLang, locales } from '@/src/lib/i18n/dictionaries';
+import { defaultDescription } from '@/src/lib/seo/page-metadata';
 import { getChrome } from '@/src/lib/api/site';
 import { toChromeProps } from '@/src/mappers/chrome';
 import '@/src/assets/styles/tailwind.css';
@@ -63,10 +64,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { lang } = await params;
     const seo = await getGlobalSeo(lang);
+    // Pages that never reach a page-level generateMetadata (the 404) fall back to the firm name, not a template string.
+    const fallbackLang = isLang(lang) ? lang : defaultLocale;
 
     return {
-        title: seo?.metaTitleTemplate || 'Starter — Web',
-        description: seo?.metaDescription || 'Public website powered by Next.js',
+        title: seo?.metaTitleTemplate || getLabels(fallbackLang).meta.home,
+        description: seo?.metaDescription || defaultDescription(fallbackLang, ''),
         keywords: seo?.keywords || undefined,
         robots: seo?.robotsDirective || 'index, follow',
         // Favicon set lives in public/images/favicon (generated with realfavicongenerator).

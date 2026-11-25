@@ -132,6 +132,44 @@ describe('ConsentPreferences', () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it('returns focus to the element that opened it when no returnFocusRef is given', async () => {
+    function Opener() {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <div>
+          <button type="button" onClick={() => setOpen(true)}>
+            Cookie settings
+          </button>
+          <ConsentPreferences
+            open={open}
+            onOpenChange={setOpen}
+            texts={defaultTexts}
+            value={{ analytics: false, marketing: false }}
+            onSave={vi.fn()}
+          />
+        </div>
+      );
+    }
+    render(<Opener />);
+    const opener = screen.getByRole('button', { name: 'Cookie settings' });
+    await userEvent.click(opener);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    await userEvent.keyboard('{Escape}');
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(opener).toHaveFocus();
+  });
+
+  it('is centred without a horizontal translate, which pushes the box off-screen in RTL', () => {
+    render(
+      <div dir="rtl">
+        <ConsentPreferences open onOpenChange={vi.fn()} texts={defaultTexts} value={{ analytics: false, marketing: false }} onSave={vi.fn()} />
+      </div>,
+    );
+    const cls = screen.getByRole('dialog').className;
+    expect(cls).toContain('mx-auto');
+    expect(cls).not.toMatch(/translate-x/);
+  });
+
   it.each(['ar', 'en'])('has no axe violations in %s', async (lang) => {
     const { container } = render(
       <div lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'}>

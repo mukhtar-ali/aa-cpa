@@ -15,7 +15,7 @@ export interface MobileNavSheetProps extends Pick<MobileNavProps, 'nav' | 'cta' 
 }
 
 /** The side sheet itself. Loaded on first open (see MobileNav) so Radix Dialog stays out of the initial client bundle. */
-export default function MobileNavSheet({ nav, cta, localeSwitch, menuLabel, closeLabel, navLabel, open, onOpenChange, returnFocusRef }: MobileNavSheetProps) {
+export default function MobileNavSheet({ nav, cta, localeSwitch, closeLabel, navLabel, open, onOpenChange, returnFocusRef }: MobileNavSheetProps) {
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -29,7 +29,7 @@ export default function MobileNavSheet({ nav, cta, localeSwitch, menuLabel, clos
           className="fixed inset-y-0 end-0 z-50 flex w-88 max-w-[88vw] flex-col gap-8 overflow-y-auto bg-bg-page p-6 shadow-float outline-none"
         >
           <div className="flex items-center justify-between gap-4">
-            <Dialog.Title className="text-h5 font-bold text-text-heading">{menuLabel}</Dialog.Title>
+            <Dialog.Title className="text-h5 font-bold text-text-heading">{navLabel}</Dialog.Title>
             <Dialog.Close asChild>
               <IconButton label={closeLabel} icon="close" size="sm" />
             </Dialog.Close>
