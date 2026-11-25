@@ -77,8 +77,8 @@ async function bootstrap() {
     const swaggerEnabled = isSwaggerEnabled();
     if (swaggerEnabled) {
         const config = new DocumentBuilder()
-            .setTitle('Ahmad Abdullah CPA API')
-            .setDescription('Bilingual (AR/EN) Content, Fee Estimator & Lead Management API for Ahmad Abdullah CPA')
+            .setTitle('Abdulrahman Al-Shabibshiri Professional Consulting API')
+            .setDescription('Bilingual (AR/EN) Content, Fee Estimator & Lead Management API for Abdulrahman Al-Shabibshiri Professional Consulting')
             .setVersion('1.0')
             .addTag('site', 'Public site chrome & global SEO')
             .addTag('pages', 'Public bilingual page aggregators')
