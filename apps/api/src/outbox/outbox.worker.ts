@@ -124,8 +124,8 @@ export class OutboxWorker {
         const subject =
             payload.subject ||
             (langSuffix === 'en'
-                ? 'Notification from Ahmad Abdullah CPA'
-                : 'إشعار من مكتب أحمد بن عبدالله للمحاسبة القانونية');
+                ? 'Notification from Abdulrahman Al-Shabibshiri Professional Consulting'
+                : 'إشعار من عبدالرحمن الشبيبشيري للاستشارات المهنية');
 
         await this.emailService.sendEmail(row.to, subject, templateName, payload);
     }

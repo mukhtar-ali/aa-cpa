@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { lang, legal } = await params;
     if (!isLang(lang) || !isLegalKey(legal)) return {};
     const page = await tryGetPage<LegalPageApi>(path(legal), `legal:${legal}`, lang);
-    return buildMetadata({ lang, path: `/${legal}`, seo: toPageSeo(page?.seo), fallbackTitle: page?.hero.title ?? legal });
+    return buildMetadata({ lang, path: `/${legal}`, seo: toPageSeo(page?.seo), fallbackTitle: getLabels(lang).meta[legal] });
 }
 
 /** Privacy (525:3854), Terms (525:4136) and Accessibility share the legal layout; the content comes from the CMS. */

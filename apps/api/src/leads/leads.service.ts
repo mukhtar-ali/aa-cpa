@@ -157,8 +157,8 @@ export class LeadsService {
                     payload: {
                         subject:
                             lang === 'en'
-                                ? 'We received your inquiry — Ahmad Abdullah CPA'
-                                : 'تم استلام استفساركم — مكتب أحمد بن عبدالله للمحاسبة القانونية',
+                                ? 'We received your inquiry — Abdulrahman Al-Shabibshiri Professional Consulting'
+                                : 'تم استلام استفساركم — عبدالرحمن الشبيبشيري للاستشارات المهنية',
                         fullName: created.fullName,
                     },
                 },
@@ -248,8 +248,8 @@ export class LeadsService {
                     payload: {
                         subject:
                             lang === 'en'
-                                ? 'Your fee estimate & quote request — Ahmad Abdullah CPA'
-                                : 'تقدير الأتعاب وطلب عرض السعر — مكتب أحمد بن عبدالله للمحاسبة القانونية',
+                                ? 'Your fee estimate & quote request — Abdulrahman Al-Shabibshiri Professional Consulting'
+                                : 'تقدير الأتعاب وطلب عرض السعر — عبدالرحمن الشبيبشيري للاستشارات المهنية',
                         fullName: created.fullName,
                         range: data.range,
                     },

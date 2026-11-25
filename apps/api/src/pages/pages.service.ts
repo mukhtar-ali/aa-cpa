@@ -13,7 +13,7 @@ import { customEnv } from '@/config/custom-env';
 
 const DEFAULT_IMAGE_REF = {
     src: '/uploads/placeholder.webp',
-    alt: 'أحمد بن عبدالله للمحاسبة القانونية',
+    alt: '',
     width: 1200,
     height: 800,
 };
@@ -173,7 +173,7 @@ export class PagesService {
         return {
             logo: {
                 href: '/',
-                label: this.str(raw.wordmark || raw.footer?.wordmark, lang, 'أحمد بن عبدالله للمحاسبة القانونية'),
+                label: this.str(raw.wordmark || raw.footer?.wordmark, lang, 'عبدالرحمن الشبيبشيري للاستشارات المهنية'),
             },
             utility: {
                 license: this.str(utilityRaw.license || utilityRaw.licence, lang, 'ترخيص مهني رقم 118'),
@@ -239,7 +239,7 @@ export class PagesService {
                         { label: lang === 'en' ? 'Accessibility' : 'إمكانية الوصول', href: `/${lang}/accessibility` },
                     ],
                 },
-                wordmark: this.str(raw.wordmark || raw.footer?.wordmark, lang, 'أحمد بن عبدالله'),
+                wordmark: this.str(raw.wordmark || raw.footer?.wordmark, lang, 'عبدالرحمن الشبيبشيري للاستشارات المهنية'),
                 offices: offices.map((o: any) => ReferenceMapper.officeToWeb(o, lang as any)),
             },
         };
@@ -435,7 +435,7 @@ export class PagesService {
                 ? {
                       signatoryBlock: {
                           eyebrow: this.str(sigRaw.eyebrow, lang, 'الشريك المدير'),
-                          title: this.str(sigRaw.title, lang, 'أحمد بن عبدالله'),
+                          title: this.str(sigRaw.title, lang, 'عبدالرحمن الشبيبشيري للاستشارات المهنية'),
                           ...(sigRaw.accent ? { accent: this.str(sigRaw.accent, lang) } : {}),
                           paragraphs: Array.isArray(sigRaw.paragraphs)
                               ? sigRaw.paragraphs.map((p: any) => this.str(p, lang))

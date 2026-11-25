@@ -38,7 +38,7 @@ describe('MobileNav', () => {
   it('opens a labelled dialog with the nav, CTA and language switch', async () => {
     setup();
     await userEvent.click(screen.getByRole('button', { name: 'Menu' }));
-    const dialog = await screen.findByRole('dialog', { name: 'Menu' });
+    const dialog = await screen.findByRole('dialog', { name: 'Main' });
     expect(dialog).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: 'Main' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'page');
